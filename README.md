@@ -8,3 +8,4 @@ all of these sections need to be filled, but if any of these sections are used, 
 You will then have a total at the bottom that tells you how much you have left after all of the expenses. This total can be moved into a
 savings section.
 
+..
