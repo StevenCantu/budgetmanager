@@ -1,8 +1,11 @@
 package com.example.thegreatbudget;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -14,11 +17,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Log.i(TAG, "onCreate: it works");
+        BottomNavigationView nav = findViewById(R.id.fragment_navigation);
+        nav.setOnNavigationItemSelectedListener(navSwitch);
     }
 
-    // TODO: 4/27/2019 github branching.
-    // TODO: 4/27/2019 android studio fragments
-    // TODO: 4/27/2019 tablayout android studio
+    private BottomNavigationView.OnNavigationItemSelectedListener navSwitch =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    Fragment selectedFragment = null;
+
+                    switch (menuItem.getItemId()) {
+                        case R.id.housing:
+                            selectedFragment = new HousingFragment();
+                            break;
+                        case R.id.personal:
+                            selectedFragment = new PersonalFragment();
+                            break;
+                        case R.id.Savings:
+                            selectedFragment = new SavingsFragment();
+                            break;
+                        case R.id.Other:
+                            selectedFragment = new OtherFragment();
+                            break;
+                    }
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_information,selectedFragment).commit();
+
+                    return true;
+                }
+            };
+
+    // TODO: TODOS done
 }
