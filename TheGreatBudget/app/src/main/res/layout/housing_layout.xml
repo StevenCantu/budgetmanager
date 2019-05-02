@@ -7,10 +7,17 @@
     tools:context=".Housing"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_housing"
+    <EditText
+        android:id="@+id/edit_housing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Housing"
+        android:autofillHints="what is this"/>
+    <Button
+        android:id="@+id/button_housing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Housing..."/>
+        android:text="apply"/>
 
 </LinearLayout>
