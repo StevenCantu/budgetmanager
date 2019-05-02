@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements Housing.HousingListener,
         Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener {
-
+    //test
     public static final int HOUSING = 0;
     public static final int PERSONAL = 1;
     public static final int SAVINGS = 2;
