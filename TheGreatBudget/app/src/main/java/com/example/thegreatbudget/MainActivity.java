@@ -11,6 +11,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.thegreatbudget.adapters.SectionPageAdapter;
+import com.example.thegreatbudget.fragments.Housing;
+import com.example.thegreatbudget.fragments.Miscellaneous;
+import com.example.thegreatbudget.fragments.Personal;
+import com.example.thegreatbudget.fragments.Savings;
+
 
 public class MainActivity extends AppCompatActivity implements Housing.HousingListener,
         Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener {

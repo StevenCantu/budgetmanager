@@ -1,4 +1,4 @@
-package com.example.thegreatbudget;
+package com.example.thegreatbudget.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,15 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Savings extends android.support.v4.app.Fragment{
+import com.example.thegreatbudget.R;
 
-    private SavingsListener mSavingsListener;
+public class Personal extends android.support.v4.app.Fragment{
+
+    private PersonalListener mPersonalListener;
     private float mTempTotal;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.saving_layout, container, false);
+        View view = inflater.inflate(R.layout.personal_layout, container, false);
 
         return view;
     }
@@ -24,31 +26,31 @@ public class Savings extends android.support.v4.app.Fragment{
     /**
      * interface to pass data to activity
      */
-    public interface SavingsListener{
-        void onSavingsSent(float input);
+    public interface PersonalListener{
+        void onPersonalSent(float input);
     }
 
     /**
-     * update the state of Savings from outside class
+     * update the state of Personal from outside class
      * @param input state of temporary total
      */
-    void updateSavings(Float input){
+    public void updatePersonal(Float input){
         mTempTotal = input;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof SavingsListener){
-            mSavingsListener = (SavingsListener) context;
+        if(context instanceof PersonalListener){
+            mPersonalListener = (PersonalListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement HousingListener");
+            throw new RuntimeException(context.toString() + " must implement PersonalListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mSavingsListener = null;
+        mPersonalListener = null;
     }
 }
