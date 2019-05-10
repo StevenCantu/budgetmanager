@@ -54,7 +54,7 @@ public class Housing extends android.support.v4.app.Fragment{
      * update the state of Housing from outside class
      * @param input state of temporary total
      */
-    public void updateHousing(Float input){
+    public void updateHousing(float input){
         mTempTotal = input;
     }
 
@@ -62,17 +62,14 @@ public class Housing extends android.support.v4.app.Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-        loadData();
-        //region testing list
-        List<String> temp = new ArrayList<>();
-        temp.add("sddfs");
-        temp.add("gdfgr");
-        temp.add("jhgjgh");
-        temp.add("tertgb");
-        if(mDataList.isEmpty()){
-            mDataList = temp;
-        }
-        //endregion
+        //loadData();
+
+        mDataList.add("Rent/Mortgage");
+        mDataList.add("Electricity");
+        mDataList.add("Gas");
+        mDataList.add("Internet/Cable");
+        mDataList.add("Water/Sewage");
+
         if(context instanceof HousingListener){
             mHousingListener = (HousingListener) context;
         } else {

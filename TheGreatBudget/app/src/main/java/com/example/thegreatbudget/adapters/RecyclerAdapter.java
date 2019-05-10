@@ -1,19 +1,30 @@
 package com.example.thegreatbudget.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thegreatbudget.R;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
@@ -26,17 +37,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView textView;
-        ImageButton trash;
-        ImageButton edit;
+        TextView editText;
         RelativeLayout relativeLayout;
+        String m_Text;
 
         ViewHolder(View itemView){
             super(itemView);
 
             mView = itemView;
             textView = itemView.findViewById(R.id.recycler_text);
-            trash = itemView.findViewById(R.id.recycler_trash);
-            edit = itemView.findViewById(R.id.edit_recycler);
+            editText = itemView.findViewById(R.id.recycler_edit);
             relativeLayout = itemView.findViewById(R.id.recycler_parent_layout);
         }
     }
@@ -60,14 +70,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerAdapter.ViewHolder holder, final int position) {
         holder.textView.setText(mDataList.get(position));
-        holder.trash.setOnClickListener(new View.OnClickListener() {
+        holder.editText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                mDataList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, mDataList.size());
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Amount");
+
+                // Set up the input
+                final EditText input = new EditText(mContext);
+                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                builder.setView(input);
+
+                // Set up the buttons
+                builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        float num = Float.parseFloat(input.getText().toString());
+                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+                        holder.editText.setText(numberFormat.format(num));
+                    }
+                });
+                builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         });
     }

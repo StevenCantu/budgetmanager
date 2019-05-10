@@ -19,24 +19,11 @@
         tools:ignore="RelativeOverlap"
         android:textSize="18sp"/>
 
-    <ImageButton
-        android:id="@+id/recycler_trash"
+    <TextView
+        android:id="@+id/recycler_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:background="@android:drawable/ic_menu_delete"
-        android:backgroundTint="@color/colorAccent"
-        android:contentDescription="@string/delete_hint"/>
-
-    <ImageButton
-        android:id="@+id/edit_recycler"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/recycler_trash"
-        android:background="@android:drawable/ic_menu_edit"
-        android:backgroundTint="@color/colorAccent"
-        android:contentDescription="@string/edit_hint"
-        android:layout_marginEnd="16dp"
-        />
+        android:text="enter amount"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

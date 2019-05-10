@@ -13,18 +13,21 @@ import android.view.MenuItem;
 
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.fragments.Housing;
+import com.example.thegreatbudget.fragments.Insurance;
 import com.example.thegreatbudget.fragments.Miscellaneous;
 import com.example.thegreatbudget.fragments.Personal;
 import com.example.thegreatbudget.fragments.Savings;
 
 
 public class MainActivity extends AppCompatActivity implements Housing.HousingListener,
-        Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener {
+        Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener,
+        Insurance.InsuranceListener{
     //test
     public static final int HOUSING = 0;
-    public static final int PERSONAL = 1;
-    public static final int SAVINGS = 2;
-    public static final int MISC = 3;
+    public static final int INSURANCE = 1;
+    public static final int PERSONAL = 2;
+    public static final int SAVINGS = 3;
+    public static final int MISC = 4;
     public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
     public static final String TOTAL_EXPENSES = "thegreatbudget.total.expenses";
 
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
     private ViewPager mViewPager;
     private float mTotalExpenses;
     private Housing mHousing;
+    private Insurance mInsurance;
     private Personal mPersonal;
     private Savings mSavings;
     private Miscellaneous mMisc;
@@ -65,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
     private void setupIcons(TabLayout tabLayout){
         int[] tabIcons = {
                 R.drawable.ic_home_black_24dp,
+                R.drawable.ic_home_black_24dp,
                 R.drawable.ic_account_balance_wallet_24dp,
                 R.drawable.ic_attach_money_24dp,
                 R.drawable.ic_star_black_24dp
         };
 
         tabLayout.getTabAt(HOUSING).setIcon(tabIcons[HOUSING]);
+        tabLayout.getTabAt(INSURANCE).setIcon(tabIcons[INSURANCE]);
         tabLayout.getTabAt(PERSONAL).setIcon(tabIcons[PERSONAL]);
         tabLayout.getTabAt(SAVINGS).setIcon(tabIcons[SAVINGS]);
         tabLayout.getTabAt(MISC).setIcon(tabIcons[MISC]);
@@ -84,13 +90,15 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
     private void setupViewPager(ViewPager viewPager){
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         mHousing = new Housing();
+        mInsurance = new Insurance();
         mPersonal = new Personal();
         mSavings = new Savings();
         mMisc = new Miscellaneous();
-        mSectionPageAdapter.addFragment(mHousing, "housing");
+        mSectionPageAdapter.addFragment(mHousing, "Housing");
+        mSectionPageAdapter.addFragment(mInsurance, "Insurance");
         mSectionPageAdapter.addFragment(mPersonal, "Personal");
-        mSectionPageAdapter.addFragment(mSavings, "savings");
-        mSectionPageAdapter.addFragment(mMisc, "misc.");
+        mSectionPageAdapter.addFragment(mSavings, "Savings");
+        mSectionPageAdapter.addFragment(mMisc, "Misc.");
         viewPager.setAdapter(mSectionPageAdapter);
     }
 
@@ -121,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
         mPersonal.updatePersonal(input);
         mSavings.updateSavings(input);
         mMisc.updateMisc(input);
+        mInsurance.updateInsurance(input);
     }
 
     @Override
@@ -140,6 +149,11 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
 
     @Override
     public void onSavingsSent(float input) {
+        updateAllExpenseTabs(input);
+    }
+
+    @Override
+    public void onInsuranceSent(float input) {
         updateAllExpenseTabs(input);
     }
 }
