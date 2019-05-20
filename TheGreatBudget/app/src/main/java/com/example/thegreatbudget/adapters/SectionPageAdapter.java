@@ -1,4 +1,4 @@
-package com.example.thegreatbudget;
+package com.example.thegreatbudget.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,7 +17,7 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
      * constructor
      * @param fragmentManager fragment manager
      */
-    SectionPageAdapter(FragmentManager fragmentManager){
+    public SectionPageAdapter(FragmentManager fragmentManager){
         super(fragmentManager);
     }
 
@@ -26,7 +26,7 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
      * @param fragment fragment to add
      * @param title title of fragment
      */
-    void addFragment(Fragment fragment, String title){
+    public void addFragment(Fragment fragment, String title){
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
     }

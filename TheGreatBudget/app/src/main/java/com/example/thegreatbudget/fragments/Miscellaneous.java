@@ -1,4 +1,4 @@
-package com.example.thegreatbudget;
+package com.example.thegreatbudget.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,15 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Personal extends android.support.v4.app.Fragment{
+import com.example.thegreatbudget.R;
 
-    private PersonalListener mPersonalListener;
+public class Miscellaneous extends android.support.v4.app.Fragment{
+
+    private MiscListener mMiscListener;
     private float mTempTotal;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.personal_layout, container, false);
+        View view = inflater.inflate(R.layout.miscellaneous, container, false);
 
         return view;
     }
@@ -24,31 +26,31 @@ public class Personal extends android.support.v4.app.Fragment{
     /**
      * interface to pass data to activity
      */
-    public interface PersonalListener{
-        void onPersonalSent(float input);
+    public interface MiscListener{
+        void onMiscSent(float input);
     }
 
     /**
-     * update the state of Personal from outside class
+     * update the state of Housing from outside class
      * @param input state of temporary total
      */
-    void updatePersonal(Float input){
+    public void updateMisc(Float input){
         mTempTotal = input;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof PersonalListener){
-            mPersonalListener = (PersonalListener) context;
+        if(context instanceof MiscListener){
+            mMiscListener = (MiscListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement PersonalListener");
+            throw new RuntimeException(context.toString() + " must implement HousingListener");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mPersonalListener = null;
+        mMiscListener = null;
     }
 }

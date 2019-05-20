@@ -1,4 +1,4 @@
-package com.example.thegreatbudget;
+package com.example.thegreatbudget.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,15 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class Miscellaneous extends android.support.v4.app.Fragment{
+import com.example.thegreatbudget.R;
 
-    private MiscListener mMiscListener;
+public class Savings extends android.support.v4.app.Fragment{
+
+    private SavingsListener mSavingsListener;
     private float mTempTotal;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.miscellaneous, container, false);
+        View view = inflater.inflate(R.layout.saving_layout, container, false);
 
         return view;
     }
@@ -24,23 +26,23 @@ public class Miscellaneous extends android.support.v4.app.Fragment{
     /**
      * interface to pass data to activity
      */
-    public interface MiscListener{
-        void onMiscSent(float input);
+    public interface SavingsListener{
+        void onSavingsSent(float input);
     }
 
     /**
-     * update the state of Housing from outside class
+     * update the state of Savings from outside class
      * @param input state of temporary total
      */
-    void updateMisc(Float input){
+    public void updateSavings(Float input){
         mTempTotal = input;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof MiscListener){
-            mMiscListener = (MiscListener) context;
+        if(context instanceof SavingsListener){
+            mSavingsListener = (SavingsListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement HousingListener");
         }
@@ -49,6 +51,6 @@ public class Miscellaneous extends android.support.v4.app.Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        mMiscListener = null;
+        mSavingsListener = null;
     }
 }
