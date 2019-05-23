@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.util.Expenses;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -30,35 +31,82 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     private static final String TAG = "RecyclerAdapter";
     private List<String> mDataList;
+    private List<Expenses> mExpenses;
     private Context mContext;
+    private OnRecyclerListener mOnRecyclerListener;
 
-    private static View mView;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView textView;
         TextView editText;
         RelativeLayout relativeLayout;
-        String m_Text;
+        OnRecyclerListener onRecyclerListener;
+        Context context;
 
-        ViewHolder(View itemView){
+        ViewHolder(View itemView, OnRecyclerListener listener, Context c){
             super(itemView);
 
-            mView = itemView;
+            context = c;
             textView = itemView.findViewById(R.id.recycler_text);
             editText = itemView.findViewById(R.id.recycler_edit);
             relativeLayout = itemView.findViewById(R.id.recycler_parent_layout);
+            onRecyclerListener = listener;
+
+            editText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        buildDialog(position);
+                    }
+                }
+            });
+        }
+
+        private void buildDialog(final int position){
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Amount");
+
+            // Set up the input
+            final EditText input = new EditText(context);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    float num = Float.parseFloat(input.getText().toString());
+                    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+                    editText.setText(numberFormat.format(num));
+
+                    if(onRecyclerListener != null) {
+                        onRecyclerListener.onItemClicked(position, num);
+                    }
+
+                }
+            });
+            builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
         }
     }
 
     /**
      * constructor
      * @param context activity context
-     * @param dataList list of items to populate
+     * @param expenses list of items to populate
      */
-    public RecyclerAdapter(Context context, List<String> dataList){
-        mDataList = dataList;
+    public RecyclerAdapter(Context context, List<Expenses> expenses){
         mContext = context;
+        mExpenses = expenses;
     }
 
     @NonNull
@@ -66,47 +114,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, mOnRecyclerListener, mContext);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerAdapter.ViewHolder holder, final int position) {
-        holder.textView.setText(mDataList.get(position));
-        holder.editText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Amount");
-
-                // Set up the input
-                final EditText input = new EditText(mContext);
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                builder.setView(input);
-
-                // Set up the buttons
-                builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        float num = Float.parseFloat(input.getText().toString());
-                        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-                        holder.editText.setText(numberFormat.format(num));
-                    }
-                });
-                builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-            }
-        });
+        //holder.textView.setText(mDataList.get(position));
+        holder.textView.setText(mExpenses.get(position).getTitle());
+        holder.editText.setText(mExpenses.get(position).getExpense());
     }
 
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return mExpenses.size();
+    }
+
+    public interface OnRecyclerListener{
+        void onItemClicked(int position, float data);
+    }
+
+    public void setOnRecyclerListener(OnRecyclerListener onRecyclerListener){
+        mOnRecyclerListener = onRecyclerListener;
     }
 }

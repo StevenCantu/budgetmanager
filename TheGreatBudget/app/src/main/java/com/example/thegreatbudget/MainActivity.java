@@ -19,26 +19,35 @@ import com.example.thegreatbudget.fragments.Personal;
 import com.example.thegreatbudget.fragments.Savings;
 
 
-public class MainActivity extends AppCompatActivity implements Housing.HousingListener,
+public class MainActivity extends AppCompatActivity implements
         Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener,
         Insurance.InsuranceListener{
-    //test
+    //tabs
     public static final int HOUSING = 0;
     public static final int INSURANCE = 1;
     public static final int PERSONAL = 2;
     public static final int SAVINGS = 3;
     public static final int MISC = 4;
+    //bundles
+    public static final String HOUSING_TITLES = "thegreatbudget.main.housing.titles";
+    public static final String HOUSING_TITLE_SP = "thegreatbudget.main.housing.title.sp";
+    public static final String HOUSING_EXPENSE_SP = "thegreatbudget.main.housing.expense.sp";
+    //shared preferences
     public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
     public static final String TOTAL_EXPENSES = "thegreatbudget.total.expenses";
+    public static final String HOUSING_LIST_TITLE = "thegreatbudget.recycler.housing.list.title";
+    public static final String HOUSING_LIST_EXPENSE = "thegreatbudget.recycler.housing.list.expense";
+    public static final String PERSONAL_LIST_TITLE = "thegreatbudget.recycler.personal.list.title";
+    public static final String PERSONAL_LIST_EXPENSE = "thegreatbudget.recycler.personal.list.expense";
 
     private static final String TAG = "MainActivity";
 
     private SectionPageAdapter mSectionPageAdapter;
     private ViewPager mViewPager;
     private float mTotalExpenses;
-    private Housing mHousing;
+    private Housing mHousing, mPersonal;
     private Insurance mInsurance;
-    private Personal mPersonal;
+    //private Personal mPersonal;
     private Savings mSavings;
     private Miscellaneous mMisc;
 
@@ -91,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         mHousing = new Housing();
         mInsurance = new Insurance();
-        mPersonal = new Personal();
+        mPersonal = new Housing();//new Personal();
         mSavings = new Savings();
         mMisc = new Miscellaneous();
         mSectionPageAdapter.addFragment(mHousing, "Housing");
@@ -100,6 +109,44 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
         mSectionPageAdapter.addFragment(mSavings, "Savings");
         mSectionPageAdapter.addFragment(mMisc, "Misc.");
         viewPager.setAdapter(mSectionPageAdapter);
+
+        initializeExpenses();
+
+        mHousing.setHousingListener(housingListener);
+        mPersonal.setHousingListener(housingListener);
+    }
+
+    /**
+     * initialize all recycler lists with expenses
+     */
+    private void initializeExpenses(){
+        String[] housingExpenses = {
+                "Rent/Mortgage",
+                "Electricity",
+                "Gas",
+                "Internet/Cable",
+                "Water/Sewage"
+        };
+        String[] personalExpenses = {
+                "Car loan",
+                "Student loan"
+        };
+
+        initializeList(housingExpenses, mHousing, HOUSING_LIST_TITLE, HOUSING_LIST_EXPENSE);
+        initializeList(personalExpenses, mPersonal, PERSONAL_LIST_TITLE, PERSONAL_LIST_EXPENSE);
+    }
+
+    /**
+     * initialize single recycler list
+     * @param s list of expenses
+     * @param housing fragment of recycler
+     */
+    private void initializeList(final String[] s, Housing housing, final String titleSP, final String expenseSP){
+        Bundle bundle = new Bundle();
+        bundle.putStringArray(HOUSING_TITLES, s);
+        bundle.putString(HOUSING_TITLE_SP, titleSP);
+        bundle.putString(HOUSING_EXPENSE_SP, expenseSP);
+        housing.setArguments(bundle);
     }
 
     /**
@@ -125,17 +172,19 @@ public class MainActivity extends AppCompatActivity implements Housing.HousingLi
      * @param input expenses
      */
     private void updateAllExpenseTabs(Float input){
-        mHousing.updateHousing(input);
-        mPersonal.updatePersonal(input);
-        mSavings.updateSavings(input);
-        mMisc.updateMisc(input);
-        mInsurance.updateInsurance(input);
+//        mHousing.updateHousing(input);
+//        mPersonal.updatePersonal(input);
+//        mSavings.updateSavings(input);
+//        mMisc.updateMisc(input);
+//        mInsurance.updateInsurance(input);
     }
 
-    @Override
-    public void onHousingSent(float input) {
-        updateAllExpenseTabs(input);
-    }
+    Housing.HousingListener housingListener = new Housing.HousingListener() {
+        @Override
+        public void onHousingSent(float input) {
+            Log.i(TAG, "onHousingSent: " + input);
+        }
+    };
 
     @Override
     public void onMiscSent(float input) {
