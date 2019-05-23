@@ -20,10 +20,17 @@
         android:layout_height="613dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <View
+        android:id="@+id/vPagerSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/main_income"
+        android:background="@color/colorPrimary"/>
+
     <TextView
         android:id="@+id/main_income"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:text="Income:23445" />
+        android:layout_height="match_parent"
+        android:text="Income: " />
 
 </LinearLayout>
