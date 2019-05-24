@@ -18,15 +18,15 @@ import com.example.thegreatbudget.fragments.Miscellaneous;
 import com.example.thegreatbudget.fragments.Personal;
 import com.example.thegreatbudget.fragments.Savings;
 
+import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity implements
-        Personal.PersonalListener, Savings.SavingsListener, Miscellaneous.MiscListener,
-        Insurance.InsuranceListener{
+
+public class MainActivity extends AppCompatActivity implements Miscellaneous.MiscListener{
     //tabs
     public static final int HOUSING = 0;
     public static final int INSURANCE = 1;
     public static final int PERSONAL = 2;
-    public static final int SAVINGS = 3;
+    public static final int WANTS = 3;
     public static final int MISC = 4;
     //bundles
     public static final String HOUSING_TITLES = "thegreatbudget.main.housing.titles";
@@ -39,16 +39,18 @@ public class MainActivity extends AppCompatActivity implements
     public static final String HOUSING_LIST_EXPENSE = "thegreatbudget.recycler.housing.list.expense";
     public static final String PERSONAL_LIST_TITLE = "thegreatbudget.recycler.personal.list.title";
     public static final String PERSONAL_LIST_EXPENSE = "thegreatbudget.recycler.personal.list.expense";
+    public static final String INSURANCE_LIST_TITLE = "thegreatbudget.recycler.insurance.list.title";
+    public static final String INSURANCE_LIST_EXPENSES = "thegreatbudget.recycler.insurance.list.expense";
+    public static final String WANTS_LIST_TITLE = "thegreatbudget.recycler.wants.list.title";
+    public static final String WANTS_LIST_EXPENSES = "thegreatbudget.recycler.wants.list.expense";
 
     private static final String TAG = "MainActivity";
 
     private SectionPageAdapter mSectionPageAdapter;
     private ViewPager mViewPager;
-    private float mTotalExpenses;
-    private Housing mHousing, mPersonal;
-    private Insurance mInsurance;
-    //private Personal mPersonal;
-    private Savings mSavings;
+    private float mFreeMoney, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
+            mWantsExpenses, mIncome;
+    private Housing mHousing, mPersonal, mInsurance, mWants;
     private Miscellaneous mMisc;
 
     @Override
@@ -59,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements
 
         mViewPager = findViewById(R.id.container);
         setupViewPager(mViewPager);
+
+        mIncome = 5000;
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
@@ -77,17 +81,17 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void setupIcons(TabLayout tabLayout){
         int[] tabIcons = {
-                R.drawable.ic_home_black_24dp,
-                R.drawable.ic_home_black_24dp,
-                R.drawable.ic_account_balance_wallet_24dp,
-                R.drawable.ic_attach_money_24dp,
-                R.drawable.ic_star_black_24dp
+                R.drawable.housing_rent,
+                R.drawable.insurance_dark,
+                R.drawable.personal,
+                R.drawable.wants,
+                R.drawable.other
         };
 
         tabLayout.getTabAt(HOUSING).setIcon(tabIcons[HOUSING]);
         tabLayout.getTabAt(INSURANCE).setIcon(tabIcons[INSURANCE]);
         tabLayout.getTabAt(PERSONAL).setIcon(tabIcons[PERSONAL]);
-        tabLayout.getTabAt(SAVINGS).setIcon(tabIcons[SAVINGS]);
+        tabLayout.getTabAt(WANTS).setIcon(tabIcons[WANTS]);
         tabLayout.getTabAt(MISC).setIcon(tabIcons[MISC]);
 
     }
@@ -99,21 +103,23 @@ public class MainActivity extends AppCompatActivity implements
     private void setupViewPager(ViewPager viewPager){
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         mHousing = new Housing();
-        mInsurance = new Insurance();
+        mInsurance = new Housing();
         mPersonal = new Housing();//new Personal();
-        mSavings = new Savings();
+        mWants = new Housing();
         mMisc = new Miscellaneous();
         mSectionPageAdapter.addFragment(mHousing, "Housing");
         mSectionPageAdapter.addFragment(mInsurance, "Insurance");
         mSectionPageAdapter.addFragment(mPersonal, "Personal");
-        mSectionPageAdapter.addFragment(mSavings, "Savings");
-        mSectionPageAdapter.addFragment(mMisc, "Misc.");
+        mSectionPageAdapter.addFragment(mWants, "Wants");
+        mSectionPageAdapter.addFragment(mMisc, "Other");
         viewPager.setAdapter(mSectionPageAdapter);
 
         initializeExpenses();
 
         mHousing.setHousingListener(housingListener);
-        mPersonal.setHousingListener(housingListener);
+        mPersonal.setHousingListener(personalListener);
+        mInsurance.setHousingListener(insuranceListener);
+        mWants.setHousingListener(wantsListener);
     }
 
     /**
@@ -129,11 +135,30 @@ public class MainActivity extends AppCompatActivity implements
         };
         String[] personalExpenses = {
                 "Car loan",
-                "Student loan"
+                "Groceries",
+                "Toiletries",
+                "Gasoline/Transportation",
+                "Cell Phone"
         };
-
+        String[] insuranceExpenses = {
+                "Auto",
+                "Health",
+                "Life",
+                "Renters/Home Owners"
+        };
+        String[] wantsExpenses = {
+                "Clothes",
+                "Dining Out",
+                "Events",
+                "Gym/Clubs",
+                "Travel",
+                "Home Decor",
+                "Streaming Services"
+        };
         initializeList(housingExpenses, mHousing, HOUSING_LIST_TITLE, HOUSING_LIST_EXPENSE);
         initializeList(personalExpenses, mPersonal, PERSONAL_LIST_TITLE, PERSONAL_LIST_EXPENSE);
+        initializeList(insuranceExpenses, mInsurance, INSURANCE_LIST_TITLE, INSURANCE_LIST_EXPENSES);
+        initializeList(wantsExpenses, mWants, WANTS_LIST_TITLE, WANTS_LIST_EXPENSES);
     }
 
     /**
@@ -142,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements
      * @param housing fragment of recycler
      */
     private void initializeList(final String[] s, Housing housing, final String titleSP, final String expenseSP){
+        Arrays.sort(s);
+
         Bundle bundle = new Bundle();
         bundle.putStringArray(HOUSING_TITLES, s);
         bundle.putString(HOUSING_TITLE_SP, titleSP);
@@ -155,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements
     private void saveData(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putFloat(TOTAL_EXPENSES, mTotalExpenses);
+        editor.putFloat(TOTAL_EXPENSES, mFreeMoney);
         editor.apply();
     }
 
@@ -164,25 +191,52 @@ public class MainActivity extends AppCompatActivity implements
      */
     private void loadData(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        mTotalExpenses = sp.getFloat(TOTAL_EXPENSES, 0f);
+        mFreeMoney = sp.getFloat(TOTAL_EXPENSES, 0f);
     }
 
     /**
      * update all temporary totals for all tabs
      * @param input expenses
      */
-    private void updateAllExpenseTabs(Float input){
-//        mHousing.updateHousing(input);
-//        mPersonal.updatePersonal(input);
-//        mSavings.updateSavings(input);
-//        mMisc.updateMisc(input);
-//        mInsurance.updateInsurance(input);
+    private void updateAllExpenseTabs(float input){
+        float expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
+        mFreeMoney = mIncome - expenses;
+        Log.i(TAG, "updateAllExpenseTabs: " + mFreeMoney + " expenses: " + expenses);
     }
 
     Housing.HousingListener housingListener = new Housing.HousingListener() {
         @Override
         public void onHousingSent(float input) {
-            Log.i(TAG, "onHousingSent: " + input);
+            Log.i(TAG, "onHousingSent H: " + input);
+            mHousingExpenses = input;
+            updateAllExpenseTabs(input);
+        }
+    };
+
+    Housing.HousingListener personalListener = new Housing.HousingListener() {
+        @Override
+        public void onHousingSent(float input) {
+            Log.i(TAG, "onHousingSent P: " + input);
+            mPersonalExpenses = input;
+            updateAllExpenseTabs(input);
+        }
+    };
+
+    Housing.HousingListener insuranceListener = new Housing.HousingListener() {
+        @Override
+        public void onHousingSent(float input) {
+            Log.i(TAG, "onHousingSent I: " + input);
+            mInsuranceExpenses = input;
+            updateAllExpenseTabs(input);
+        }
+    };
+
+    Housing.HousingListener wantsListener = new Housing.HousingListener() {
+        @Override
+        public void onHousingSent(float input) {
+            Log.i(TAG, "onHousingSent W: " + input);
+            mWantsExpenses = input;
+            updateAllExpenseTabs(input);
         }
     };
 
@@ -191,18 +245,4 @@ public class MainActivity extends AppCompatActivity implements
         updateAllExpenseTabs(input);
     }
 
-    @Override
-    public void onPersonalSent(float input) {
-        updateAllExpenseTabs(input);
-    }
-
-    @Override
-    public void onSavingsSent(float input) {
-        updateAllExpenseTabs(input);
-    }
-
-    @Override
-    public void onInsuranceSent(float input) {
-        updateAllExpenseTabs(input);
-    }
 }

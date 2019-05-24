@@ -43,8 +43,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         RelativeLayout relativeLayout;
         OnRecyclerListener onRecyclerListener;
         Context context;
+        List<Expenses> expenses;
 
-        ViewHolder(View itemView, OnRecyclerListener listener, Context c){
+        ViewHolder(View itemView, OnRecyclerListener listener, Context c, List<Expenses> e){
             super(itemView);
 
             context = c;
@@ -52,6 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             editText = itemView.findViewById(R.id.recycler_edit);
             relativeLayout = itemView.findViewById(R.id.recycler_parent_layout);
             onRecyclerListener = listener;
+            expenses = e;
 
             editText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,6 +69,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         private void buildDialog(final int position){
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Amount");
+            builder.setMessage(String.format("Enter your %s expense.", expenses.get(position).getTitle()));
 
             // Set up the input
             final EditText input = new EditText(context);
@@ -114,7 +117,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_layout, parent, false);
-        return new ViewHolder(view, mOnRecyclerListener, mContext);
+        return new ViewHolder(view, mOnRecyclerListener, mContext, mExpenses);
     }
 
     @Override
