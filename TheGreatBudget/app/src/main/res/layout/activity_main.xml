@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@drawable/bg_main"
     android:orientation="vertical">
 
 
@@ -25,12 +25,17 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/main_income"
-        android:background="@color/colorPrimary"/>
-
-    <TextView
-        android:id="@+id/main_income"
-        android:layout_width="wrap_content"
+        android:background="@color/lighterBlack"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Income: " />
+        >
+
+        <TextView
+            android:id="@+id/main_income"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Income: " />
+    </RelativeLayout>
 
 </LinearLayout>
