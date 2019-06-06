@@ -14,28 +14,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="613dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <View
-        android:id="@+id/vPagerSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/main_income"
-        android:background="@color/lighterBlack"/>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="613dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <View
+            android:id="@+id/vPagerSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/main_income"
+            android:background="@color/lighterBlack"/>
 
         <TextView
             android:id="@+id/main_income"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Income: " />
-    </RelativeLayout>
+
+    </LinearLayout>
 
 </LinearLayout>
