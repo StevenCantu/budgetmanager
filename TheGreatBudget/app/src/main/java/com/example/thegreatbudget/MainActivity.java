@@ -1,5 +1,6 @@
 package com.example.thegreatbudget;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.fragments.Housing;
@@ -18,7 +21,9 @@ import com.example.thegreatbudget.fragments.Miscellaneous;
 import com.example.thegreatbudget.fragments.Personal;
 import com.example.thegreatbudget.fragments.Savings;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements Miscellaneous.MiscListener{
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     public static final String HOUSING_TITLES = "thegreatbudget.main.housing.titles";
     public static final String HOUSING_TITLE_SP = "thegreatbudget.main.housing.title.sp";
     public static final String HOUSING_EXPENSE_SP = "thegreatbudget.main.housing.expense.sp";
+    public static final String INCOME_EXTRA = "thegreatbudget.main.income.extra.intent";
     //shared preferences
     public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
     public static final String TOTAL_EXPENSES = "thegreatbudget.total.expenses";
@@ -50,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     private ViewPager mViewPager;
     private float mFreeMoney, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
             mWantsExpenses, mIncome;
+    private TextView mAvailableText;
     private Housing mHousing, mPersonal, mInsurance, mWants;
     private Miscellaneous mMisc;
 
@@ -59,10 +66,14 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         setContentView(R.layout.activity_main);
         loadData();
 
+        mAvailableText = findViewById(R.id.main_income);
+        mAvailableText.setOnClickListener(incomeClickListener);
+
         mViewPager = findViewById(R.id.container);
         setupViewPager(mViewPager);
 
-        //mIncome = 5000;
+        mIncome = 5000;
+        updateAvailable(mFreeMoney);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
@@ -194,6 +205,11 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         mFreeMoney = sp.getFloat(TOTAL_EXPENSES, 0f);
     }
 
+    private void updateAvailable(float value){
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        mAvailableText.setText(numberFormat.format(value));
+    }
+
     /**
      * update all temporary totals for all tabs
      * @param input expenses
@@ -201,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     private void updateAllExpenseTabs(float input){
         float expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
         mFreeMoney = mIncome - expenses;
+        updateAvailable(mFreeMoney);
         Log.i(TAG, "updateAllExpenseTabs: " + mFreeMoney + " expenses: " + expenses);
     }
 
@@ -237,6 +254,16 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
             Log.i(TAG, "onHousingSent W: " + input);
             mWantsExpenses = input;
             updateAllExpenseTabs(input);
+        }
+    };
+
+    View.OnClickListener incomeClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(v.getContext(), IncomeActivity.class);
+            intent.putExtra(INCOME_EXTRA, mIncome);
+            startActivity(intent);
+//            startActivityForResult();
         }
     };
 

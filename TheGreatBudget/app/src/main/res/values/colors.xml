@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="darkBlue">#0D47A1</color>
-    <color name="lightBlue">#1E88E5</color>
-    <color name="lighterBlue">#52b7f8</color>
+    <color name="darkBlue">#6585BB</color>
+    <color name="lightBlue">#B2DFDB</color>
+    <color name="lighterBlue">#E8F5E9</color>
     <color name="lighterBlack">#2B2B2B</color>
     <color name="black">#000000</color>
+    <color name="lightestGreen">#E8F5E9</color>
+    <color name="lighterGreen">#00CC00</color>
+    <color name="Green">#006600</color>
+    <color name="DarkGreen">#FFEB3B</color>
+    <color name="Protanomaly">#ABB467</color>
+    <color name="Deuteranomaly">#B6AF6E</color>
+    <color name="Tritanomaly">#92B7A0</color>
+    <color name="Deuteranopia">#D3A974</color>
+    <color name="Tritanopia">#9AB4C1</color>
+
 </resources>
