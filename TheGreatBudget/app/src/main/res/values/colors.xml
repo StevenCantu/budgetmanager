@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#FFFFFF</color>
     <color name="darkBlue">#6585BB</color>
     <color name="lightBlue">#B2DFDB</color>
     <color name="lighterBlue">#E8F5E9</color>
@@ -14,5 +15,6 @@
     <color name="Tritanomaly">#92B7A0</color>
     <color name="Deuteranopia">#D3A974</color>
     <color name="Tritanopia">#9AB4C1</color>
-
+    <color name="medium_blue">#4CABFF</color>
+    <color name="blue">#0060FF</color>
 </resources>
