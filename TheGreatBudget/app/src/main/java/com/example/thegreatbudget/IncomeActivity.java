@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,7 +17,8 @@ import java.util.Locale;
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
 
-    private TextView mIncomeText;
+    //private TextView mIncomeText;
+    private EditText mIncomeText;
     private Button mOne, mTwo, mThree, mFour, mFive, mSix, mSeven, mEight, mNine, mZero, mDelete,
     mEnter;
     private float mIncome;
@@ -42,7 +44,7 @@ public class IncomeActivity extends AppCompatActivity {
         mDelete = findViewById(R.id.buttonDelete);
         mZero = findViewById(R.id.button0);
         mEnter = findViewById(R.id.buttonEnter);
-        mIncomeText = findViewById(R.id.income_text);
+        mIncomeText = findViewById(R.id.editIncome);
         updateIncome(mIncome);
         mIncomeText.setOnClickListener(incomeTextClickListener);
         mOne.setOnClickListener(oneListener);
