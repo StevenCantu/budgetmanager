@@ -58,7 +58,7 @@ public class IncomeActivity extends AppCompatActivity {
         mNine.setOnClickListener(oneListener);
         mDelete.setOnClickListener(oneListener);
         mZero.setOnClickListener(oneListener);
-        mEnter.setOnClickListener(oneListener);
+        mEnter.setOnClickListener(oneListener); 
 
     }
 
