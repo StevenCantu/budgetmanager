@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         mViewPager = findViewById(R.id.container);
         setupViewPager(mViewPager);
 
-        mIncome = 5000;
+        mIncome = 0f;
         updateAvailable(mFreeMoney);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
