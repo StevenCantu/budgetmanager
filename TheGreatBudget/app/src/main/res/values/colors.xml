@@ -17,4 +17,6 @@
     <color name="Tritanopia">#9AB4C1</color>
     <color name="medium_blue">#4CABFF</color>
     <color name="blue">#2d8de2</color>
+    <color name="dim_gray">#696969</color>
+    <color name="light_gray">#989898</color>
 </resources>

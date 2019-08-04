@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recycler_parent_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/recycler_parent_layout"
-    android:padding="15dp"
     android:layout_marginBottom="4dp"
-    android:background="@android:color/background_light">
+    android:background="@android:color/black"
+    android:padding="15dp">
 
     <TextView
         android:id="@+id/recycler_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textColor="@color/black"
         android:layout_marginEnd="10dp"
-        tools:ignore="RelativeOverlap"
-        android:textSize="18sp"/>
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        tools:ignore="RelativeOverlap" />
 
     <TextView
         android:id="@+id/recycler_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="enter amount"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/white"
+        android:text="enter amount" />
 
 </RelativeLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/medium_blue"
+    android:background="@color/dim_gray"
     tools:context=".IncomeActivity">
 
 
@@ -14,6 +14,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="48dp"
         android:gravity="center"
+        android:textColor="@color/white"
         android:textSize="36sp"
         tools:gravity="center_horizontal|top"
         tools:text="767676767" />
@@ -26,7 +27,7 @@
         android:layout_marginTop="288dp"
         android:src="@android:color/white"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/income_input"
@@ -35,6 +36,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="270dp"
+        android:textColor="@color/white"
         tools:text="5555555" />
 
     <GridLayout

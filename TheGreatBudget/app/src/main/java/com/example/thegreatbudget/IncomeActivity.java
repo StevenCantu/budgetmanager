@@ -1,13 +1,12 @@
 package com.example.thegreatbudget;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,11 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
-
-import static java.lang.Math.pow;
 
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
@@ -32,8 +27,8 @@ public class IncomeActivity extends AppCompatActivity {
     private Button mEnter;
     private Button[] inputs = new Button[11];
     private ImageButton mDelete;
-    private float mIncome;
-    private List<Integer> numArray = new ArrayList<>();
+    private double mIncome;
+    private String mDecimalInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +37,7 @@ public class IncomeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mIncome = intent.getFloatExtra(MainActivity.INCOME_EXTRA, 0f);
+        mDecimalInput = "";
 
         for (int i = 0; i < KEYPAD_INDEX; i++) {
             String buttonID = "button" + i;
@@ -65,6 +61,9 @@ public class IncomeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     */
     View.OnClickListener incomeTextClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -86,38 +85,64 @@ public class IncomeActivity extends AppCompatActivity {
     };
 
     private void buttonPicker(View v) {
-        int num;
         switch (v.getId()) {
             case R.id.buttonDecimal:
-                double test = 555555;
-                Log.i(TAG, "buttonPicker: test " + test);
+                if (!mDecimalInput.contains(".")) {
+                    double test = 555555;
+                    String s = ((Button) v).getText().toString();
+                    addToDecimal(s);
+                    Log.i(TAG, "buttonPicker: test " + test);
+                }
                 break;
             case R.id.button0:
-                num = Integer.parseInt(((Button) v).getText().toString());
-                if (!numArray.isEmpty()) {
-                    addtoNumArray(num);
-                }
-                Log.i(TAG, "buttonPicker: " + arrayToInt(numArray));
+                String s = ((Button) v).getText().toString();
+                addToDecimal(s);
                 break;
             case R.id.buttonDelete:
-                if (!numArray.isEmpty()) {
-                    numArray.remove(numArray.size() - 1);
-                    Log.i(TAG, "buttonPicker: " + numArray.toString());
-                }
+                deleteFromDecimal();
                 break;
             default:
-                num = Integer.parseInt(((Button) v).getText().toString());
-                addtoNumArray(num);
-                Log.i(TAG, "buttonPicker: " + arrayToInt(numArray));
+                s = ((Button) v).getText().toString();
+                addToDecimal(s);
                 break;
         }
     }
 
-    private void addtoNumArray(int num) {
-        if (numArray.size() < INCOME_LIMIT) {
-            numArray.add(num);
+    private void addToDecimal(String s) {
+        if (s.equals(".")) {
+            mDecimalInput = mDecimalInput + s;
+        } else if (mDecimalInput.contains(".")) {
+            int index = mDecimalInput.indexOf(".");
+            if (mDecimalInput.length() <= index + 2) {
+                if (mDecimalInput.length() == index + 2) {
+                    if (!s.equals("0")) {
+                        mDecimalInput = mDecimalInput + s;
+                    }
+                } else {
+                    mDecimalInput = mDecimalInput + s;
+                }
+
+            }
+        } else {
+            if (mDecimalInput.length() < INCOME_LIMIT) {
+                mDecimalInput = mDecimalInput + s;
+            }
+        }
+
+        updateInputBox(mDecimalInput);
+    }
+
+    private void deleteFromDecimal() {
+        if (!mDecimalInput.isEmpty()) {
+            if (mDecimalInput.contains(".") && mDecimalInput.length() - 1 == mDecimalInput.indexOf(".")) {
+                mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 2);
+            } else {
+                mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 1);
+            }
+            updateInputBox(mDecimalInput);
         }
     }
+
 
     private void setButtonsVisibility(final int visibility) {
         for (int i = 0; i < KEYPAD_INDEX; i++) {
@@ -131,7 +156,17 @@ public class IncomeActivity extends AppCompatActivity {
 
     }
 
-    private void updateIncome(float value) {
+    private void updateInputBox(String s) {
+        if (s.isEmpty()) {
+            s = "0";
+        }
+        double currency = Double.parseDouble(s);
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        String money = numberFormat.format(currency);
+        mIncomeInput.setText(money);
+    }
+
+    private void updateIncome(double value) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String money = numberFormat.format(value);
         mIncomeText.setText(String.format(Locale.US, "Income: %s", money));
@@ -143,12 +178,7 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText.setLayoutParams(p);
     }
 
-    private long arrayToInt(List<Integer> list){
-        long total = 0;
-        for (Integer i : list) { // assuming list is of type List<Integer>
-            total = 10*total + i;
-        }
-        mIncomeInput.setText(String.valueOf(total));
-        return total;
-    }
+    // TODO: 8/3/2019 Update income to display user input 
+    // TODO: 8/3/2019 Allow income to be increased by input addition 
+
 }
