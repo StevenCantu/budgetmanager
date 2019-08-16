@@ -2,6 +2,8 @@ package com.example.thegreatbudget;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -14,26 +16,39 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Locale;
 
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
     public static final int KEYPAD_INDEX = 11;
     public static final int INCOME_LIMIT = 10;
+    public static final int MAX_SIZE = 10;
 
+    private FloatingActionButton mAddButton;
     private ImageView mDivider;
+    private ImageButton mUndoButton;
+    private ImageButton mEditButton;
     private GridLayout mGrid;
-    private TextView mIncomeText, mIncomeInput;
+    private TextView mIncomeInput;
+    private TextView mIncomeText;
     private Button mEnter;
     private Button[] inputs = new Button[11];
     private ImageButton mDelete;
+    private Handler handler;
+
+    private Deque<Double> mTemps = new ArrayDeque<>();
     private double mIncome;
+    private double mIncomeTemp;
     private String mDecimalInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
+
+        handler = new Handler();
 
         Intent intent = getIntent();
         mIncome = intent.getFloatExtra(MainActivity.INCOME_EXTRA, 0f);
@@ -49,17 +64,60 @@ public class IncomeActivity extends AppCompatActivity {
             inputs[i].setOnClickListener(keypadListener);
 
         }
+        mAddButton = findViewById(R.id.add_input);
+        mUndoButton = findViewById(R.id.undo_income);
+        mEditButton = findViewById(R.id.edit_income);
         mIncomeInput = findViewById(R.id.income_input);
         mDivider = findViewById(R.id.income_divider);
         mGrid = findViewById(R.id.keypadLayout);
         mDelete = findViewById(R.id.buttonDelete);
         mEnter = findViewById(R.id.buttonEnter);
+        mEnter.setOnClickListener(enterButtonListener);
         mIncomeText = findViewById(R.id.income_text);
         updateIncome(mIncome);
-        mIncomeText.setOnClickListener(incomeTextClickListener);
+        mAddButton.setOnClickListener(incomeTextClickListener);
+//        mIncomeText.setOnClickListener(incomeTextClickListener);
         mDelete.setOnClickListener(keypadListener);
+        mUndoButton.setOnClickListener(undoListener);
 
     }
+
+    View.OnClickListener undoListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!mTemps.isEmpty()) {
+                mIncome = mTemps.removeLast();
+                updateIncome(mIncome);
+            }
+        }
+    };
+
+    View.OnClickListener enterButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!mDecimalInput.isEmpty()) {
+                addToDeque(mIncome);
+                Log.d("DEBUG", "onClick: " + mTemps);
+                mIncomeTemp = mIncome;
+                mIncome += Double.parseDouble(mDecimalInput);
+                updateIncome(mIncome);
+                mDecimalInput = "";
+                mIncomeInput.setText("");
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    moveIncomeView(Gravity.CENTER);
+                    setButtonsVisibility(View.INVISIBLE);
+                    mUndoButton.setVisibility(View.VISIBLE);
+                    mEditButton.setVisibility(View.VISIBLE);
+                    mAddButton.show();
+                    mDecimalInput = "";
+                    mIncomeInput.setText("");
+                }
+            }, 350);
+        }
+    };
 
     /**
      *
@@ -69,6 +127,9 @@ public class IncomeActivity extends AppCompatActivity {
         public void onClick(View v) {
             moveIncomeView(Gravity.CENTER_HORIZONTAL);
             setButtonsVisibility(View.VISIBLE);
+            mUndoButton.setVisibility(View.INVISIBLE);
+            mEditButton.setVisibility(View.INVISIBLE);
+            mAddButton.hide();
         }
     };
 
@@ -84,7 +145,17 @@ public class IncomeActivity extends AppCompatActivity {
         }
     };
 
+    private void addToDeque(double item){
+        if (mTemps.size() < MAX_SIZE) {
+            mTemps.add(item);
+        } else {
+            mTemps.removeFirst();
+            mTemps.add(item);
+        }
+    }
+
     private void buttonPicker(View v) {
+
         switch (v.getId()) {
             case R.id.buttonDecimal:
                 if (!mDecimalInput.contains(".")) {
@@ -178,7 +249,9 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText.setLayoutParams(p);
     }
 
-    // TODO: 8/3/2019 Update income to display user input 
-    // TODO: 8/3/2019 Allow income to be increased by input addition 
-
+    // TODO: 8/15/2019 add edit functionality
+    // TODO: 8/15/2019 make input bigger and better
+    // TODO: 8/15/2019 set default colors
+    // TODO: 8/15/2019 add dialog for undo 
+    // TODO: 8/15/2019 return income to main activity 
 }
