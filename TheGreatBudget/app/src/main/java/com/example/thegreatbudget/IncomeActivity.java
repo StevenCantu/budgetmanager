@@ -22,6 +22,8 @@ import java.util.Locale;
 
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
+
+    public static final String EXTRA_INCOME = "com.example.thegreatbudget.incomeactivity.extra.income";
     public static final int KEYPAD_INDEX = 11;
     public static final int INCOME_LIMIT = 10;
     public static final int MAX_SIZE = 10;
@@ -51,7 +53,7 @@ public class IncomeActivity extends AppCompatActivity {
         handler = new Handler();
 
         Intent intent = getIntent();
-        mIncome = intent.getFloatExtra(MainActivity.INCOME_EXTRA, 0f);
+        mIncome = intent.getDoubleExtra(MainActivity.INCOME_EXTRA, -111f);
         mDecimalInput = "";
 
         for (int i = 0; i < KEYPAD_INDEX; i++) {
@@ -114,6 +116,9 @@ public class IncomeActivity extends AppCompatActivity {
                     mAddButton.show();
                     mDecimalInput = "";
                     mIncomeInput.setText("");
+                    Intent intent = new Intent(IncomeActivity.this, MainActivity.class);
+                    intent.putExtra(EXTRA_INCOME, mIncome);
+                    setResult(RESULT_OK, intent);
                 }
             }, 350);
         }
@@ -159,10 +164,8 @@ public class IncomeActivity extends AppCompatActivity {
         switch (v.getId()) {
             case R.id.buttonDecimal:
                 if (!mDecimalInput.contains(".")) {
-                    double test = 555555;
                     String s = ((Button) v).getText().toString();
                     addToDecimal(s);
-                    Log.i(TAG, "buttonPicker: test " + test);
                 }
                 break;
             case R.id.button0:
@@ -204,11 +207,21 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void deleteFromDecimal() {
+        String test = "2.";
+        String t = test.substring(0, 0);
+        Log.d(TAG, "deleteFromDecimal: \"" + t + "\"");
+        Log.d(TAG, "deleteFromDecimal: original " + mDecimalInput);
         if (!mDecimalInput.isEmpty()) {
             if (mDecimalInput.contains(".") && mDecimalInput.length() - 1 == mDecimalInput.indexOf(".")) {
-                mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 2);
+                if (mDecimalInput.length() == 1) {
+                    mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 1);
+                } else {
+                    mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 2);
+                }
+                Log.d(TAG, "deleteFromDecimal: contains \"" + mDecimalInput + "\"");
             } else {
                 mDecimalInput = mDecimalInput.substring(0, mDecimalInput.length() - 1);
+                Log.d(TAG, "deleteFromDecimal: \"" + mDecimalInput + "\"");
             }
             updateInputBox(mDecimalInput);
         }
@@ -228,7 +241,7 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void updateInputBox(String s) {
-        if (s.isEmpty()) {
+        if (s.isEmpty() || s.equals(".")) {
             s = "0";
         }
         double currency = Double.parseDouble(s);
@@ -249,9 +262,9 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText.setLayoutParams(p);
     }
 
-    // TODO: 8/15/2019 add edit functionality
+    // TODO: 8/15/2019 add edit functionality and dialog
     // TODO: 8/15/2019 make input bigger and better
     // TODO: 8/15/2019 set default colors
-    // TODO: 8/15/2019 add dialog for undo 
-    // TODO: 8/15/2019 return income to main activity 
+    // TODO: 8/15/2019 add snackbar for undo
+    // TODO: 8/29/2019 make going back to main intuitive
 }

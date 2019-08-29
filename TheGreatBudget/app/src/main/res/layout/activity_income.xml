@@ -70,7 +70,7 @@
         android:columnCount="3"
         android:padding="4dp"
         android:rowCount="4"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <Button
             android:id="@+id/button1"

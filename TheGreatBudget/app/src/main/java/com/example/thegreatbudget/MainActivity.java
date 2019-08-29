@@ -3,6 +3,7 @@ package com.example.thegreatbudget;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -49,12 +50,14 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     public static final String INSURANCE_LIST_EXPENSES = "thegreatbudget.recycler.insurance.list.expense";
     public static final String WANTS_LIST_TITLE = "thegreatbudget.recycler.wants.list.title";
     public static final String WANTS_LIST_EXPENSES = "thegreatbudget.recycler.wants.list.expense";
+    // other activity
+    public static final int INCOME_ACTIVITY_REQUEST = 21;
 
     private static final String TAG = "MainActivity";
 
     private SectionPageAdapter mSectionPageAdapter;
     private ViewPager mViewPager;
-    private float mFreeMoney, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
+    private double mAfterExpenses, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
             mWantsExpenses, mIncome;
     private TextView mAvailableText;
     private Housing mHousing, mPersonal, mInsurance, mWants;
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         setupViewPager(mViewPager);
 
         mIncome = 0f;
-        updateAvailable(mFreeMoney);
+        updateAvailable(mAfterExpenses);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager);
@@ -84,6 +87,21 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     protected void onStop() {
         super.onStop();
         saveData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == INCOME_ACTIVITY_REQUEST && resultCode == RESULT_OK) {
+            if (data != null) {
+                double income = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
+                mIncome = income;
+                updateAvailable(mIncome);
+                // TODO: 8/29/2019 for now 
+                Log.d(TAG, "onActivityResult: " + income);
+            }
+            // get data from data intent
+        }
     }
 
     /**
@@ -193,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     private void saveData(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putFloat(TOTAL_EXPENSES, mFreeMoney);
+//        editor.putFloat(TOTAL_EXPENSES, mFreeMoney);
         editor.apply();
     }
 
@@ -202,10 +220,10 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
      */
     private void loadData(){
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        mFreeMoney = sp.getFloat(TOTAL_EXPENSES, 0f);
+        mAfterExpenses = sp.getFloat(TOTAL_EXPENSES, 0f);
     }
 
-    private void updateAvailable(float value){
+    private void updateAvailable(double value){
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         mAvailableText.setText(numberFormat.format(value));
     }
@@ -215,10 +233,10 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
      * @param input expenses
      */
     private void updateAllExpenseTabs(float input){
-        float expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
-        mFreeMoney = mIncome - expenses;
-        updateAvailable(mFreeMoney);
-        Log.i(TAG, "updateAllExpenseTabs: " + mFreeMoney + " expenses: " + expenses);
+        double expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
+        mAfterExpenses = mIncome - expenses;
+        updateAvailable(mAfterExpenses);
+        Log.i(TAG, "updateAllExpenseTabs: " + mAfterExpenses + " expenses: " + expenses);
     }
 
     Housing.HousingListener housingListener = new Housing.HousingListener() {
@@ -262,8 +280,8 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), IncomeActivity.class);
             intent.putExtra(INCOME_EXTRA, mIncome);
-            startActivity(intent);
-//            startActivityForResult();
+//            startActivity(intent);
+            startActivityForResult(intent, INCOME_ACTIVITY_REQUEST);
         }
     };
 
@@ -271,5 +289,9 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     public void onMiscSent(float input) {
         updateAllExpenseTabs(input);
     }
+
+    // TODO: 8/29/2019 Add edit income for user. Prompt user to click
+    // TODO: 8/29/2019 on saved: change from put float to put string
+    // TODO: 8/29/2019 make bottom sheet for income, available and expenses 
 
 }
