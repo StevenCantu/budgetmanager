@@ -1,14 +1,22 @@
 package com.example.thegreatbudget;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,11 +35,15 @@ public class IncomeActivity extends AppCompatActivity {
     public static final int KEYPAD_INDEX = 11;
     public static final int INCOME_LIMIT = 10;
     public static final int MAX_SIZE = 10;
+    public static final String PREFS = "com.example.thegreatbudget.shared.prefs";
+    public static final String CHECK_KEY = "skipMessage";
+    public static final String ISCHECKED = "checked";
+    public static final String NOTCHECKED = "not checked";
 
+    private CheckBox mIgnore;
     private FloatingActionButton mAddButton;
     private ImageView mDivider;
-    private ImageButton mUndoButton;
-    private ImageButton mEditButton;
+    private Menu mIncomeMenu;
     private GridLayout mGrid;
     private TextView mIncomeInput;
     private TextView mIncomeText;
@@ -44,6 +56,7 @@ public class IncomeActivity extends AppCompatActivity {
     private double mIncome;
     private double mIncomeTemp;
     private String mDecimalInput;
+    private boolean mEditing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +80,6 @@ public class IncomeActivity extends AppCompatActivity {
 
         }
         mAddButton = findViewById(R.id.add_input);
-        mUndoButton = findViewById(R.id.undo_income);
-        mEditButton = findViewById(R.id.edit_income);
         mIncomeInput = findViewById(R.id.income_input);
         mDivider = findViewById(R.id.income_divider);
         mGrid = findViewById(R.id.keypadLayout);
@@ -78,10 +89,33 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText = findViewById(R.id.income_text);
         updateIncome(mIncome);
         mAddButton.setOnClickListener(incomeTextClickListener);
-//        mIncomeText.setOnClickListener(incomeTextClickListener);
         mDelete.setOnClickListener(keypadListener);
-        mUndoButton.setOnClickListener(undoListener);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.income_activity_menu, menu);
+        mIncomeMenu = menu;
+        mIncomeMenu.findItem(R.id.menu_cancel).setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_edit:
+                mEditing = true;
+                addIncome();
+                return true;
+            case R.id.menu_undo:
+                showUndoDialog();
+                undoIncome();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     View.OnClickListener undoListener = new View.OnClickListener() {
@@ -101,7 +135,12 @@ public class IncomeActivity extends AppCompatActivity {
                 addToDeque(mIncome);
                 Log.d("DEBUG", "onClick: " + mTemps);
                 mIncomeTemp = mIncome;
-                mIncome += Double.parseDouble(mDecimalInput);
+                if (mEditing) {
+                    mIncome = Double.parseDouble(mDecimalInput);
+                    mEditing = false;
+                } else {
+                    mIncome += Double.parseDouble(mDecimalInput);
+                }
                 updateIncome(mIncome);
                 mDecimalInput = "";
                 mIncomeInput.setText("");
@@ -111,8 +150,9 @@ public class IncomeActivity extends AppCompatActivity {
                 public void run() {
                     moveIncomeView(Gravity.CENTER);
                     setButtonsVisibility(View.INVISIBLE);
-                    mUndoButton.setVisibility(View.VISIBLE);
-                    mEditButton.setVisibility(View.VISIBLE);
+                    mIncomeMenu.findItem(R.id.menu_undo).setVisible(true);
+                    mIncomeMenu.findItem(R.id.menu_edit).setVisible(true);
+                    mIncomeMenu.findItem(R.id.menu_cancel).setVisible(false);
                     mAddButton.show();
                     mDecimalInput = "";
                     mIncomeInput.setText("");
@@ -124,33 +164,49 @@ public class IncomeActivity extends AppCompatActivity {
         }
     };
 
+    View.OnClickListener editClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mEditing = true;
+            addIncome();
+        }
+    };
+
     /**
      *
      */
     View.OnClickListener incomeTextClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            moveIncomeView(Gravity.CENTER_HORIZONTAL);
-            setButtonsVisibility(View.VISIBLE);
-            mUndoButton.setVisibility(View.INVISIBLE);
-            mEditButton.setVisibility(View.INVISIBLE);
-            mAddButton.hide();
+            addIncome();
         }
     };
 
     View.OnClickListener keypadListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            mIncome += Float.parseFloat(mOne.getText().toString());
-//            updateIncome(mIncome);
 
-//            setButtonsVisibility(View.GONE);
-//            moveIncomeView(Gravity.CENTER);
             buttonPicker(v);
         }
     };
 
-    private void addToDeque(double item){
+    private void undoIncome() {
+        if (!mTemps.isEmpty()) {
+            mIncome = mTemps.removeLast();
+            updateIncome(mIncome);
+        }
+    }
+
+    private void addIncome() {
+        moveIncomeView(Gravity.CENTER_HORIZONTAL);
+        setButtonsVisibility(View.VISIBLE);
+        mIncomeMenu.findItem(R.id.menu_undo).setVisible(false);
+        mIncomeMenu.findItem(R.id.menu_edit).setVisible(false);
+        mIncomeMenu.findItem(R.id.menu_cancel).setVisible(true);
+        mAddButton.hide();
+    }
+
+    private void addToDeque(double item) {
         if (mTemps.size() < MAX_SIZE) {
             mTemps.add(item);
         } else {
@@ -262,9 +318,55 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText.setLayoutParams(p);
     }
 
-    // TODO: 8/15/2019 add edit functionality and dialog
+    private void showUndoDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        LayoutInflater adbInflater = LayoutInflater.from(this);
+        View eulaLayout = adbInflater.inflate(R.layout.check_layout, null);
+        SharedPreferences settings = getSharedPreferences(PREFS, 0);
+        String skipMessage = settings.getString(CHECK_KEY, NOTCHECKED);
+
+        mIgnore = eulaLayout.findViewById(R.id.skip_check);
+        dialog.setView(eulaLayout);
+        dialog.setTitle("Attention");
+        dialog.setMessage("Are you sure you want to undo your previous income change?");
+
+        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                saveChecked();
+
+            }
+        });
+
+        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                saveChecked();
+
+            }
+        });
+
+        if (!ISCHECKED.equals(skipMessage)) {
+            dialog.show();
+        }
+    }
+
+    private void saveChecked() {
+        String checkBoxResult = NOTCHECKED;
+
+        if (mIgnore.isChecked()) {
+            checkBoxResult = ISCHECKED;
+        }
+
+        SharedPreferences settings = getSharedPreferences(PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString(CHECK_KEY, checkBoxResult);
+        editor.apply();
+    }
+
     // TODO: 8/15/2019 make input bigger and better
     // TODO: 8/15/2019 set default colors
     // TODO: 8/15/2019 add snackbar for undo
-    // TODO: 8/29/2019 make going back to main intuitive
+    // TODO: 9/2/2019 menu dialog "dont show again" for edit
+    // TODO: 9/2/2019 logic for dialogs 
+    // TODO: 9/2/2019 cancel menu button
 }
