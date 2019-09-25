@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
                 double income = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
                 mIncome = income;
                 updateAvailable(mIncome);
-                // TODO: 8/29/2019 for now 
+                // TODO: 8/29/2019 for now show income
                 Log.d(TAG, "onActivityResult: " + income);
             }
             // get data from data intent
@@ -292,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
 
     // TODO: 8/29/2019 Add edit income for user. Prompt user to click
     // TODO: 8/29/2019 on saved: change from put float to put string
-    // TODO: 8/29/2019 make bottom sheet for income, available and expenses 
+    // TODO: 8/29/2019 make bottom sheet for income, available and expenses
+    // TODO: 9/24/2019 tabs text not showing all the way
 
 }

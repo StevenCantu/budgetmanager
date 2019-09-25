@@ -413,6 +413,4 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     // TODO: 8/15/2019 make input bigger and better
-    // TODO: 8/15/2019 set default colors
-    // TODO: 9/12/2019 check for bugs in snackbar undo
 }

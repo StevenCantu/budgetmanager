@@ -4,7 +4,6 @@
     android:id="@+id/activity_income"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dim_gray"
     tools:context=".IncomeActivity">
 
     <RelativeLayout
@@ -17,7 +16,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="48dp"
             android:gravity="center"
-            android:textColor="@color/white"
             android:textSize="36sp"
             tools:gravity="center_horizontal|top"
             tools:text="767676767" />
@@ -28,7 +26,7 @@
             android:layout_height="1dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="288dp"
-            android:src="@android:color/white"
+            android:src="@android:color/darker_gray"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -39,7 +37,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="270dp"
-            android:textColor="@color/white"
             tools:text="5555555" />
 
         <GridLayout

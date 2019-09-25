@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recycler_parent_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:layout_marginBottom="4dp"
-    android:background="@android:color/black"
+    android:background="@color/background"
     android:padding="15dp">
 
-    <TextView
-        android:id="@+id/recycler_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="10dp"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        tools:ignore="RelativeOverlap" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="8dp">
 
-    <TextView
-        android:id="@+id/recycler_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/white"
-        android:text="enter amount" />
+        <TextView
+            android:id="@+id/recycler_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp"
+            android:textSize="18sp"
+            tools:ignore="RelativeOverlap" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/recycler_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="enter amount" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

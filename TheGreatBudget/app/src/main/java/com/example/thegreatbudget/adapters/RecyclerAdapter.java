@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -40,7 +41,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         TextView textView;
         TextView editText;
-        RelativeLayout relativeLayout;
+        //RelativeLayout relativeLayout;
+        CardView relativeLayout;
         OnRecyclerListener onRecyclerListener;
         Context context;
         List<Expenses> expenses;
