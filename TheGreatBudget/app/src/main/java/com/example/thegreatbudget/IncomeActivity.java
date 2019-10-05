@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -66,6 +67,7 @@ public class IncomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
 
+        setTitle("Income");
         handler = new Handler();
 
         Intent intent = getIntent();
@@ -179,6 +181,8 @@ public class IncomeActivity extends AppCompatActivity {
 
     private void resetViews() {
         moveIncomeView(Gravity.CENTER);
+        mIncomeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 64);
+        setTitle("Income");
         setButtonsVisibility(View.INVISIBLE);
         mIncomeMenu.findItem(R.id.menu_undo).setVisible(true);
         mIncomeMenu.findItem(R.id.menu_edit).setVisible(true);
@@ -203,7 +207,9 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void keypadView() {
-        moveIncomeView(Gravity.CENTER_HORIZONTAL);
+        moveIncomeView(Gravity.TOP, Gravity.LEFT);
+        mIncomeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        setTitle(mEditing ? "Edit Income" : "Add Income");
         setButtonsVisibility(View.VISIBLE);
         mIncomeMenu.findItem(R.id.menu_undo).setVisible(false);
         mIncomeMenu.findItem(R.id.menu_edit).setVisible(false);
@@ -310,12 +316,19 @@ public class IncomeActivity extends AppCompatActivity {
     private void updateIncome(double value) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String money = numberFormat.format(value);
-        mIncomeText.setText(String.format(Locale.US, "Income: %s", money));
+//        mIncomeText.setText(String.format(Locale.US, "Income: %s", money));
+        mIncomeText.setText(String.format(Locale.US, "%s", money));
     }
 
     private void moveIncomeView(final int gravity) {
         RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) mIncomeText.getLayoutParams();
         mIncomeText.setGravity(gravity);
+        mIncomeText.setLayoutParams(p);
+    }
+
+    private void moveIncomeView(final int gravity, final int gravity2) {
+        RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) mIncomeText.getLayoutParams();
+        mIncomeText.setGravity(gravity | gravity2);
         mIncomeText.setLayoutParams(p);
     }
 
@@ -413,4 +426,5 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     // TODO: 8/15/2019 make input bigger and better
+    // TODO: 10/4/2019 cap income input and income text
 }
