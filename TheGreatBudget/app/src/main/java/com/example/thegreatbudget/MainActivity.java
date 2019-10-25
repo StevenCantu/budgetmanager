@@ -10,7 +10,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +25,8 @@ import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -43,12 +50,13 @@ public class MainActivity extends AppCompatActivity {
     private SectionPageAdapter mSectionPageAdapter;
     private ViewPager mViewPager;
     private double mAfterExpenses, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
-            mWantsExpenses, mIncome;
+            mWantsExpenses, mIncome, mTotalExpenses;
     private TextView mAvailableText;
     private ExpenseFragment mHousing2, mPersonal2, mInsurance2, mWants2;
     private ExpenseFragment mOther;
 
-    private BottomSheetBehavior mBottomSheetBehavior;
+    private Spinner spinnerTotals;
+    private ImageButton mEditIncomeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +64,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loadData();
 
-        View bottomSheet = findViewById(R.id.bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        initSpinner();
 
         mAvailableText = findViewById(R.id.main_income);
         mAvailableText.setOnClickListener(incomeClickListener);
@@ -92,6 +99,53 @@ public class MainActivity extends AppCompatActivity {
             }
             // get data from data intent
         }
+    }
+
+    private void initSpinner() {
+        spinnerTotals = findViewById(R.id.spinner_totals);
+        mEditIncomeButton = findViewById(R.id.edit_income_button);
+        // Spinner Drop down elements
+        final List<String> categories = new ArrayList<>();
+        categories.add("Income");
+        categories.add("Expenses");
+        categories.add("After Expenses");
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerTotals.setAdapter(dataAdapter);
+
+        spinnerTotals.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //switch case for each category in the spinner
+                //ex: income would show total income and edit will be enabled
+                //Only enable edit for income
+
+                switch(categories.get(position)) {
+                    case "Income":
+                        mEditIncomeButton.setVisibility(View.VISIBLE);
+                        updateAvailable(mIncome);
+                        break;
+                    case "Expenses":
+                        mEditIncomeButton.setVisibility(View.INVISIBLE);
+                        updateAvailable(mTotalExpenses);
+                        break;
+                    case "After Expenses":
+                        mEditIncomeButton.setVisibility(View.INVISIBLE);
+                        updateAvailable(mAfterExpenses);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     /**
@@ -220,10 +274,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // TODO: 8/29/2019 Add edit income for user. Prompt user to click
-    // TODO: 8/29/2019 on saved: change from put float to put string
-    // TODO: 8/29/2019 make bottom sheet for income, available and expenses
-    // TODO: 9/24/2019 tabs text not showing all the way
-
     // TODO: 10/22/2019 delete unnecessary code
+
+    // TODO: 10/25/2019 Text in spinner matches the text view
+    // TODO: 10/25/2019 only allow edit for income in spinner
+    // TODO: 10/25/2019 only save income on shared preferences
+    // TODO: 10/25/2019 make sure mTotal and mAfterExpenses is always up to date
 }

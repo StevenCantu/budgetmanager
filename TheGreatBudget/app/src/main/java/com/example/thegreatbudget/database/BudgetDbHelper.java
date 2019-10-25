@@ -188,15 +188,15 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         );
     }
 
-    public int totalExpenses() {
-        int total = 0;
+    public double totalExpenses() {
+        double total = 0;
         mDatabase = getReadableDatabase();
 
         final String SUM_AMOUNT = "SELECT SUM(" + BudgetTable.AMOUNT + ") FROM " + BudgetTable.TABLE_NAME;
 
         Cursor cursor = mDatabase.rawQuery(SUM_AMOUNT, null);
         if (cursor.moveToFirst()) {
-            total = cursor.getInt(0);
+            total = cursor.getDouble(0);
         }
         cursor.close();
         return total;
