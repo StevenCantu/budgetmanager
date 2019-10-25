@@ -1,37 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:background="@color/primary"
-        app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="46dp">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/container"
+        <TextView
+            android:id="@+id/main_income"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="@string/income_string"
+            android:textSize="24sp" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/primary"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="613dp"
+            android:layout_above="@+id/main_income"
+            android:layout_below="@+id/tab_layout"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="613dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_above="@+id/main_income"
-        android:layout_below="@+id/tab_layout"/>
+        android:layout_height="140dp"
+        android:background="@color/accent"
+        app:behavior_peekHeight="46dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
-    <TextView
-        android:id="@+id/main_income"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:text="@string/income_string"
-        android:layout_alignParentBottom="true" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/primary"
+            android:padding="4dp">
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="t1"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="t2"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="t3"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

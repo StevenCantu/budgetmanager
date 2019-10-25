@@ -2,32 +2,28 @@ package com.example.thegreatbudget;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
-import com.example.thegreatbudget.fragments.Housing;
-import com.example.thegreatbudget.fragments.Insurance;
-import com.example.thegreatbudget.fragments.Miscellaneous;
-import com.example.thegreatbudget.fragments.Personal;
-import com.example.thegreatbudget.fragments.Savings;
+import com.example.thegreatbudget.fragments.ExpenseFragment;
+import com.example.thegreatbudget.model.Category;
+import com.example.thegreatbudget.model.Expenses;
 
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Locale;
 
 
-public class MainActivity extends AppCompatActivity implements Miscellaneous.MiscListener{
+public class MainActivity extends AppCompatActivity {
     //tabs
     public static final int HOUSING = 0;
     public static final int INSURANCE = 1;
@@ -35,21 +31,10 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     public static final int WANTS = 3;
     public static final int MISC = 4;
     //bundles
-    public static final String HOUSING_TITLES = "thegreatbudget.main.housing.titles";
-    public static final String HOUSING_TITLE_SP = "thegreatbudget.main.housing.title.sp";
-    public static final String HOUSING_EXPENSE_SP = "thegreatbudget.main.housing.expense.sp";
     public static final String INCOME_EXTRA = "thegreatbudget.main.income.extra.intent";
     //shared preferences
     public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
     public static final String TOTAL_EXPENSES = "thegreatbudget.total.expenses";
-    public static final String HOUSING_LIST_TITLE = "thegreatbudget.recycler.housing.list.title";
-    public static final String HOUSING_LIST_EXPENSE = "thegreatbudget.recycler.housing.list.expense";
-    public static final String PERSONAL_LIST_TITLE = "thegreatbudget.recycler.personal.list.title";
-    public static final String PERSONAL_LIST_EXPENSE = "thegreatbudget.recycler.personal.list.expense";
-    public static final String INSURANCE_LIST_TITLE = "thegreatbudget.recycler.insurance.list.title";
-    public static final String INSURANCE_LIST_EXPENSES = "thegreatbudget.recycler.insurance.list.expense";
-    public static final String WANTS_LIST_TITLE = "thegreatbudget.recycler.wants.list.title";
-    public static final String WANTS_LIST_EXPENSES = "thegreatbudget.recycler.wants.list.expense";
     // other activity
     public static final int INCOME_ACTIVITY_REQUEST = 21;
 
@@ -60,14 +45,19 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     private double mAfterExpenses, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
             mWantsExpenses, mIncome;
     private TextView mAvailableText;
-    private Housing mHousing, mPersonal, mInsurance, mWants;
-    private Miscellaneous mMisc;
+    private ExpenseFragment mHousing2, mPersonal2, mInsurance2, mWants2;
+    private ExpenseFragment mOther;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadData();
+
+        View bottomSheet = findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
         mAvailableText = findViewById(R.id.main_income);
         mAvailableText.setOnClickListener(incomeClickListener);
@@ -106,9 +96,10 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
 
     /**
      * set up icons for each tab
+     *
      * @param tabLayout layout containing tabs
      */
-    private void setupIcons(TabLayout tabLayout){
+    private void setupIcons(TabLayout tabLayout) {
         int[] tabIcons = {
                 R.drawable.housing_rent,
                 R.drawable.insurance_dark,
@@ -127,88 +118,60 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
 
     /**
      * set up tabs in ViewPager
+     *
      * @param viewPager contains tab layout
      */
-    private void setupViewPager(ViewPager viewPager){
+    private void setupViewPager(ViewPager viewPager) {
         mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
-        mHousing = new Housing();
-        mInsurance = new Housing();
-        mPersonal = new Housing();//new Personal();
-        mWants = new Housing();
-        mMisc = new Miscellaneous();
-        mSectionPageAdapter.addFragment(mHousing, "Housing");
-        mSectionPageAdapter.addFragment(mInsurance, "Insurance");
-        mSectionPageAdapter.addFragment(mPersonal, "Personal");
-        mSectionPageAdapter.addFragment(mWants, "Wants");
-        mSectionPageAdapter.addFragment(mMisc, "Other");
+        mHousing2 = new ExpenseFragment();
+        mInsurance2 = new ExpenseFragment();
+        mPersonal2 = new ExpenseFragment();
+        mWants2 = new ExpenseFragment();
+        mOther = new ExpenseFragment();
+
+        mSectionPageAdapter.addFragment(mHousing2, "Housing");
+        mSectionPageAdapter.addFragment(mInsurance2, "Insurance");
+        mSectionPageAdapter.addFragment(mPersonal2, "Personal");
+        mSectionPageAdapter.addFragment(mWants2, "Wants");
+        mSectionPageAdapter.addFragment(mOther, "Other");
         viewPager.setAdapter(mSectionPageAdapter);
 
         initializeExpenses();
 
-        mHousing.setHousingListener(housingListener);
-        mPersonal.setHousingListener(personalListener);
-        mInsurance.setHousingListener(insuranceListener);
-        mWants.setHousingListener(wantsListener);
+        mHousing2.setOnClickListener(expenseListener);
+        mPersonal2.setOnClickListener(expenseListener);
+        mInsurance2.setOnClickListener(expenseListener);
+        mWants2.setOnClickListener(expenseListener);
+        mOther.setOnClickListener(expenseListener);
     }
 
     /**
      * initialize all recycler lists with expenses
      */
-    private void initializeExpenses(){
-        String[] housingExpenses = {
-                "Rent/Mortgage",
-                "Electricity",
-                "Gas",
-                "Internet/Cable",
-                "Water/Sewage"
-        };
-        String[] personalExpenses = {
-                "Car loan",
-                "Groceries",
-                "Toiletries",
-                "Gasoline/Transportation",
-                "Cell Phone"
-        };
-        String[] insuranceExpenses = {
-                "Auto",
-                "Health",
-                "Life",
-                "Renters/Home Owners"
-        };
-        String[] wantsExpenses = {
-                "Clothes",
-                "Dining Out",
-                "Events",
-                "Gym/Clubs",
-                "Travel",
-                "Home Decor",
-                "Streaming Services"
-        };
-        initializeList(housingExpenses, mHousing, HOUSING_LIST_TITLE, HOUSING_LIST_EXPENSE);
-        initializeList(personalExpenses, mPersonal, PERSONAL_LIST_TITLE, PERSONAL_LIST_EXPENSE);
-        initializeList(insuranceExpenses, mInsurance, INSURANCE_LIST_TITLE, INSURANCE_LIST_EXPENSES);
-        initializeList(wantsExpenses, mWants, WANTS_LIST_TITLE, WANTS_LIST_EXPENSES);
+    private void initializeExpenses() {
+        initializeCategories(mHousing2, Category.HOUSING);
+        initializeCategories(mPersonal2, Category.PERSONAL);
+        initializeCategories(mInsurance2, Category.INSURANCE);
+        initializeCategories(mWants2, Category.WANTS);
+        initializeCategories(mOther, Category.MISC);
     }
 
     /**
-     * initialize single recycler list
-     * @param s list of expenses
-     * @param housing fragment of recycler
+     * initialize expense recycler
+     *
+     * @param fragment expense fragment instance
+     * @param category Category to query
      */
-    private void initializeList(final String[] s, Housing housing, final String titleSP, final String expenseSP){
-        Arrays.sort(s);
-
+    private void initializeCategories(ExpenseFragment fragment, int category) {
         Bundle bundle = new Bundle();
-        bundle.putStringArray(HOUSING_TITLES, s);
-        bundle.putString(HOUSING_TITLE_SP, titleSP);
-        bundle.putString(HOUSING_EXPENSE_SP, expenseSP);
-        housing.setArguments(bundle);
+        bundle.putInt(ExpenseFragment.CATEGORY, category);
+        fragment.setArguments(bundle);
     }
 
     /**
      * save the state of the app from shared preferences
      */
-    private void saveData(){
+    private void saveData() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 //        editor.putFloat(TOTAL_EXPENSES, mFreeMoney);
@@ -218,60 +181,32 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
     /**
      * load state of app from shared preferences
      */
-    private void loadData(){
+    private void loadData() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         mAfterExpenses = sp.getFloat(TOTAL_EXPENSES, 0f);
     }
 
-    private void updateAvailable(double value){
+    private void updateAvailable(double value) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         mAvailableText.setText(numberFormat.format(value));
     }
 
     /**
      * update all temporary totals for all tabs
+     *
      * @param input expenses
      */
-    private void updateAllExpenseTabs(float input){
+    private void updateAllExpenseTabs(float input) {
         double expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
         mAfterExpenses = mIncome - expenses;
         updateAvailable(mAfterExpenses);
         Log.i(TAG, "updateAllExpenseTabs: " + mAfterExpenses + " expenses: " + expenses);
     }
 
-    Housing.HousingListener housingListener = new Housing.HousingListener() {
+    ExpenseFragment.OnClickListener expenseListener = new ExpenseFragment.OnClickListener() {
         @Override
-        public void onHousingSent(float input) {
-            Log.i(TAG, "onHousingSent H: " + input);
-            mHousingExpenses = input;
-            updateAllExpenseTabs(input);
-        }
-    };
-
-    Housing.HousingListener personalListener = new Housing.HousingListener() {
-        @Override
-        public void onHousingSent(float input) {
-            Log.i(TAG, "onHousingSent P: " + input);
-            mPersonalExpenses = input;
-            updateAllExpenseTabs(input);
-        }
-    };
-
-    Housing.HousingListener insuranceListener = new Housing.HousingListener() {
-        @Override
-        public void onHousingSent(float input) {
-            Log.i(TAG, "onHousingSent I: " + input);
-            mInsuranceExpenses = input;
-            updateAllExpenseTabs(input);
-        }
-    };
-
-    Housing.HousingListener wantsListener = new Housing.HousingListener() {
-        @Override
-        public void onHousingSent(float input) {
-            Log.i(TAG, "onHousingSent W: " + input);
-            mWantsExpenses = input;
-            updateAllExpenseTabs(input);
+        public void amountClick(Expenses expense) {
+            Log.d(TAG, "amountClick: " + expense);
         }
     };
 
@@ -285,14 +220,10 @@ public class MainActivity extends AppCompatActivity implements Miscellaneous.Mis
         }
     };
 
-    @Override
-    public void onMiscSent(float input) {
-        updateAllExpenseTabs(input);
-    }
-
     // TODO: 8/29/2019 Add edit income for user. Prompt user to click
     // TODO: 8/29/2019 on saved: change from put float to put string
     // TODO: 8/29/2019 make bottom sheet for income, available and expenses
     // TODO: 9/24/2019 tabs text not showing all the way
 
+    // TODO: 10/22/2019 delete unnecessary code
 }
