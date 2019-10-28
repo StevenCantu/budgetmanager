@@ -51,6 +51,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
 
         viewHolder.mExpense.setText(expense);
         viewHolder.mAmount.setText(stringAmount(amount));
+        viewHolder.itemView.setTag(id);
 
         viewHolder.mAmount.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -157,6 +157,11 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         insertExpense(expense);
     }
 
+    public void deleteExpense(long id) {
+        mDatabase = getWritableDatabase();
+        mDatabase.delete(BudgetTable.TABLE_NAME, BudgetTable._ID + "=" + id, null);
+    }
+
     public void editExpense(Expenses expense) {
         mDatabase = getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -201,6 +206,4 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         cursor.close();
         return total;
     }
-
-    // TODO: 10/23/2019 add delete method 
 }

@@ -11,6 +11,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -101,7 +102,49 @@ public class ExpenseFragment extends Fragment {
         
         if (mCategory == Category.MISC) {
             addExpenseText.setVisibility(View.VISIBLE);
+
+            new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                    ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView,
+                                      @NonNull RecyclerView.ViewHolder viewHolder,
+                                      @NonNull RecyclerView.ViewHolder viewHolder1) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    Log.d(TAG, "onSwiped: " + viewHolder.getAdapterPosition());
+                    Log.d(TAG, "onSwiped: " + viewHolder.itemView.getTag());
+                    buildDeleteDialog((Long) viewHolder.itemView.getTag());
+                }
+            }).attachToRecyclerView(recyclerView);
         }
+    }
+
+    private void buildDeleteDialog(final long id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure you want to delete?");
+
+        // Set up the buttons
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mDataBase.deleteExpense(id);
+                swapCursor();
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                swapCursor();
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     private void buildAddDialog() {
