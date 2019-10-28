@@ -30,6 +30,7 @@ import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
+import com.example.thegreatbudget.util.CustomDialog;
 
 public class ExpenseFragment extends Fragment {
 
@@ -95,7 +96,7 @@ public class ExpenseFragment extends Fragment {
         mAdapter.setOnItemClickedListener(new ExpenseRecyclerAdapter.OnItemClickedListener() {
             @Override
             public void amountClicked(Expenses expense) {
-                buildDialog(expense);
+                buildEditDialog(expense);
                 mListener.amountClick(expense);
             }
         });
@@ -123,133 +124,86 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void buildDeleteDialog(final long id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Delete");
-        builder.setMessage("Are you sure you want to delete?");
+        CustomDialog dialog = new CustomDialog();
+        dialog.setArguments(new Bundle());
+        if (getActivity().getSupportFragmentManager() != null) {
+            dialog.show(getActivity().getSupportFragmentManager(), "delete");
+        }
 
-        // Set up the buttons
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void positiveClick(String expenseText, String amountText) {
                 mDataBase.deleteExpense(id);
                 swapCursor();
-
             }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void negativeClick() {
                 swapCursor();
-                dialog.cancel();
             }
         });
-
-        builder.show();
     }
 
     private void buildAddDialog() {
-        final Expenses expense = new Expenses();
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Add Expense");
-        builder.setMessage("Enter your expense.");
+        CustomDialog dialog = new CustomDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(CustomDialog.TITLE, "Add Expense");
+        bundle.putString(CustomDialog.MESSAGE, "Enter your expense.");
+        bundle.putBoolean(CustomDialog.HAS_EXPENSE, true);
+        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        dialog.setArguments(bundle);
 
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        layoutParams.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        layoutParams.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
+        if (getActivity().getSupportFragmentManager() != null) {
+            dialog.show(getActivity().getSupportFragmentManager(), "delete");
+        }
 
-        // Set up the input
-        final EditText amountText = new EditText(mContext);
-        final EditText expenseText = new EditText(mContext);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        amountText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        amountText.setGravity(Gravity.CENTER);
-        amountText.setHint("Enter amount");
-
-        expenseText.setInputType(InputType.TYPE_CLASS_TEXT);
-        expenseText.setGravity(Gravity.CENTER);
-        expenseText.setHint("Enter expense");
-
-        amountText.setLayoutParams(layoutParams);
-        expenseText.setLayoutParams(layoutParams);
-        LinearLayout container = new LinearLayout(mContext);
-        container.setOrientation(LinearLayout.VERTICAL);
-        container.addView(expenseText);
-        container.addView(amountText);
-        builder.setView(container);
-
-        // Set up the buttons
-        builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (amountText.getText().length() == 0 || expenseText.getText().length() == 0) return;
+            public void positiveClick(String expenseText, String amountText) {
+                final Expenses expense = new Expenses();
+                if (amountText.length() == 0 || expenseText.length() == 0) return;
 
-                float num = Float.parseFloat(amountText.getText().toString());
+                float num = Float.parseFloat(amountText.toString());
                 expense.setAmount(num);
-                expense.setTitle(expenseText.getText().toString());
+                expense.setTitle(expenseText.toString());
                 expense.setCategoryId(Category.MISC);
                 mDataBase.addExpense(expense);
-                Log.d(TAG, "onClick: " + mDataBase.totalExpenses());
                 swapCursor();
-
             }
-        });
-        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void negativeClick() {
             }
         });
-
-        builder.show();
     }
 
-    private void buildDialog(final Expenses expense) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("Amount");
-        builder.setMessage(String.format("Enter your %s expense.", expense.getTitle()));
+    private void buildEditDialog(final Expenses expense) {
+        CustomDialog dialog = new CustomDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(CustomDialog.TITLE, "Amount");
+        bundle.putString(CustomDialog.MESSAGE, String.format("Enter your %s expense.", expense.getTitle()));
+        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        dialog.setArguments(bundle);
 
-        // Set up the input
-        final EditText input = new EditText(mContext);
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setGravity(Gravity.CENTER);
-        input.setHint("Enter amount");
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        layoutParams.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        layoutParams.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        input.setLayoutParams(layoutParams);
-        FrameLayout container = new FrameLayout(mContext);
-        container.addView(input);
-        builder.setView(container);
+        if (getActivity().getSupportFragmentManager() != null) {
+            dialog.show(getActivity().getSupportFragmentManager(), "delete");
+        }
 
-        // Set up the buttons
-        builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (input.getText().length() == 0) return;
+            public void positiveClick(String expenseText, String amountText) {
+                if (amountText.length() == 0) return;
 
-                float num = Float.parseFloat(input.getText().toString());
+                float num = Float.parseFloat(amountText);
                 expense.setAmount(num);
                 mDataBase.editExpense(expense);
-                Log.d(TAG, "onClick: " + mDataBase.totalExpenses());
                 swapCursor();
-
             }
-        });
-        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            public void negativeClick() {
             }
         });
-
-        builder.show();
     }
 
     public void swapCursor() {
@@ -264,7 +218,6 @@ public class ExpenseFragment extends Fragment {
         void amountClick(Expenses expense);
     }
 
-    // TODO: 10/23/2019 make dialog class
     // TODO: 10/23/2019 make click listener for add method
 
 }

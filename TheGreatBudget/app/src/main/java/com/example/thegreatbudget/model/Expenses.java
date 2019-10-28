@@ -65,5 +65,4 @@ public class Expenses {
                 "\ntitle: \t" + getTitle() +
                 "\namount: \t" + getAmount();
     }
-    // TODO: 10/21/2019 make parcelable?? 
 }
