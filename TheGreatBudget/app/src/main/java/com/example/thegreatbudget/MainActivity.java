@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,13 +12,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
+import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
@@ -28,6 +25,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,25 +35,26 @@ public class MainActivity extends AppCompatActivity {
     public static final int PERSONAL = 2;
     public static final int WANTS = 3;
     public static final int MISC = 4;
+    //spinner constants
+    public static final String INCOME = "Income";
+    public static final String EXPENSES = "Expenses";
+    public static final String AFTER_EXPENSES = "After Expenses";
+
     //bundles
     public static final String INCOME_EXTRA = "thegreatbudget.main.income.extra.intent";
     //shared preferences
     public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
-    public static final String TOTAL_EXPENSES = "thegreatbudget.total.expenses";
+    public static final String INCOME_SHARED_PREFS = "thegreatbudget.income.shared.prefs";
     // other activity
     public static final int INCOME_ACTIVITY_REQUEST = 21;
 
     private static final String TAG = "MainActivity";
 
-    private SectionPageAdapter mSectionPageAdapter;
-    private ViewPager mViewPager;
-    private double mAfterExpenses, mHousingExpenses, mPersonalExpenses, mInsuranceExpenses,
-            mWantsExpenses, mIncome, mTotalExpenses;
-    private TextView mAvailableText;
-    private ExpenseFragment mHousing2, mPersonal2, mInsurance2, mWants2;
+    private double mAfterExpenses, mIncome, mTotalExpenses;
+    private TextView mCurrencyText;
+    private ExpenseFragment mHousing, mPersonal, mInsurance, mWants;
     private ExpenseFragment mOther;
-
-    private Spinner spinnerTotals;
+    private String mCurrentSpinnerItem = INCOME;
     private ImageButton mEditIncomeButton;
 
     @Override
@@ -65,18 +64,18 @@ public class MainActivity extends AppCompatActivity {
         loadData();
 
         initSpinner();
+        mEditIncomeButton.setOnClickListener(incomeClickListener);
+        mTotalExpenses = BudgetDbHelper.getInstance(this).totalExpenses();
+        mAfterExpenses = mIncome - mTotalExpenses;
 
-        mAvailableText = findViewById(R.id.main_income);
-        mAvailableText.setOnClickListener(incomeClickListener);
+        mCurrencyText = findViewById(R.id.main_income);
+        updateCurrencyText();
 
-        mViewPager = findViewById(R.id.container);
-        setupViewPager(mViewPager);
-
-        mIncome = 0f;
-        updateAvailable(mAfterExpenses);
+        ViewPager viewPager = findViewById(R.id.container);
+        setupViewPager(viewPager);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setupWithViewPager(viewPager);
         setupIcons(tabLayout);
     }
 
@@ -91,28 +90,24 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INCOME_ACTIVITY_REQUEST && resultCode == RESULT_OK) {
             if (data != null) {
-                double income = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
-                mIncome = income;
-                updateAvailable(mIncome);
-                // TODO: 8/29/2019 for now show income
-                Log.d(TAG, "onActivityResult: " + income);
+                mIncome = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
+                mAfterExpenses = mIncome - mTotalExpenses;
+                updateCurrencyText();
             }
-            // get data from data intent
         }
     }
 
     private void initSpinner() {
-        spinnerTotals = findViewById(R.id.spinner_totals);
+        //bottom menu
+        Spinner spinnerTotals = findViewById(R.id.spinner_totals);
         mEditIncomeButton = findViewById(R.id.edit_income_button);
         // Spinner Drop down elements
         final List<String> categories = new ArrayList<>();
-        categories.add("Income");
-        categories.add("Expenses");
-        categories.add("After Expenses");
+        categories.add(INCOME);
+        categories.add(EXPENSES);
+        categories.add(AFTER_EXPENSES);
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
@@ -121,24 +116,22 @@ public class MainActivity extends AppCompatActivity {
         spinnerTotals.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //switch case for each category in the spinner
-                //ex: income would show total income and edit will be enabled
-                //Only enable edit for income
 
                 switch(categories.get(position)) {
-                    case "Income":
+                    case INCOME:
+                        mCurrentSpinnerItem = INCOME;
                         mEditIncomeButton.setVisibility(View.VISIBLE);
-                        updateAvailable(mIncome);
                         break;
-                    case "Expenses":
+                    case EXPENSES:
+                        mCurrentSpinnerItem = EXPENSES;
                         mEditIncomeButton.setVisibility(View.INVISIBLE);
-                        updateAvailable(mTotalExpenses);
                         break;
-                    case "After Expenses":
+                    case AFTER_EXPENSES:
+                        mCurrentSpinnerItem = AFTER_EXPENSES;
                         mEditIncomeButton.setVisibility(View.INVISIBLE);
-                        updateAvailable(mAfterExpenses);
                         break;
                 }
+                updateCurrencyText();
             }
 
             @Override
@@ -162,11 +155,11 @@ public class MainActivity extends AppCompatActivity {
                 R.drawable.other
         };
 
-        tabLayout.getTabAt(HOUSING).setIcon(tabIcons[HOUSING]);
-        tabLayout.getTabAt(INSURANCE).setIcon(tabIcons[INSURANCE]);
-        tabLayout.getTabAt(PERSONAL).setIcon(tabIcons[PERSONAL]);
-        tabLayout.getTabAt(WANTS).setIcon(tabIcons[WANTS]);
-        tabLayout.getTabAt(MISC).setIcon(tabIcons[MISC]);
+        Objects.requireNonNull(tabLayout.getTabAt(HOUSING)).setIcon(tabIcons[HOUSING]);
+        Objects.requireNonNull(tabLayout.getTabAt(INSURANCE)).setIcon(tabIcons[INSURANCE]);
+        Objects.requireNonNull(tabLayout.getTabAt(PERSONAL)).setIcon(tabIcons[PERSONAL]);
+        Objects.requireNonNull(tabLayout.getTabAt(WANTS)).setIcon(tabIcons[WANTS]);
+        Objects.requireNonNull(tabLayout.getTabAt(MISC)).setIcon(tabIcons[MISC]);
 
     }
 
@@ -176,26 +169,26 @@ public class MainActivity extends AppCompatActivity {
      * @param viewPager contains tab layout
      */
     private void setupViewPager(ViewPager viewPager) {
-        mSectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
-        mHousing2 = new ExpenseFragment();
-        mInsurance2 = new ExpenseFragment();
-        mPersonal2 = new ExpenseFragment();
-        mWants2 = new ExpenseFragment();
+        SectionPageAdapter sectionPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
+        mHousing = new ExpenseFragment();
+        mInsurance = new ExpenseFragment();
+        mPersonal = new ExpenseFragment();
+        mWants = new ExpenseFragment();
         mOther = new ExpenseFragment();
 
-        mSectionPageAdapter.addFragment(mHousing2, "Housing");
-        mSectionPageAdapter.addFragment(mInsurance2, "Insurance");
-        mSectionPageAdapter.addFragment(mPersonal2, "Personal");
-        mSectionPageAdapter.addFragment(mWants2, "Wants");
-        mSectionPageAdapter.addFragment(mOther, "Other");
-        viewPager.setAdapter(mSectionPageAdapter);
+        sectionPageAdapter.addFragment(mHousing, "Housing");
+        sectionPageAdapter.addFragment(mInsurance, "Insurance");
+        sectionPageAdapter.addFragment(mPersonal, "Personal");
+        sectionPageAdapter.addFragment(mWants, "Wants");
+        sectionPageAdapter.addFragment(mOther, "Other");
+        viewPager.setAdapter(sectionPageAdapter);
 
         initializeExpenses();
 
-        mHousing2.setOnClickListener(expenseListener);
-        mPersonal2.setOnClickListener(expenseListener);
-        mInsurance2.setOnClickListener(expenseListener);
-        mWants2.setOnClickListener(expenseListener);
+        mHousing.setOnClickListener(expenseListener);
+        mPersonal.setOnClickListener(expenseListener);
+        mInsurance.setOnClickListener(expenseListener);
+        mWants.setOnClickListener(expenseListener);
         mOther.setOnClickListener(expenseListener);
     }
 
@@ -203,10 +196,10 @@ public class MainActivity extends AppCompatActivity {
      * initialize all recycler lists with expenses
      */
     private void initializeExpenses() {
-        initializeCategories(mHousing2, Category.HOUSING);
-        initializeCategories(mPersonal2, Category.PERSONAL);
-        initializeCategories(mInsurance2, Category.INSURANCE);
-        initializeCategories(mWants2, Category.WANTS);
+        initializeCategories(mHousing, Category.HOUSING);
+        initializeCategories(mPersonal, Category.PERSONAL);
+        initializeCategories(mInsurance, Category.INSURANCE);
+        initializeCategories(mWants, Category.WANTS);
         initializeCategories(mOther, Category.MISC);
     }
 
@@ -228,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveData() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-//        editor.putFloat(TOTAL_EXPENSES, mFreeMoney);
+        editor = putDouble(editor, INCOME_SHARED_PREFS, mIncome);
         editor.apply();
     }
 
@@ -237,30 +230,55 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadData() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        mAfterExpenses = sp.getFloat(TOTAL_EXPENSES, 0f);
-    }
-
-    private void updateAvailable(double value) {
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-        mAvailableText.setText(numberFormat.format(value));
+        mIncome = getDouble(sp, INCOME_SHARED_PREFS, 0d);
     }
 
     /**
-     * update all temporary totals for all tabs
-     *
-     * @param input expenses
+     * save a Double data type in shared preferences by converting to bytes and storing as Long
+     * @param edit SharedPreferences editor
+     * @param key string key
+     * @param value Double value to store as Long
+     * @return SharedPreferences editor with changes made
      */
-    private void updateAllExpenseTabs(float input) {
-        double expenses = mHousingExpenses + mInsuranceExpenses + mPersonalExpenses + mWantsExpenses;
-        mAfterExpenses = mIncome - expenses;
-        updateAvailable(mAfterExpenses);
-        Log.i(TAG, "updateAllExpenseTabs: " + mAfterExpenses + " expenses: " + expenses);
+    SharedPreferences.Editor putDouble(final SharedPreferences.Editor edit, final String key, final double value) {
+        return edit.putLong(key, Double.doubleToRawLongBits(value));
+    }
+
+    /**
+     * get the Double value from SharedPreferences stored as Long
+     * @param prefs SharedPreferences
+     * @param key string key
+     * @param defaultValue Double default value
+     * @return Double value stored as bytes in SharedPreferences
+     */
+    double getDouble(final SharedPreferences prefs, final String key, final double defaultValue) {
+        return Double.longBitsToDouble(prefs.getLong(key, Double.doubleToLongBits(defaultValue)));
+    }
+
+    /**
+     * update UI currency text
+     */
+    private void updateCurrencyText() {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        switch (mCurrentSpinnerItem) {
+            case INCOME:
+                mCurrencyText.setText(numberFormat.format(mIncome));
+                break;
+            case EXPENSES:
+                mCurrencyText.setText(numberFormat.format(mTotalExpenses));
+                break;
+            case AFTER_EXPENSES:
+                mCurrencyText.setText(numberFormat.format(mAfterExpenses));
+                break;
+        }
     }
 
     ExpenseFragment.OnClickListener expenseListener = new ExpenseFragment.OnClickListener() {
         @Override
-        public void amountClick(Expenses expense) {
-            Log.d(TAG, "amountClick: " + expense);
+        public void expenseUpdated() {
+            mTotalExpenses = BudgetDbHelper.getInstance(MainActivity.this).totalExpenses();
+            mAfterExpenses = mIncome - mTotalExpenses;
+            updateCurrencyText();
         }
     };
 
@@ -269,15 +287,9 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             Intent intent = new Intent(v.getContext(), IncomeActivity.class);
             intent.putExtra(INCOME_EXTRA, mIncome);
-//            startActivity(intent);
             startActivityForResult(intent, INCOME_ACTIVITY_REQUEST);
         }
     };
 
-    // TODO: 10/22/2019 delete unnecessary code
-
-    // TODO: 10/25/2019 Text in spinner matches the text view
-    // TODO: 10/25/2019 only allow edit for income in spinner
-    // TODO: 10/25/2019 only save income on shared preferences
-    // TODO: 10/25/2019 make sure mTotal and mAfterExpenses is always up to date
+    // TODO: 10/29/2019 put start margin on currency text
 }

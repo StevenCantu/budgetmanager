@@ -97,7 +97,6 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void amountClicked(Expenses expense) {
                 buildEditDialog(expense);
-                mListener.amountClick(expense);
             }
         });
         
@@ -135,6 +134,10 @@ public class ExpenseFragment extends Fragment {
             public void positiveClick(String expenseText, String amountText) {
                 mDataBase.deleteExpense(id);
                 swapCursor();
+
+                if (mListener != null) {
+                    mListener.expenseUpdated();
+                }
             }
 
             @Override
@@ -169,6 +172,10 @@ public class ExpenseFragment extends Fragment {
                 expense.setCategoryId(Category.MISC);
                 mDataBase.addExpense(expense);
                 swapCursor();
+
+                if (mListener != null) {
+                    mListener.expenseUpdated();
+                }
             }
 
             @Override
@@ -198,6 +205,10 @@ public class ExpenseFragment extends Fragment {
                 expense.setAmount(num);
                 mDataBase.editExpense(expense);
                 swapCursor();
+
+                if (mListener != null) {
+                    mListener.expenseUpdated();
+                }
             }
 
             @Override
@@ -215,7 +226,7 @@ public class ExpenseFragment extends Fragment {
     }
 
     public interface OnClickListener {
-        void amountClick(Expenses expense);
+        void expenseUpdated();
     }
 
     // TODO: 10/23/2019 make click listener for add method
