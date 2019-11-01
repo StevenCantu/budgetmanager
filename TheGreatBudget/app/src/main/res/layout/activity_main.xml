@@ -1,21 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/primary"
+        app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:layout_height="613dp"
+        android:layout_above="@+id/main_income"
+        android:layout_below="@+id/tab_layout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primary"/>
+
+    <TextView
+        android:id="@+id/main_income"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginStart="8dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:text="@string/income_string"
+        android:textSize="24sp" />
+
+    <ImageButton
+        android:id="@+id/edit_income_button"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:src="@drawable/ic_edit"
+        android:layout_marginEnd="8dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/custom_button"
+        android:layout_alignParentEnd="true"/>
+
+    <Spinner
+        android:id="@+id/spinner_totals"
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/edit_income_button"/>
+
+
+</RelativeLayout>
