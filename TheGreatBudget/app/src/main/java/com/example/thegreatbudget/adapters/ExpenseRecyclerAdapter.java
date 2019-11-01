@@ -61,6 +61,14 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
                 }
             }
         });
+        viewHolder.mExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.itemClicked(new Expenses(id, expense, amount, categoryId));
+                }
+            }
+        });
     }
 
     @Override
@@ -102,6 +110,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
 
     public interface OnItemClickedListener {
         void amountClicked(Expenses expense);
+        void itemClicked(Expenses expense);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

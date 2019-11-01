@@ -35,7 +35,7 @@ public class IncomeActivity extends AppCompatActivity {
 
     public static final String EXTRA_INCOME = "com.example.thegreatbudget.incomeactivity.extra.income";
     public static final int KEYPAD_INDEX = 11;
-    public static final int INCOME_LIMIT = 10;
+    public static final int INCOME_LIMIT = 6;
     public static final int MAX_SIZE = 10;
     public static final String PREFS = "com.example.thegreatbudget.shared.prefs";
     public static final String CHECK_UNDO_KEY = "skipMessage.undo";
@@ -58,7 +58,7 @@ public class IncomeActivity extends AppCompatActivity {
     private Deque<Double> mTemps = new ArrayDeque<>();
     private double mIncome;
     private double mTempIncome;
-    private double mTempundo;
+    private double mTempUndo;
     private String mDecimalInput;
     private boolean mEditing;
 
@@ -145,6 +145,7 @@ public class IncomeActivity extends AppCompatActivity {
                     mIncome = Double.parseDouble(mDecimalInput);
                     mEditing = false;
                 } else {
+                    if (Double.parseDouble(mDecimalInput) + mIncome > 999999.99) return;
                     mIncome += Double.parseDouble(mDecimalInput);
                 }
                 updateIncome(mIncome);
@@ -199,7 +200,7 @@ public class IncomeActivity extends AppCompatActivity {
         if (!mTemps.isEmpty()) {
             mTempIncome = mIncome;
             mIncome = mTemps.removeLast();
-            mTempundo = mIncome;
+            mTempUndo = mIncome;
             Log.d(TAG, "undoIncome: " + mTemps + " " + mTempIncome);
             updateIncome(mIncome);
             showSnackbar();
@@ -418,13 +419,12 @@ public class IncomeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         mIncome = mTempIncome;
-                        mTemps.add(mTempundo);
+                        mTemps.add(mTempUndo);
                         updateIncome(mIncome);
                         Log.d(TAG, "onClick: " + mTemps + " " + mTempIncome);
                     }
                 }).show();
     }
 
-    // TODO: 8/15/2019 make input bigger and better
-    // TODO: 10/4/2019 cap income input and income text
+    // TODO: 11/1/2019 add a toast when user tries to exceed the limit 
 }

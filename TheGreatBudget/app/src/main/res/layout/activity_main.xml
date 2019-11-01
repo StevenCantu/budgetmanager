@@ -35,6 +35,7 @@
         android:id="@+id/main_income"
         android:layout_width="match_parent"
         android:layout_height="46dp"
+        android:layout_marginStart="8dp"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
         android:text="@string/income_string"

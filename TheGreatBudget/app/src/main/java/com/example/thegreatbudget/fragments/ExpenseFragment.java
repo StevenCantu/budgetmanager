@@ -3,6 +3,7 @@ package com.example.thegreatbudget.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thegreatbudget.DetailsActivity;
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
@@ -97,6 +99,13 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void amountClicked(Expenses expense) {
                 buildEditDialog(expense);
+            }
+
+            @Override
+            public void itemClicked(Expenses expense) {
+                Toast.makeText(mContext, expense.toString(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, DetailsActivity.class);
+                startActivity(intent);
             }
         });
         
