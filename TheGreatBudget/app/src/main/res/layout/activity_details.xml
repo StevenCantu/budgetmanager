@@ -35,11 +35,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="History:"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense_item" />
+
+    <ImageView
+        android:id="@+id/history_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:src="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/clear_all"
@@ -72,10 +80,12 @@
         tools:text="Delete" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/history_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:scrollbars="vertical"
         app:layout_constraintBottom_toTopOf="@+id/clear_all"
         app:layout_constraintTop_toBottomOf="@+id/history_text"
         tools:layout_editor_absoluteX="16dp" />

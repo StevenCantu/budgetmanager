@@ -32,7 +32,9 @@ import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
+import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.util.CustomDialog;
+import com.google.gson.Gson;
 
 public class ExpenseFragment extends Fragment {
 
@@ -104,6 +106,16 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void itemClicked(Expenses expense) {
                 Toast.makeText(mContext, expense.toString(), Toast.LENGTH_SHORT).show();
+
+                Gson gson = new Gson();
+                History history = new History();
+                history.addItem(12);
+                history.addItem(1);
+                history.addItem(2);
+                String obj = gson.toJson(history);
+                History h2 = gson.fromJson(obj, History.class);
+                expense.setHistory(h2);
+
                 Intent intent = new Intent(mContext, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.EXPENSE_EXTRA, expense);
                 startActivity(intent);

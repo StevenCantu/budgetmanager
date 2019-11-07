@@ -90,6 +90,7 @@ public class Expenses implements Parcelable {
         mCategoryId = in.readInt();
         mId = in.readLong();
         mTitle = in.readString();
+        mHistory = in.readParcelable(History.class.getClassLoader());
     }
 
     public static final Creator<Expenses> CREATOR = new Creator<Expenses>() {
@@ -115,5 +116,6 @@ public class Expenses implements Parcelable {
         dest.writeInt(mCategoryId);
         dest.writeLong(mId);
         dest.writeString(mTitle);
+        dest.writeParcelable(mHistory, flags);
     }
 }

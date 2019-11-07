@@ -1,16 +1,15 @@
 package com.example.thegreatbudget.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public class History {
+public class History implements Parcelable {
 
     public static final String SEPARATOR = "-";
     @SerializedName("H")
@@ -39,5 +38,31 @@ public class History {
             builder.append(item.toString()).append("\t");
         }
         return builder.toString();
+    }
+
+    protected History(Parcel in) {
+        mHistoryItems = in.createTypedArrayList(HistoryItem.CREATOR);
+    }
+
+    public static final Creator<History> CREATOR = new Creator<History>() {
+        @Override
+        public History createFromParcel(Parcel in) {
+            return new History(in);
+        }
+
+        @Override
+        public History[] newArray(int size) {
+            return new History[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeTypedList(mHistoryItems);
     }
 }

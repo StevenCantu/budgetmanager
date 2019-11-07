@@ -65,17 +65,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loadData();
 
-        Gson gson = new Gson();
-        History history = new History();
-        history.addItem(12);
-        history.addItem(1);
-        history.addItem(2);
-        String obj = gson.toJson(history);
-        Log.d(TAG, "onCreate: " + history.toString());
-        Log.d(TAG, "onCreate: " + obj);
-        History h2 = gson.fromJson(obj, History.class);
-        Log.d(TAG, "onCreate: " + h2.toString());
-
         initSpinner();
         mEditIncomeButton.setOnClickListener(incomeClickListener);
         mTotalExpenses = BudgetDbHelper.getInstance(this).totalExpenses();
