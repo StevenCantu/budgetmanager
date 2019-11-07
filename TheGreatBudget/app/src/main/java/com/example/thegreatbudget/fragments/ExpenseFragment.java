@@ -105,6 +105,7 @@ public class ExpenseFragment extends Fragment {
             public void itemClicked(Expenses expense) {
                 Toast.makeText(mContext, expense.toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(mContext, DetailsActivity.class);
+                intent.putExtra(DetailsActivity.EXPENSE_EXTRA, expense);
                 startActivity(intent);
             }
         });

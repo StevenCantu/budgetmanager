@@ -1,15 +1,18 @@
 package com.example.thegreatbudget.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-public class Expenses {
+public class Expenses implements Parcelable {
 
     private static final String TAG = "Expenses";
 
     private float mAmount = 0f;
     private int mCategoryId = 5; //Category Misc
     private long mId;
-    private String mTitle;
+    private String mTitle = "";
+    private History mHistory;
 
     public Expenses() {
     }
@@ -26,28 +29,36 @@ public class Expenses {
         mCategoryId = categoryId;
     }
 
+    public Expenses(long id, String title, float amount, int categoryId, History history) {
+        mId = id;
+        mTitle = title;
+        mAmount = amount;
+        mCategoryId = categoryId;
+        mHistory = history;
+    }
+
     public String getTitle() {
         return mTitle;
     }
 
-    public void setTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setTitle(String title) {
+        this.mTitle = title;
     }
 
     public int getCategoryId() {
         return mCategoryId;
     }
 
-    public void setCategoryId(int mCategoryId) {
-        this.mCategoryId = mCategoryId;
+    public void setCategoryId(int categoryId) {
+        this.mCategoryId = categoryId;
     }
 
     public long getId() {
         return mId;
     }
 
-    public void setId(int mId) {
-        this.mId = mId;
+    public void setId(int id) {
+        this.mId = id;
     }
 
     public float getAmount() {
@@ -58,11 +69,51 @@ public class Expenses {
         this.mAmount = amount;
     }
 
+    public History getHistory() {
+        return mHistory;
+    }
+
+    public void setHistory(History history) {
+        this.mHistory = history;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return "ID: \t" + getId() +
                 "\ntitle: \t" + getTitle() +
                 "\namount: \t" + getAmount();
+    }
+
+    protected Expenses(Parcel in) {
+        mAmount = in.readFloat();
+        mCategoryId = in.readInt();
+        mId = in.readLong();
+        mTitle = in.readString();
+    }
+
+    public static final Creator<Expenses> CREATOR = new Creator<Expenses>() {
+        @Override
+        public Expenses createFromParcel(Parcel in) {
+            return new Expenses(in);
+        }
+
+        @Override
+        public Expenses[] newArray(int size) {
+            return new Expenses[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(mAmount);
+        dest.writeInt(mCategoryId);
+        dest.writeLong(mId);
+        dest.writeString(mTitle);
     }
 }

@@ -11,8 +11,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:padding="8dp">
+        android:gravity="center">
 
         <TextView
             android:id="@+id/recycler_text"
@@ -20,14 +19,17 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginEnd="10dp"
+            android:padding="10dp"
             android:textSize="18sp"
-            tools:ignore="RelativeOverlap" />
+            tools:ignore="RelativeOverlap"
+            tools:text="text" />
 
         <TextView
             android:id="@+id/recycler_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:padding="10dp"
             android:text="enter amount" />
 
     </RelativeLayout>

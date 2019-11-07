@@ -48,6 +48,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
         final String expense = mCursor.getString(mCursor.getColumnIndex(BudgetContract.BudgetTable.EXPENSE));
         final float amount = mCursor.getFloat(mCursor.getColumnIndex(BudgetContract.BudgetTable.AMOUNT));
         final int categoryId = mCursor.getInt(mCursor.getColumnIndex(BudgetContract.BudgetTable.CATEGORY_ID));
+        // TODO: 11/6/2019 add History and include in Expense ctor
 
         viewHolder.mExpense.setText(expense);
         viewHolder.mAmount.setText(stringAmount(amount));
