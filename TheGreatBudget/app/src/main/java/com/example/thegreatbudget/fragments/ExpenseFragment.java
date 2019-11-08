@@ -36,10 +36,15 @@ import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.util.CustomDialog;
 import com.google.gson.Gson;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 public class ExpenseFragment extends Fragment {
 
     public static final String CATEGORY = "thegreatbudget.fragments.expense.category";
     private static final String TAG = "ExpenseFragment";
+    public static final int DETAILS_ACTIVITY_REQUEST = 20;
+
 
     private int mCategory = Category.MISC;
     private TextView addExpenseText;
@@ -66,6 +71,7 @@ public class ExpenseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.expense_fragment, container, false);
+        Log.d(TAG, "onCreateView: gffdgdfgfg");
         mCursor = mDataBase.getExpensesCursor(mCategory);
         initRecyclerView(view);
         view.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +95,17 @@ public class ExpenseFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DETAILS_ACTIVITY_REQUEST && resultCode == RESULT_CANCELED) {
+            if (mListener != null) {
+                mListener.expenseUpdated();
+            }
+            swapCursor();
+        }
+    }
+
     private void initRecyclerView(View view) {
         addExpenseText = view.findViewById(R.id.add_misc_text);
         RecyclerView recyclerView = view.findViewById(R.id.expense_recycler);
@@ -107,7 +124,7 @@ public class ExpenseFragment extends Fragment {
             public void itemClicked(Expenses expense) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.EXPENSE_EXTRA, expense);
-                startActivity(intent);
+                startActivityForResult(intent, DETAILS_ACTIVITY_REQUEST);
             }
         });
         

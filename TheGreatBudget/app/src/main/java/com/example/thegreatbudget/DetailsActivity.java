@@ -3,20 +3,27 @@ package com.example.thegreatbudget;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thegreatbudget.adapters.HistoryRecyclerAdapter;
+import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
 import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
+import com.example.thegreatbudget.util.CustomDialog;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -36,17 +43,40 @@ public class DetailsActivity extends AppCompatActivity {
 
     private History mHistory = new History();
     private ColorStateList mStateList;
+    private BudgetDbHelper mDataBase;
+    private Expenses mExpense = new Expenses();
+
+    HistoryRecyclerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         setTitle("Details");
+        mDataBase = BudgetDbHelper.getInstance(this);
 
         initColorStateList();
         initViews();
         initClickListeners();
         initRecyclerView();
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate((R.menu.details_activity_menu), menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_expense) {
+            buildEditDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void initViews() {
@@ -55,11 +85,11 @@ public class DetailsActivity extends AppCompatActivity {
         boolean deletable = false;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            Expenses expense = bundle.getParcelable(EXPENSE_EXTRA);
-            itemName = expense.getTitle();
-            itemAmount = expense.getAmount();
-            deletable = Category.MISC == expense.getCategoryId();
-            mHistory = expense.getHistory();
+            mExpense = bundle.getParcelable(EXPENSE_EXTRA);
+            itemName = mExpense.getTitle();
+            itemAmount = mExpense.getAmount();
+            deletable = Category.MISC == mExpense.getCategoryId();
+            mHistory = mExpense.getHistory();
         }
 
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
@@ -81,11 +111,28 @@ public class DetailsActivity extends AppCompatActivity {
         List<HistoryItem> historyItems = new ArrayList<>(mHistory.getHistory());
         Collections.reverse(historyItems);
         RecyclerView recyclerView = findViewById(R.id.history_recycler_view);
-        HistoryRecyclerAdapter adapter = new HistoryRecyclerAdapter(this, historyItems);
+        mAdapter = new HistoryRecyclerAdapter(this, historyItems);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.setOnClickListener(historyItemListener);
+        mAdapter.setOnClickListener(historyItemListener);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                Log.d(TAG, "onSwiped: " + viewHolder.itemView.getTag());
+                mExpense.getHistory().getHistory().remove((int) viewHolder.itemView.getTag());
+                updateDetails();
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 
     private void initColorStateList() {
@@ -101,24 +148,69 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initClickListeners() {
-        if (mHistory.getHistory().isEmpty()) {
-            mClearAll.setEnabled(false);
-        }
+        mClearAll.setEnabled(!mHistory.getHistory().isEmpty());
         mClearAll.setOnClickListener(clearAllListener);
         mDelete.setOnClickListener(deleteItemListener);
+    }
+
+    private void buildEditDialog() {
+        CustomDialog dialog = new CustomDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(CustomDialog.TITLE, "Amount");
+        bundle.putString(CustomDialog.MESSAGE, String.format("Enter your %s expense.", mExpense.getTitle()));
+        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        dialog.setArguments(bundle);
+
+        if (this.getSupportFragmentManager() != null) {
+            dialog.show(this.getSupportFragmentManager(), "delete");
+        }
+
+        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
+            @Override
+            public void positiveClick(String expenseText, String amountText) {
+                if (amountText.length() == 0) return;
+                float num = Float.parseFloat(amountText);
+                mExpense.getHistory().addItem(num);
+                mExpense.setAmount(mExpense.getHistory().getTotal());
+//                expense.setAmount(num);
+                mDataBase.editExpense(mExpense);
+                updateDetails();
+            }
+
+            @Override
+            public void negativeClick() {
+            }
+        });
+    }
+
+    private void updateDetails() {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        List<HistoryItem> historyItems = new ArrayList<>(mExpense.getHistory().getHistory());
+        Collections.reverse(historyItems);
+        mAdapter.swapList(historyItems);
+        mExpenseTotal.setText(numberFormat.format(mExpense.getAmount()));
+
+        mClearAll.setEnabled(!mHistory.getHistory().isEmpty());
     }
 
     View.OnClickListener clearAllListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            mExpense.getHistory().clearAll();
+            mExpense.setAmount(mExpense.getHistory().getTotal());
+            mDataBase.editExpense(mExpense);
+            updateDetails();
         }
     };
 
     View.OnClickListener deleteItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            if (mExpense.getCategoryId() == Category.MISC) {
+                mDataBase.deleteExpense(mExpense.getId());
+                setResult(RESULT_CANCELED);
+                DetailsActivity.this.finish();
+            }
         }
     };
 
@@ -126,6 +218,11 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(HistoryItem item) {
             Toast.makeText(DetailsActivity.this, item.toString(), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "onClick: item at " + (mExpense.getHistory().getHistory().indexOf(item)));
         }
     };
+
+    // TODO: 11/8/2019 ability to delete from details/ swipe
+    // TODO: 11/8/2019 don't ask again for clear all and delete
+    // TODO: 11/8/2019 update totals after swipe deleting in details
 }

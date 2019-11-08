@@ -35,6 +35,10 @@ public class History implements Parcelable {
         return total;
     }
 
+    public void clearAll() {
+        mHistoryItems.clear();
+    }
+
     @NonNull
     @Override
     public String toString() {

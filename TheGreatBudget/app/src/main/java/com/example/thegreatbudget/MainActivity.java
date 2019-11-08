@@ -293,9 +293,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // TODO: 11/1/2019 Decide if edit overwrites or adds
-    // TODO: 11/1/2019 Every month, reset expenses 
+    // TODO: 11/1/2019 Every month, reset expenses
     // TODO: 11/1/2019 lookup how to put hints on app 
-    // TODO: 11/1/2019 history for each expense as json
-    // TODO: 11/1/2019 display date for each expense 
 }

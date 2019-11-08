@@ -41,6 +41,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         viewHolder.mAmount.setText(numberFormat.format(item.getAmount()));
         viewHolder.mDate.setText(item.getDate());
+        viewHolder.itemView.setTag(mHistoryItems.indexOf(item));
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +55,11 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     @Override
     public int getItemCount() {
         return mHistoryItems.size();
+    }
+
+    public void swapList(List<HistoryItem> list) {
+        mHistoryItems = list;
+        notifyDataSetChanged();
     }
 
     public void setOnClickListener(OnClickListener listener) {
