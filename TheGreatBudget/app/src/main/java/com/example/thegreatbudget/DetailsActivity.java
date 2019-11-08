@@ -19,6 +19,9 @@ import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -75,8 +78,10 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
+        List<HistoryItem> historyItems = new ArrayList<>(mHistory.getHistory());
+        Collections.reverse(historyItems);
         RecyclerView recyclerView = findViewById(R.id.history_recycler_view);
-        HistoryRecyclerAdapter adapter = new HistoryRecyclerAdapter(this, mHistory.getHistory());
+        HistoryRecyclerAdapter adapter = new HistoryRecyclerAdapter(this, historyItems);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

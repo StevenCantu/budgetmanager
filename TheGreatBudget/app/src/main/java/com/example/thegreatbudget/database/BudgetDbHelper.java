@@ -59,6 +59,7 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
                 BudgetTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 BudgetTable.EXPENSE + " TEXT, " +
                 BudgetTable.AMOUNT + " REAL, " +
+                BudgetTable.HISTORY + " TEXT," +
                 BudgetTable.CATEGORY_ID + " INTEGER, " +
                 "FOREIGN KEY (" + BudgetTable.CATEGORY_ID + ") REFERENCES " +
                 CategoriesTable.TABLE_NAME + "(" + CategoriesTable._ID + ") ON DELETE CASCADE" +
@@ -148,6 +149,7 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BudgetTable.EXPENSE, expense.getTitle());
         contentValues.put(BudgetTable.AMOUNT, expense.getAmount());
+        contentValues.put(BudgetTable.HISTORY, expense.getHistoryJson());
         contentValues.put(BudgetTable.CATEGORY_ID, expense.getCategoryId());
         mDatabase.insert(BudgetTable.TABLE_NAME, null, contentValues);
     }
@@ -167,6 +169,7 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         values.put(BudgetTable.AMOUNT, expense.getAmount());
+        values.put(BudgetTable.HISTORY, expense.getHistoryJson());
 
         mDatabase.update(
                 BudgetTable.TABLE_NAME,

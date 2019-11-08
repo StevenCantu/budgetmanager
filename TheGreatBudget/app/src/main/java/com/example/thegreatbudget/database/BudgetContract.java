@@ -16,6 +16,7 @@ public final class BudgetContract {
         static final String TABLE_NAME = "budget_expenses";
         public static final String EXPENSE = "expense";
         public static final String AMOUNT = "amount";
+        public static final String HISTORY = "history";
         public static final String CATEGORY_ID = "category_id";
     }
 }

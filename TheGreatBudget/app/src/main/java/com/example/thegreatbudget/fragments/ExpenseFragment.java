@@ -105,17 +105,6 @@ public class ExpenseFragment extends Fragment {
 
             @Override
             public void itemClicked(Expenses expense) {
-                Toast.makeText(mContext, expense.toString(), Toast.LENGTH_SHORT).show();
-
-                Gson gson = new Gson();
-                History history = new History();
-                history.addItem(12);
-                history.addItem(1);
-                history.addItem(2);
-                String obj = gson.toJson(history);
-                History h2 = gson.fromJson(obj, History.class);
-                expense.setHistory(h2);
-
                 Intent intent = new Intent(mContext, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.EXPENSE_EXTRA, expense);
                 startActivity(intent);
@@ -188,9 +177,10 @@ public class ExpenseFragment extends Fragment {
                 final Expenses expense = new Expenses();
                 if (amountText.length() == 0 || expenseText.length() == 0) return;
 
-                float num = Float.parseFloat(amountText.toString());
+                float num = Float.parseFloat(amountText);
                 expense.setAmount(num);
-                expense.setTitle(expenseText.toString());
+                expense.getHistory().addItem(num);
+                expense.setTitle(expenseText);
                 expense.setCategoryId(Category.MISC);
                 mDataBase.addExpense(expense);
                 swapCursor();
@@ -224,7 +214,9 @@ public class ExpenseFragment extends Fragment {
                 if (amountText.length() == 0) return;
 
                 float num = Float.parseFloat(amountText);
-                expense.setAmount(num);
+                expense.getHistory().addItem(num);
+                expense.setAmount(expense.getHistory().getTotal());
+//                expense.setAmount(num);
                 mDataBase.editExpense(expense);
                 swapCursor();
 

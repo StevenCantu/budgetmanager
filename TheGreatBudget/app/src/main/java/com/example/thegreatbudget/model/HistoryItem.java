@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 public class HistoryItem implements Parcelable {
 
@@ -63,5 +64,19 @@ public class HistoryItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeDouble(mAmount);
         dest.writeString(mDate);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HistoryItem)) return false;
+        HistoryItem item = (HistoryItem) o;
+        return Double.compare(item.mAmount, mAmount) == 0 &&
+                mDate.equals(item.mDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mAmount, mDate);
     }
 }

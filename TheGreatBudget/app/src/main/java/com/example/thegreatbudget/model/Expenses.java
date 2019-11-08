@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 public class Expenses implements Parcelable {
 
     private static final String TAG = "Expenses";
@@ -12,7 +14,7 @@ public class Expenses implements Parcelable {
     private int mCategoryId = 5; //Category Misc
     private long mId;
     private String mTitle = "";
-    private History mHistory;
+    private History mHistory = new History();
 
     public Expenses() {
     }
@@ -29,12 +31,13 @@ public class Expenses implements Parcelable {
         mCategoryId = categoryId;
     }
 
-    public Expenses(long id, String title, float amount, int categoryId, History history) {
+    public Expenses(long id, String title, float amount, int categoryId, String history) {
         mId = id;
         mTitle = title;
         mAmount = amount;
         mCategoryId = categoryId;
-        mHistory = history;
+        Gson gson = new Gson();
+        mHistory = gson.fromJson(history, History.class);
     }
 
     public String getTitle() {
@@ -75,6 +78,11 @@ public class Expenses implements Parcelable {
 
     public void setHistory(History history) {
         this.mHistory = history;
+    }
+
+    public String getHistoryJson() {
+        Gson gson = new Gson();
+        return gson.toJson(getHistory());
     }
 
     @NonNull
