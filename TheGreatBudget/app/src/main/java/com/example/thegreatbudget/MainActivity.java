@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.ToDoubleBiFunction;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -295,4 +296,6 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 11/1/2019 Every month, reset expenses
     // TODO: 11/1/2019 lookup how to put hints on app 
+    // TODO: 11/22/2019 lookup how to create statement for each expense
+    // TODO: 11/22/2019 settings tab
 }

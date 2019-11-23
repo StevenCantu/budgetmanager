@@ -6,4 +6,6 @@
     <color name="primary">#1ad67e</color>
     <color name="primaryDark">#34a36f</color>
     <color name="accent">#d61a1a</color>
+    <color name="primaryNight">#212121</color>
+    <color name="primaryDarkNight">#000000</color>
 </resources>

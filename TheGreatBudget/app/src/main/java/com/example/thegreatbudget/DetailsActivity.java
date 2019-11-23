@@ -1,5 +1,6 @@
 package com.example.thegreatbudget;
 
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.example.thegreatbudget.model.Expenses;
 import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
 import com.example.thegreatbudget.util.CustomDialog;
+import com.example.thegreatbudget.util.DontAskDialog;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -35,6 +37,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     public static final String EXPENSE_EXTRA = "thegreatbudget.expense.obj.extra";
     private static final String TAG = "DetailsActivity";
+    public static final String CLEAR_ALL_KEY = "DetailsActivity.skipMessage.clearall";
+    public static final String DELETE_KEY = "DetailsActivity.skipMessage.delete";
+
 
     private TextView mExpenseItem;
     private TextView mExpenseTotal;
@@ -193,13 +198,79 @@ public class DetailsActivity extends AppCompatActivity {
         mClearAll.setEnabled(!mHistory.getHistory().isEmpty());
     }
 
+    private void deleteDialog() {
+        DontAskDialog dialog = new DontAskDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to delete this expense tab?");
+        bundle.putString(DontAskDialog.KEY, DELETE_KEY);
+
+        dialog.setArguments(bundle);
+        if (getSupportFragmentManager() != null && isNotChecked(DELETE_KEY)) {
+            dialog.show(getSupportFragmentManager(), "delete");
+        }
+        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+            @Override
+            public void positiveClick() {
+                mDataBase.deleteExpense(mExpense.getId());
+                setResult(RESULT_CANCELED);
+                DetailsActivity.this.finish();
+            }
+
+            @Override
+            public void negativeClick() {
+
+            }
+        });
+    }
+
+    private void clearAllDialog() {
+        DontAskDialog dialog = new DontAskDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to clear the history?");
+        bundle.putString(DontAskDialog.KEY, CLEAR_ALL_KEY);
+
+        dialog.setArguments(bundle);
+        if (getSupportFragmentManager() != null && isNotChecked(CLEAR_ALL_KEY)) {
+            dialog.show(getSupportFragmentManager(), "clearall");
+        }
+        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+            @Override
+            public void positiveClick() {
+                mExpense.getHistory().clearAll();
+                mExpense.setAmount(mExpense.getHistory().getTotal());
+                mDataBase.editExpense(mExpense);
+                updateDetails();
+            }
+
+            @Override
+            public void negativeClick() {
+
+            }
+        });
+    }
+
+    private boolean isNotChecked(String key) {
+        SharedPreferences settings = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
+        String skipMessage = settings.getString(key, DontAskDialog.NOTCHECKED);
+
+        return !DontAskDialog.ISCHECKED.equals(skipMessage);
+    }
+
     View.OnClickListener clearAllListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mExpense.getHistory().clearAll();
-            mExpense.setAmount(mExpense.getHistory().getTotal());
-            mDataBase.editExpense(mExpense);
-            updateDetails();
+            SharedPreferences sp = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
+            String checked = sp.getString(CLEAR_ALL_KEY, DontAskDialog.NOTCHECKED);
+            if (DontAskDialog.ISCHECKED.equals(checked)) {
+                mExpense.getHistory().clearAll();
+                mExpense.setAmount(mExpense.getHistory().getTotal());
+                mDataBase.editExpense(mExpense);
+                updateDetails();
+            } else {
+                clearAllDialog();
+            }
         }
     };
 
@@ -207,9 +278,15 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (mExpense.getCategoryId() == Category.MISC) {
-                mDataBase.deleteExpense(mExpense.getId());
-                setResult(RESULT_CANCELED);
-                DetailsActivity.this.finish();
+                SharedPreferences sp = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
+                String checked = sp.getString(DELETE_KEY, DontAskDialog.NOTCHECKED);
+                if (DontAskDialog.ISCHECKED.equals(checked)) {
+                    mDataBase.deleteExpense(mExpense.getId());
+                    setResult(RESULT_CANCELED);
+                    DetailsActivity.this.finish();
+                } else {
+                    deleteDialog();
+                }
             }
         }
     };
@@ -223,6 +300,5 @@ public class DetailsActivity extends AppCompatActivity {
     };
 
     // TODO: 11/8/2019 ability to delete from details/ swipe
-    // TODO: 11/8/2019 don't ask again for clear all and delete
     // TODO: 11/8/2019 update totals after swipe deleting in details
 }

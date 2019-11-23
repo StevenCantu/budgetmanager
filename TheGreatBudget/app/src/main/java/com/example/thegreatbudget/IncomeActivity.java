@@ -24,6 +24,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.thegreatbudget.util.DontAskDialog;
 
 import java.text.NumberFormat;
 import java.util.ArrayDeque;
@@ -145,8 +148,11 @@ public class IncomeActivity extends AppCompatActivity {
                     mIncome = Double.parseDouble(mDecimalInput);
                     mEditing = false;
                 } else {
-                    if (Double.parseDouble(mDecimalInput) + mIncome > 999999.99) return;
-                    mIncome += Double.parseDouble(mDecimalInput);
+                    if (Double.parseDouble(mDecimalInput) + mIncome > 999999.99) {
+                        Toast.makeText(IncomeActivity.this, "You have exceeded the limit.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mIncome += Double.parseDouble(mDecimalInput);
+                    }
                 }
                 updateIncome(mIncome);
                 mDecimalInput = "";
@@ -203,7 +209,7 @@ public class IncomeActivity extends AppCompatActivity {
             mTempUndo = mIncome;
             Log.d(TAG, "undoIncome: " + mTemps + " " + mTempIncome);
             updateIncome(mIncome);
-            showSnackbar();
+            showSnackBar();
         }
     }
 
@@ -333,86 +339,60 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeText.setLayoutParams(p);
     }
 
-    private void showUndoDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        LayoutInflater adbInflater = LayoutInflater.from(this);
-        View eulaLayout = adbInflater.inflate(R.layout.check_layout, null);
-        SharedPreferences settings = getSharedPreferences(PREFS, MODE_PRIVATE);
-        String skipMessage = settings.getString(CHECK_UNDO_KEY, NOTCHECKED);
-
-        mIgnore = eulaLayout.findViewById(R.id.skip_check);
-        dialog.setView(eulaLayout);
-        dialog.setTitle("Attention");
-        dialog.setMessage("Are you sure you want to undo your previous income change?");
-
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                saveChecked(CHECK_UNDO_KEY);
-                undoIncome();
-            }
-        });
-
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-
-
-            }
-        });
-
-        if (!ISCHECKED.equals(skipMessage)) {
-            dialog.show();
-        }
-    }
-
     private void showEditDialog() {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-        LayoutInflater layoutInflater = LayoutInflater.from(this);
-        View layout = layoutInflater.inflate(R.layout.check_layout, null);
-        SharedPreferences settings = getSharedPreferences(PREFS, MODE_PRIVATE);
-        String skipMessage = settings.getString(CHECK_EDIT_KEY, NOTCHECKED);
+        DontAskDialog dialog = new DontAskDialog();
+        dialog.setArguments(new Bundle());
+        if (getSupportFragmentManager() != null && isNotChecked(CHECK_EDIT_KEY)) {
+            dialog.show(getSupportFragmentManager(), "showEditDialog");
+        }
 
-        mIgnore = layout.findViewById(R.id.skip_check);
-        dialog.setView(layout);
-        dialog.setTitle("Attention");
-        dialog.setMessage("Are you sure you want to edit income");
-
-        dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                saveChecked(CHECK_EDIT_KEY);
+            public void positiveClick() {
                 mEditing = true;
                 keypadView();
             }
-        });
 
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void negativeClick() {
 
             }
         });
-
-        if (!ISCHECKED.equals(skipMessage)) {
-            dialog.show();
-        }
-
     }
 
-    private void saveChecked(String key) {
-        String checkBoxResult = NOTCHECKED;
+    private void showUndoDialog() {
+        DontAskDialog dialog = new DontAskDialog();
 
-        if (mIgnore.isChecked()) {
-            checkBoxResult = ISCHECKED;
+        Bundle bundle = new Bundle();
+        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to undo your previous income change?");
+        bundle.putString(DontAskDialog.KEY, CHECK_UNDO_KEY);
+
+        dialog.setArguments(bundle);
+        if (getSupportFragmentManager() != null && isNotChecked(CHECK_UNDO_KEY)) {
+            dialog.show(getSupportFragmentManager(), "showUndoDialog");
         }
 
+        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+            @Override
+            public void positiveClick() {
+                undoIncome();
+            }
+
+            @Override
+            public void negativeClick() {
+
+            }
+        });
+    }
+
+    private boolean isNotChecked(String key) {
         SharedPreferences settings = getSharedPreferences(PREFS, MODE_PRIVATE);
-        SharedPreferences.Editor editor = settings.edit();
+        String skipMessage = settings.getString(key, NOTCHECKED);
 
-        editor.putString(key, checkBoxResult);
-        editor.apply();
+        return !ISCHECKED.equals(skipMessage);
     }
 
-    private void showSnackbar() {
+    private void showSnackBar() {
         String msg = String.format(Locale.getDefault(), "You have removed $%.2f.", mTempIncome);
         Snackbar.make(findViewById(R.id.activity_income), msg, Snackbar.LENGTH_LONG)
                 .setAction("Undo", new View.OnClickListener() {
@@ -425,6 +405,4 @@ public class IncomeActivity extends AppCompatActivity {
                     }
                 }).show();
     }
-
-    // TODO: 11/1/2019 add a toast when user tries to exceed the limit 
 }

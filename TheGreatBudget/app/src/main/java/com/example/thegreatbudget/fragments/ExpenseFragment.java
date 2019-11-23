@@ -1,30 +1,20 @@
 package com.example.thegreatbudget.fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.InputType;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thegreatbudget.DetailsActivity;
 import com.example.thegreatbudget.R;
@@ -32,12 +22,9 @@ import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
-import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.util.CustomDialog;
-import com.google.gson.Gson;
 
 import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class ExpenseFragment extends Fragment {
 
@@ -127,7 +114,7 @@ public class ExpenseFragment extends Fragment {
                 startActivityForResult(intent, DETAILS_ACTIVITY_REQUEST);
             }
         });
-        
+
         if (mCategory == Category.MISC) {
             addExpenseText.setVisibility(View.VISIBLE);
 
@@ -259,7 +246,4 @@ public class ExpenseFragment extends Fragment {
     public interface OnClickListener {
         void expenseUpdated();
     }
-
-    // TODO: 10/23/2019 make click listener for add method
-
 }
