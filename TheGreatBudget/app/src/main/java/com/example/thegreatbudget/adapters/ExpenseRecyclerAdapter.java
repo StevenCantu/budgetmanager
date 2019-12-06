@@ -49,6 +49,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
         final float amount = mCursor.getFloat(mCursor.getColumnIndex(BudgetContract.BudgetTable.AMOUNT));
         final int categoryId = mCursor.getInt(mCursor.getColumnIndex(BudgetContract.BudgetTable.CATEGORY_ID));
         final String historyJson = mCursor.getString(mCursor.getColumnIndex(BudgetContract.BudgetTable.HISTORY));
+        final Expenses expensesListenerRes = new Expenses(id, expense, amount, categoryId, historyJson);
 
         viewHolder.mExpense.setText(expense);
         viewHolder.mAmount.setText(stringAmount(amount));
@@ -58,7 +59,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.amountClicked(new Expenses(id, expense, amount, categoryId, historyJson));
+                    mListener.amountClicked(expensesListenerRes);
                 }
             }
         });
@@ -66,7 +67,7 @@ public class ExpenseRecyclerAdapter extends RecyclerView.Adapter<ExpenseRecycler
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.itemClicked(new Expenses(id, expense, amount, categoryId, historyJson));
+                    mListener.itemClicked(expensesListenerRes);
                 }
             }
         });

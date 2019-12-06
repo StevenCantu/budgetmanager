@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadData();
+        // TODO: 12/5/2019 monthly reset logic
+//        BudgetDbHelper.getInstance(this).resetBD();
 
         initSpinner();
         mEditIncomeButton.setOnClickListener(incomeClickListener);
@@ -294,8 +296,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // TODO: 11/1/2019 Every month, reset expenses
-    // TODO: 11/1/2019 lookup how to put hints on app 
+    // TODO: 11/1/2019 lookup how to put hints on app
     // TODO: 11/22/2019 lookup how to create statement for each expense
     // TODO: 11/22/2019 settings tab
 }

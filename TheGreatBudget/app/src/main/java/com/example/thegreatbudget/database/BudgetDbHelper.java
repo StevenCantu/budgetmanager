@@ -7,13 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.thegreatbudget.database.BudgetContract.BudgetTable;
 import com.example.thegreatbudget.database.BudgetContract.CategoriesTable;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
-
-import java.util.ArrayList;
+import com.example.thegreatbudget.model.History;
 
 public class BudgetDbHelper extends SQLiteOpenHelper {
 
@@ -50,20 +50,20 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
         final String CREATE_CATEGORY_TABLE =
                 "CREATE TABLE " + CategoriesTable.TABLE_NAME + " ( " +
-                CategoriesTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                CategoriesTable.CATEGORY_NAME + " TEXT " +
-                ")";
+                        CategoriesTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        CategoriesTable.CATEGORY_NAME + " TEXT " +
+                        ")";
 
         final String CREATE_BUDGET_TABLE =
                 "CREATE TABLE " + BudgetTable.TABLE_NAME + " ( " +
-                BudgetTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                BudgetTable.EXPENSE + " TEXT, " +
-                BudgetTable.AMOUNT + " REAL, " +
-                BudgetTable.HISTORY + " TEXT," +
-                BudgetTable.CATEGORY_ID + " INTEGER, " +
-                "FOREIGN KEY (" + BudgetTable.CATEGORY_ID + ") REFERENCES " +
-                CategoriesTable.TABLE_NAME + "(" + CategoriesTable._ID + ") ON DELETE CASCADE" +
-                ")";
+                        BudgetTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        BudgetTable.EXPENSE + " TEXT, " +
+                        BudgetTable.AMOUNT + " REAL, " +
+                        BudgetTable.HISTORY + " TEXT," +
+                        BudgetTable.CATEGORY_ID + " INTEGER, " +
+                        "FOREIGN KEY (" + BudgetTable.CATEGORY_ID + ") REFERENCES " +
+                        CategoriesTable.TABLE_NAME + "(" + CategoriesTable._ID + ") ON DELETE CASCADE" +
+                        ")";
 
         mDatabase.execSQL(CREATE_CATEGORY_TABLE);
         mDatabase.execSQL(CREATE_BUDGET_TABLE);
@@ -161,11 +161,19 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
     public void deleteExpense(long id) {
         mDatabase = getWritableDatabase();
+        delete(id);
+    }
+
+    private void delete(long id) {
         mDatabase.delete(BudgetTable.TABLE_NAME, BudgetTable._ID + "=" + id, null);
     }
 
     public void editExpense(Expenses expense) {
         mDatabase = getWritableDatabase();
+        edit(expense);
+    }
+
+    private void edit(Expenses expense) {
         ContentValues values = new ContentValues();
 
         values.put(BudgetTable.AMOUNT, expense.getAmount());
@@ -208,5 +216,36 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return total;
+    }
+
+    public void resetBD() {
+        mDatabase = getWritableDatabase();
+
+        try (Cursor cursor = mDatabase.query(
+                BudgetTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                BudgetTable.CATEGORY_ID + " ASC"
+        )) {
+            while (cursor.moveToNext()) {
+                final long id = cursor.getLong(cursor.getColumnIndex(BudgetTable._ID));
+                final String expense = cursor.getString(cursor.getColumnIndex(BudgetTable.EXPENSE));
+                final float amount = cursor.getFloat(cursor.getColumnIndex(BudgetTable.AMOUNT));
+                final int categoryId = cursor.getInt(cursor.getColumnIndex(BudgetTable.CATEGORY_ID));
+                final String historyJson = cursor.getString(cursor.getColumnIndex(BudgetTable.HISTORY));
+                Expenses expenses = new Expenses(id, expense, amount, categoryId, historyJson);
+
+                if (categoryId == Category.MISC) {
+                    delete(id);
+                } else {
+                    expenses.setAmount(0f);
+                    expenses.setHistory(new History());
+                    edit(expenses);
+                }
+            }
+        }
     }
 }
