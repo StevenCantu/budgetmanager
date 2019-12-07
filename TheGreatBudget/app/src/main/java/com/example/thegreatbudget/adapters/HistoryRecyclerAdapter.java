@@ -41,7 +41,8 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         viewHolder.mAmount.setText(numberFormat.format(item.getAmount()));
         viewHolder.mDate.setText(item.getDate());
-        viewHolder.itemView.setTag(mHistoryItems.indexOf(item));
+        int index = (mHistoryItems.size() - 1) - mHistoryItems.indexOf(item);
+        viewHolder.itemView.setTag(index);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -123,7 +123,7 @@ public class DetailsActivity extends AppCompatActivity {
         mAdapter.setOnClickListener(historyItemListener);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder,
@@ -133,8 +133,8 @@ public class DetailsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                Log.d(TAG, "onSwiped: " + viewHolder.itemView.getTag());
                 mExpense.getHistory().getHistory().remove((int) viewHolder.itemView.getTag());
+                Log.d(TAG, "onSwiped: " + mExpense.getHistory().getTotal());
                 updateDetails();
             }
         }).attachToRecyclerView(recyclerView);
@@ -176,9 +176,6 @@ public class DetailsActivity extends AppCompatActivity {
                 if (amountText.length() == 0) return;
                 float num = Float.parseFloat(amountText);
                 mExpense.getHistory().addItem(num);
-                mExpense.setAmount(mExpense.getHistory().getTotal());
-//                expense.setAmount(num);
-                mDataBase.editExpense(mExpense);
                 updateDetails();
             }
 
@@ -189,6 +186,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void updateDetails() {
+        mExpense.setAmount(mExpense.getHistory().getTotal());
+        mDataBase.editExpense(mExpense);
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         List<HistoryItem> historyItems = new ArrayList<>(mExpense.getHistory().getHistory());
         Collections.reverse(historyItems);
@@ -239,8 +238,6 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void positiveClick() {
                 mExpense.getHistory().clearAll();
-                mExpense.setAmount(mExpense.getHistory().getTotal());
-                mDataBase.editExpense(mExpense);
                 updateDetails();
             }
 
@@ -265,8 +262,6 @@ public class DetailsActivity extends AppCompatActivity {
             String checked = sp.getString(CLEAR_ALL_KEY, DontAskDialog.NOTCHECKED);
             if (DontAskDialog.ISCHECKED.equals(checked)) {
                 mExpense.getHistory().clearAll();
-                mExpense.setAmount(mExpense.getHistory().getTotal());
-                mDataBase.editExpense(mExpense);
                 updateDetails();
             } else {
                 clearAllDialog();
@@ -295,10 +290,7 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(HistoryItem item) {
             Toast.makeText(DetailsActivity.this, item.toString(), Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "onClick: item at " + (mExpense.getHistory().getHistory().indexOf(item)));
+            Log.d(TAG, "onSwiped: " + mExpense.getHistory().getTotal());
         }
     };
-
-    // TODO: 11/8/2019 ability to delete from details/ swipe
-    // TODO: 11/8/2019 update totals after swipe deleting in details
 }

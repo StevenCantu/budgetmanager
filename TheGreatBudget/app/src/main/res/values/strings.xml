@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The Great Budget</string>
+    <string name="app_name">GreatBudget</string>
     <string name="edit_hint">edit</string>
     <string name="one_string">1</string>
     <string name="two_string">2</string>

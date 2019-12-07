@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.app.AppCompatDelegate;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,16 +21,12 @@ import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
 import com.example.thegreatbudget.model.Category;
-import com.example.thegreatbudget.model.Expenses;
-import com.example.thegreatbudget.model.History;
-import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.function.ToDoubleBiFunction;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -102,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+        return true;
+    }
+
     private void initSpinner() {
         //bottom menu
         Spinner spinnerTotals = findViewById(R.id.spinner_totals);
@@ -122,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                switch(categories.get(position)) {
+                switch (categories.get(position)) {
                     case INCOME:
                         mCurrentSpinnerItem = INCOME;
                         mEditIncomeButton.setVisibility(View.VISIBLE);
@@ -240,8 +245,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * save a Double data type in shared preferences by converting to bytes and storing as Long
-     * @param edit SharedPreferences editor
-     * @param key string key
+     *
+     * @param edit  SharedPreferences editor
+     * @param key   string key
      * @param value Double value to store as Long
      * @return SharedPreferences editor with changes made
      */
@@ -251,8 +257,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * get the Double value from SharedPreferences stored as Long
-     * @param prefs SharedPreferences
-     * @param key string key
+     *
+     * @param prefs        SharedPreferences
+     * @param key          string key
      * @param defaultValue Double default value
      * @return Double value stored as bytes in SharedPreferences
      */
@@ -297,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // TODO: 11/1/2019 lookup how to put hints on app
-    // TODO: 11/22/2019 lookup how to create statement for each expense
-    // TODO: 11/22/2019 settings tab
+    // TODO: 11/22/2019 lookup how to create statement for the previous month
+    // TODO: 11/22/2019 settings tab and action bar
+    // TODO: 12/6/2019 dark theme https://www.youtube.com/watch?v=-qsHE3TpJqw 
 }
