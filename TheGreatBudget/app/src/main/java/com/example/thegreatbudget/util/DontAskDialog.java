@@ -7,14 +7,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 
 import com.example.thegreatbudget.R;
 
-import static com.example.thegreatbudget.IncomeActivity.CHECK_EDIT_KEY;
+import static com.example.thegreatbudget.activities.IncomeActivity.CHECK_EDIT_KEY;
 
 public class DontAskDialog extends AppCompatDialogFragment {
     public static final String MESSAGE = "thegreatbudget.util.DontAskDialog.message";

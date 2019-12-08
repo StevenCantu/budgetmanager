@@ -1,4 +1,4 @@
-package com.example.thegreatbudget;
+package com.example.thegreatbudget.activities;
 
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.HistoryRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;

@@ -15,4 +15,5 @@
     <string name="income_string">Income:</string>
     <string name="enter_string">Enter</string>
     <string name="delete_string">Delete</string>
+    <string name="main_menu_settings">Settings</string>
 </resources>

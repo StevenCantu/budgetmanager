@@ -11,15 +11,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeNoAction"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".DetailsActivity"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme"/>
         <activity
-            android:name=".IncomeActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".activities.SettingsActivity"
+            android:parentActivityName=".activities.MainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.DetailsActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.IncomeActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.thegreatbudget.DetailsActivity;
+import com.example.thegreatbudget.activities.DetailsActivity;
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;

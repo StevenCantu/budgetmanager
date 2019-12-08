@@ -4,7 +4,7 @@
     android:id="@+id/activity_income"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".IncomeActivity">
+    tools:context=".activities.IncomeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

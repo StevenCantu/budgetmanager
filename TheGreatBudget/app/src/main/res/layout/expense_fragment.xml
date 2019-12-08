@@ -5,6 +5,7 @@
     android:id="@+id/expense_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="46dp"
     tools:context=".fragments.ExpenseFragment">
 
     <TextView
