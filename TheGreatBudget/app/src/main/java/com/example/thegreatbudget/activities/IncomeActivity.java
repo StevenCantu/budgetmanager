@@ -31,6 +31,10 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
+import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
+import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
 
@@ -38,11 +42,8 @@ public class IncomeActivity extends AppCompatActivity {
     public static final int KEYPAD_INDEX = 11;
     public static final int INCOME_LIMIT = 6;
     public static final int MAX_SIZE = 10;
-    public static final String PREFS = "com.example.thegreatbudget.shared.prefs";
     public static final String CHECK_UNDO_KEY = "skipMessage.undo";
     public static final String CHECK_EDIT_KEY = "skipMessage.edit";
-    public static final String ISCHECKED = "checked";
-    public static final String NOTCHECKED = "not checked";
 
     private CheckBox mIgnore;
     private FloatingActionButton mAddButton;
@@ -110,20 +111,20 @@ public class IncomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SharedPreferences sp = getSharedPreferences(PREFS, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         String checked;
         switch (item.getItemId()) {
             case R.id.menu_edit:
-                checked = sp.getString(CHECK_EDIT_KEY, NOTCHECKED);
-                if (ISCHECKED.equals(checked)) {
+                checked = sp.getString(CHECK_EDIT_KEY, NOT_CHECKED);
+                if (IS_CHECKED.equals(checked)) {
                     mEditing = true;
                     keypadView();
                 }
                 showEditDialog();
                 return true;
             case R.id.menu_undo:
-                checked = sp.getString(CHECK_UNDO_KEY, NOTCHECKED);
-                if (ISCHECKED.equals(checked)) {
+                checked = sp.getString(CHECK_UNDO_KEY, NOT_CHECKED);
+                if (IS_CHECKED.equals(checked)) {
                     undoIncome();
                 }
                 showUndoDialog();
@@ -384,10 +385,10 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private boolean isNotChecked(String key) {
-        SharedPreferences settings = getSharedPreferences(PREFS, MODE_PRIVATE);
-        String skipMessage = settings.getString(key, NOTCHECKED);
+        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        String skipMessage = settings.getString(key, NOT_CHECKED);
 
-        return !ISCHECKED.equals(skipMessage);
+        return !IS_CHECKED.equals(skipMessage);
     }
 
     private void showSnackBar() {

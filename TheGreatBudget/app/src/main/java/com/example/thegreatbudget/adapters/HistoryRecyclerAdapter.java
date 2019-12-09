@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
-import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
 
 import java.text.NumberFormat;
@@ -31,7 +30,7 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.recycler_layout, viewGroup, false);
+                .inflate(R.layout.expese_recycler_layout, viewGroup, false);
         return new HistoryRecyclerAdapter.ViewHolder(view);
     }
 

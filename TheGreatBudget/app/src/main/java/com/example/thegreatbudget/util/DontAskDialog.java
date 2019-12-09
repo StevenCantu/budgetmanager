@@ -14,13 +14,13 @@ import android.widget.CheckBox;
 import com.example.thegreatbudget.R;
 
 import static com.example.thegreatbudget.activities.IncomeActivity.CHECK_EDIT_KEY;
+import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
+import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
 
 public class DontAskDialog extends AppCompatDialogFragment {
     public static final String MESSAGE = "thegreatbudget.util.DontAskDialog.message";
     public static final String KEY = "thegreatbudget.util.DontAskDialog.key";
-    public static final String PREFS = "com.example.thegreatbudget.shared.prefs";
-    public static final String ISCHECKED = "checked";
-    public static final String NOTCHECKED = "not checked";
 
     private OnClickListener onClickListener;
     private CheckBox mIgnore;
@@ -71,13 +71,13 @@ public class DontAskDialog extends AppCompatDialogFragment {
     }
 
     private void saveChecked(String key) {
-        String checkBoxResult = NOTCHECKED;
+        String checkBoxResult = NOT_CHECKED;
 
         if (mIgnore.isChecked()) {
-            checkBoxResult = ISCHECKED;
+            checkBoxResult = IS_CHECKED;
         }
 
-        SharedPreferences settings = getActivity().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(key, checkBoxResult);

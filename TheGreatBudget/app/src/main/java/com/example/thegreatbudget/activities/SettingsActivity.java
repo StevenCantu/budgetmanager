@@ -14,3 +14,6 @@ public class SettingsActivity extends AppCompatActivity {
         setTitle("Settings");
     }
 }
+
+// TODO: 12/8/2019 make model class 
+// TODO: 12/8/2019 save in sharedprefs 

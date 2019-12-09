@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+
 
 public class MainActivity extends AppCompatActivity {
     //tabs
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     //bundles
     public static final String INCOME_EXTRA = "thegreatbudget.main.income.extra.intent";
     //shared preferences
-    public static final String SHARED_PREFERENCES = "thegreatbudget.shared.preferences";
     public static final String INCOME_SHARED_PREFS = "thegreatbudget.income.shared.prefs";
     // other activity
     public static final int INCOME_ACTIVITY_REQUEST = 21;

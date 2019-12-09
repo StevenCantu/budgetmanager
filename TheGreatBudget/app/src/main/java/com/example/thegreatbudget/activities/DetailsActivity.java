@@ -34,6 +34,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
+import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+
 public class DetailsActivity extends AppCompatActivity {
 
     public static final String EXPENSE_EXTRA = "thegreatbudget.expense.obj.extra";
@@ -142,11 +146,11 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void initColorStateList() {
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_enabled}, // enabled
-                new int[] {-android.R.attr.state_enabled}, // disabled
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_enabled}, // enabled
+                new int[]{-android.R.attr.state_enabled}, // disabled
         };
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 ResourcesCompat.getColor(getResources(), R.color.accent, null),
                 Color.GRAY,
         };
@@ -250,18 +254,18 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private boolean isNotChecked(String key) {
-        SharedPreferences settings = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
-        String skipMessage = settings.getString(key, DontAskDialog.NOTCHECKED);
+        SharedPreferences settings = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        String skipMessage = settings.getString(key, NOT_CHECKED);
 
-        return !DontAskDialog.ISCHECKED.equals(skipMessage);
+        return !IS_CHECKED.equals(skipMessage);
     }
 
     View.OnClickListener clearAllListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            SharedPreferences sp = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
-            String checked = sp.getString(CLEAR_ALL_KEY, DontAskDialog.NOTCHECKED);
-            if (DontAskDialog.ISCHECKED.equals(checked)) {
+            SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+            String checked = sp.getString(CLEAR_ALL_KEY, NOT_CHECKED);
+            if (IS_CHECKED.equals(checked)) {
                 mExpense.getHistory().clearAll();
                 updateDetails();
             } else {
@@ -274,9 +278,9 @@ public class DetailsActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (mExpense.getCategoryId() == Category.MISC) {
-                SharedPreferences sp = getSharedPreferences(DontAskDialog.PREFS, MODE_PRIVATE);
-                String checked = sp.getString(DELETE_KEY, DontAskDialog.NOTCHECKED);
-                if (DontAskDialog.ISCHECKED.equals(checked)) {
+                SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+                String checked = sp.getString(DELETE_KEY, NOT_CHECKED);
+                if (IS_CHECKED.equals(checked)) {
                     mDataBase.deleteExpense(mExpense.getId());
                     setResult(RESULT_CANCELED);
                     DetailsActivity.this.finish();
