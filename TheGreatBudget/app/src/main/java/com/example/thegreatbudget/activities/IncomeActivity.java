@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.util.Common;
 import com.example.thegreatbudget.util.DontAskDialog;
 
 import java.text.NumberFormat;
@@ -31,9 +32,9 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
-import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
-import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
-import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+import static com.example.thegreatbudget.util.Common.IS_CHECKED;
+import static com.example.thegreatbudget.util.Common.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Common.SHARED_PREFERENCES;
 
 public class IncomeActivity extends AppCompatActivity {
     private static final String TAG = "IncomeActivity";
@@ -66,6 +67,7 @@ public class IncomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Common.themeSetter(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
 
@@ -137,53 +139,6 @@ public class IncomeActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    View.OnClickListener enterButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (!mDecimalInput.isEmpty()) {
-                addToDeque(mIncome);
-                if (mEditing) {
-                    mIncome = Double.parseDouble(mDecimalInput);
-                    mEditing = false;
-                } else {
-                    if (Double.parseDouble(mDecimalInput) + mIncome > 999999.99) {
-                        Toast.makeText(IncomeActivity.this, "You have exceeded the limit.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        mIncome += Double.parseDouble(mDecimalInput);
-                    }
-                }
-                updateIncome(mIncome);
-                mDecimalInput = "";
-                mIncomeInput.setText("");
-            }
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetViews();
-                    Log.d(TAG, "run: " + mTemps + " " + mTempIncome);
-                }
-            }, 350);
-        }
-    };
-
-    /**
-     *
-     */
-    View.OnClickListener incomeTextClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            keypadView();
-        }
-    };
-
-    View.OnClickListener keypadListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            buttonPicker(v);
-        }
-    };
 
     private void resetViews() {
         moveIncomeView(Gravity.CENTER);
@@ -404,4 +359,48 @@ public class IncomeActivity extends AppCompatActivity {
                     }
                 }).show();
     }
+
+    View.OnClickListener enterButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!mDecimalInput.isEmpty()) {
+                addToDeque(mIncome);
+                if (mEditing) {
+                    mIncome = Double.parseDouble(mDecimalInput);
+                    mEditing = false;
+                } else {
+                    if (Double.parseDouble(mDecimalInput) + mIncome > 999999.99) {
+                        Toast.makeText(IncomeActivity.this, "You have exceeded the limit.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        mIncome += Double.parseDouble(mDecimalInput);
+                    }
+                }
+                updateIncome(mIncome);
+                mDecimalInput = "";
+                mIncomeInput.setText("");
+            }
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    resetViews();
+                    Log.d(TAG, "run: " + mTemps + " " + mTempIncome);
+                }
+            }, 350);
+        }
+    };
+
+    View.OnClickListener incomeTextClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            keypadView();
+        }
+    };
+
+    View.OnClickListener keypadListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            buttonPicker(v);
+        }
+    };
 }

@@ -25,6 +25,7 @@ import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
 import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
+import com.example.thegreatbudget.util.Common;
 import com.example.thegreatbudget.util.CustomDialog;
 import com.example.thegreatbudget.util.DontAskDialog;
 
@@ -34,9 +35,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
-import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
-import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+import static com.example.thegreatbudget.util.Common.IS_CHECKED;
+import static com.example.thegreatbudget.util.Common.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Common.SHARED_PREFERENCES;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -60,6 +61,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Common.themeSetter(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         setTitle("Details");

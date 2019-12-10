@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="46dp"
+    android:background="?attr/backgroundColor"
     tools:context=".fragments.ExpenseFragment">
 
     <TextView
@@ -17,6 +18,7 @@
         android:text="tap to add expense"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?attr/textColor"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

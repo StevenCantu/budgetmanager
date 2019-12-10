@@ -9,7 +9,6 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppThemeNoAction"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".activities.SettingsActivity"
@@ -25,7 +24,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/AppThemeNoAction">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,11 +4,13 @@
     android:id="@+id/activity_income"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".activities.IncomeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/backgroundColor">
 
         <TextView
             android:id="@+id/income_text"
@@ -20,6 +22,7 @@
             android:layout_marginBottom="32dp"
             android:gravity="center"
             android:textSize="64sp"
+            android:textColor="?attr/textColor"
             tools:gravity="center_horizontal|top"
             tools:text="767676767" />
 
@@ -39,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:textColor="?attr/textColor"
             android:layout_marginTop="180dp"
             android:textSize="32sp"
             tools:text="$4545" />
@@ -67,6 +71,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/one_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -78,6 +83,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/two_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -89,6 +95,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/three_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -100,6 +107,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/four_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -111,6 +119,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/five_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -122,6 +131,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/six_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -133,6 +143,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/seven_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -144,6 +155,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/eight_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -155,6 +167,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/nine_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -166,6 +179,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/decimal_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <Button
@@ -177,6 +191,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:text="@string/zero_string"
+                android:textColor="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
             <ImageButton
@@ -188,6 +203,7 @@
                 android:layout_columnWeight="1"
                 android:background="@drawable/custom_button"
                 android:src="@drawable/delete_button"
+                android:tint="?attr/textColor"
                 android:textAppearance="@android:style/TextAppearance.Large" />
 
         </GridLayout>
@@ -202,6 +218,7 @@
             android:layout_marginBottom="32dp"
             android:background="@drawable/custom_button"
             android:text="@string/enter_string"
+            android:textColor="?attr/textColor"
             android:textAppearance="@android:style/TextAppearance.Large"
             android:visibility="gone" />
 

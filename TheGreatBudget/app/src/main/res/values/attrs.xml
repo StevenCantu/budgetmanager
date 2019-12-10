@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="custom_style">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="cardBackground" format="color"/>
+        <attr name="textColor" format="color"/>
+        <attr name="mainTextColor" format="color"/>
+        <attr name="tabTextColor" format="color" />
+        <attr name="tintColor" format="color"/>
+    </declare-styleable>
+</resources>

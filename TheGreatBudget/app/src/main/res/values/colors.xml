@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- light theme-->
     <color name="background">#fafafa</color>
-
+    <color name="cardColor">#ffffff</color>
+    <color name="textColor">#808080</color>
+    <color name="mainText">#505050</color>
+    <color name="tintColor">#000000</color>
     <color name="primary">#1ad67e</color>
     <color name="primaryDark">#34a36f</color>
     <color name="accent">#d61a1a</color>
+
+    <!-- dark theme-->
+    <color name="backgroundDark">#303030</color>
+    <color name="cardColorDark">#424242</color>
+    <color name="textColorDark">#ffffff</color>
+    <color name="tintColorDark">#ffffff</color>
     <color name="primaryNight">#212121</color>
     <color name="primaryDarkNight">#000000</color>
 </resources>

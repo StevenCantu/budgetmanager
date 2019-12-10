@@ -9,6 +9,7 @@
     android:orientation="vertical"
     tools:context=".activities.MainActivity">
 
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,8 +28,11 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
-            app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption" />
+            android:background="?attr/colorPrimary"
+            app:tabRippleColor="@color/accent"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:tabTextColor="?attr/mainTextColor"
+            app:tabSelectedTextColor="?attr/tabTextColor"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/primary" />
+            android:background="?attr/colorPrimary" />
 
         <ImageButton
             android:id="@+id/edit_income_button"
@@ -73,6 +77,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:text="@string/income_string"
+            android:textColor="?attr/mainTextColor"
             android:textSize="24sp" />
 
     </RelativeLayout>

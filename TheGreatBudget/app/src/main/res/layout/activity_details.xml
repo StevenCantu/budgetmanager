@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
     tools:context=".activities.DetailsActivity">
 
-    <TextView
-        android:id="@+id/expense_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Text" />
+    <ImageView
+        android:id="@+id/history_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:src="?attr/textColor"
+        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/expense_total"
@@ -26,6 +23,7 @@
         android:layout_marginEnd="16dp"
         android:text="$0.00"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="$0.00" />
@@ -38,16 +36,22 @@
         android:layout_marginTop="16dp"
         android:text="History:"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?attr/textColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense_item" />
 
-    <ImageView
-        android:id="@+id/history_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:src="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
-        app:layout_constraintStart_toStartOf="parent"/>
+    <TextView
+        android:id="@+id/expense_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Text" />
 
     <TextView
         android:id="@+id/clear_all"

@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +24,7 @@ import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
 import com.example.thegreatbudget.model.Category;
+import com.example.thegreatbudget.util.Common;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+import static com.example.thegreatbudget.util.Common.SHARED_PREFERENCES;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String INCOME_SHARED_PREFS = "thegreatbudget.income.shared.prefs";
     // other activity
     public static final int INCOME_ACTIVITY_REQUEST = 21;
+    public static final int SETTINGS_ACTIVITY_REQUEST = 22;
 
     private static final String TAG = "MainActivity";
 
@@ -63,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadData();
@@ -102,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 mAfterExpenses = mIncome - mTotalExpenses;
                 updateCurrencyText();
             }
+        } else if (requestCode == SETTINGS_ACTIVITY_REQUEST && resultCode == RESULT_CANCELED) {
+            recreate();
         }
     }
 
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_settings) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST);
             return true;
         } else {
             return super.onOptionsItemSelected(item);

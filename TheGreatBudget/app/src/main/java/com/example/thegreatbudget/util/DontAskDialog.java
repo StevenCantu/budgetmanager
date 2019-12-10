@@ -14,9 +14,9 @@ import android.widget.CheckBox;
 import com.example.thegreatbudget.R;
 
 import static com.example.thegreatbudget.activities.IncomeActivity.CHECK_EDIT_KEY;
-import static com.example.thegreatbudget.util.Constants.IS_CHECKED;
-import static com.example.thegreatbudget.util.Constants.NOT_CHECKED;
-import static com.example.thegreatbudget.util.Constants.SHARED_PREFERENCES;
+import static com.example.thegreatbudget.util.Common.IS_CHECKED;
+import static com.example.thegreatbudget.util.Common.NOT_CHECKED;
+import static com.example.thegreatbudget.util.Common.SHARED_PREFERENCES;
 
 public class DontAskDialog extends AppCompatDialogFragment {
     public static final String MESSAGE = "thegreatbudget.util.DontAskDialog.message";

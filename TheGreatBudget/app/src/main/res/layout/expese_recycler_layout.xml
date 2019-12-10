@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:layout_marginBottom="4dp"
-    android:background="@color/background"
+    android:background="?attr/cardBackground"
     android:padding="15dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        android:background="?attr/cardBackground">
 
         <TextView
             android:id="@+id/recycler_text"
@@ -21,6 +22,7 @@
             android:layout_marginEnd="10dp"
             android:padding="10dp"
             android:textSize="18sp"
+            android:textColor="?attr/textColor"
             tools:ignore="RelativeOverlap"
             tools:text="text" />
 
@@ -29,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:textColor="?attr/textColor"
             android:padding="10dp"
             android:text="enter amount" />
 
