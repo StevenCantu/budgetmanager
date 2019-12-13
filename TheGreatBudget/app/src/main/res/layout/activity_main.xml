@@ -67,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:layout_alignParentBottom="true"
+            android:backgroundTint="?attr/mainTextColor"
             android:layout_toStartOf="@+id/edit_income_button" />
 
         <TextView

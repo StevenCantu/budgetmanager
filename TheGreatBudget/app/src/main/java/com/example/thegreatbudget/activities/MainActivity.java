@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String INCOME_SHARED_PREFS = "thegreatbudget.income.shared.prefs";
     // other activity
     public static final int INCOME_ACTIVITY_REQUEST = 21;
-    public static final int SETTINGS_ACTIVITY_REQUEST = 22;
 
     private static final String TAG = "MainActivity";
 
@@ -106,8 +104,6 @@ public class MainActivity extends AppCompatActivity {
                 mAfterExpenses = mIncome - mTotalExpenses;
                 updateCurrencyText();
             }
-        } else if (requestCode == SETTINGS_ACTIVITY_REQUEST && resultCode == RESULT_CANCELED) {
-            recreate();
         }
     }
 
@@ -122,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.main_menu_settings) {
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivityForResult(intent, SETTINGS_ACTIVITY_REQUEST);
+            startActivity(intent);
+            finish();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -140,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
         categories.add(AFTER_EXPENSES);
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
 
         // attaching data adapter to spinner
         spinnerTotals.setAdapter(dataAdapter);

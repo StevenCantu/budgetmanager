@@ -1,9 +1,11 @@
 package com.example.thegreatbudget.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -44,6 +46,21 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            goHome();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        goHome();
+        super.onBackPressed();
+    }
+
     private void initViews() {
         mDarkModeSwitch = findViewById(R.id.dark_mode_switch);
         TextView darkModeText = findViewById(R.id.dark_mode_text);
@@ -55,7 +72,11 @@ public class SettingsActivity extends AppCompatActivity {
             darkModeText.setText("Enable Dark Mode");
         }
     }
+
+    private void goHome() {
+        Log.d(TAG, "goHome: ");
+        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 }
 
-// TODO: 12/8/2019 add tag attr to model class
-// TODO: 12/8/2019 save in sharedprefs 
