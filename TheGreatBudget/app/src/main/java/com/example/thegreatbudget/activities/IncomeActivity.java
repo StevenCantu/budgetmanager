@@ -46,7 +46,6 @@ public class IncomeActivity extends AppCompatActivity {
     public static final String CHECK_UNDO_KEY = "skipMessage.undo";
     public static final String CHECK_EDIT_KEY = "skipMessage.edit";
 
-    private CheckBox mIgnore;
     private FloatingActionButton mAddButton;
     private ImageView mDivider;
     private Menu mIncomeMenu;

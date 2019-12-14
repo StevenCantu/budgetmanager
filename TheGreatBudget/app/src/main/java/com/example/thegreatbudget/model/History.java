@@ -3,13 +3,19 @@ package com.example.thegreatbudget.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.example.thegreatbudget.util.CustomComparator;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class History implements Parcelable {
+    private static final String TAG = "History";
 
     public static final String SEPARATOR = "-";
     @SerializedName("H")
@@ -17,6 +23,11 @@ public class History implements Parcelable {
 
     public History() {
         mHistoryItems = new ArrayList<>();
+    }
+
+    public void addItem(HistoryItem item) {
+        mHistoryItems.add(item);
+        Collections.sort(mHistoryItems, new CustomComparator());
     }
 
     public void addItem(double item) {

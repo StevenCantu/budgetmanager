@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +53,7 @@ public class DetailsActivity extends AppCompatActivity {
     private TextView mClearAll;
     private TextView mDelete;
 
+    private HistoryItem mTempHistoryItem = new HistoryItem(0);
     private History mHistory = new History();
     private ColorStateList mStateList;
     private BudgetDbHelper mDataBase;
@@ -140,9 +142,21 @@ public class DetailsActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                mTempHistoryItem = mExpense.getHistory().getHistory().get((int) viewHolder.itemView.getTag());
                 mExpense.getHistory().getHistory().remove((int) viewHolder.itemView.getTag());
                 Log.d(TAG, "onSwiped: " + mExpense.getHistory().getTotal());
                 updateDetails();
+
+                String msg = "You have removed " + mTempHistoryItem.toString() + " from the list";
+                Snackbar.make(findViewById(R.id.activity_details), msg, Snackbar.LENGTH_LONG)
+                        .setAction("Undo", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mExpense.getHistory().addItem(mTempHistoryItem);
+                                updateDetails();
+                            }
+                        })
+                        .show();
             }
         }).attachToRecyclerView(recyclerView);
     }

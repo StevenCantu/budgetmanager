@@ -325,6 +325,4 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO: 11/1/2019 lookup how to put hints on app
     // TODO: 11/22/2019 lookup how to create statement for the previous month
-    // TODO: 11/22/2019 settings tab and action bar
-    // TODO: 12/6/2019 dark theme https://www.youtube.com/watch?v=-qsHE3TpJqw 
 }

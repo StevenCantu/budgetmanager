@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 public class HistoryItem implements Parcelable {
@@ -35,7 +37,8 @@ public class HistoryItem implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return getAmount() + " - " + getDate();
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        return numberFormat.format(getAmount());
     }
 
     protected HistoryItem(Parcel in) {

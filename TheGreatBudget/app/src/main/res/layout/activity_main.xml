@@ -13,7 +13,7 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:expanded="false">
+        app:expanded="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/main_toolbar"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:layout_alignParentBottom="true"
-            android:backgroundTint="?attr/mainTextColor"
+            android:backgroundTint="@android:color/white"
             android:layout_toStartOf="@+id/edit_income_button" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:text="@string/income_string"
-            android:textColor="?attr/mainTextColor"
+            android:textColor="@android:color/white"
             android:textSize="24sp" />
 
     </RelativeLayout>
