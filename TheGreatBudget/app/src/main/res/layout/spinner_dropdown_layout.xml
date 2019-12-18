@@ -7,4 +7,4 @@
     android:background="?attr/cardBackground"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textColor="?attr/mainTextColor" />
+    android:textColor="?attr/textColor" />

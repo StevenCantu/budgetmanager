@@ -1,4 +1,4 @@
-package com.example.thegreatbudget.util;
+package com.example.thegreatbudget.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

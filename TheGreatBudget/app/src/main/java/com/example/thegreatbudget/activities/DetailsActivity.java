@@ -17,18 +17,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.HistoryRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
+import com.example.thegreatbudget.fragments.ExpenseDialogFragment;
+import com.example.thegreatbudget.fragments.NeverAskAgainDialog;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
 import com.example.thegreatbudget.model.History;
 import com.example.thegreatbudget.model.HistoryItem;
 import com.example.thegreatbudget.util.Common;
-import com.example.thegreatbudget.util.CustomDialog;
-import com.example.thegreatbudget.util.DontAskDialog;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -180,18 +179,18 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void buildEditDialog() {
-        CustomDialog dialog = new CustomDialog();
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(CustomDialog.TITLE, "Amount");
-        bundle.putString(CustomDialog.MESSAGE, String.format("Enter your %s expense.", mExpense.getTitle()));
-        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        bundle.putString(ExpenseDialogFragment.TITLE, "Amount");
+        bundle.putString(ExpenseDialogFragment.MESSAGE, String.format("Enter your %s expense.", mExpense.getTitle()));
+        bundle.putBoolean(ExpenseDialogFragment.HAS_AMOUNT, true);
         dialog.setArguments(bundle);
 
         if (this.getSupportFragmentManager() != null) {
             dialog.show(this.getSupportFragmentManager(), "delete");
         }
 
-        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
+        dialog.setOnClickListener(new ExpenseDialogFragment.OnClickListener() {
             @Override
             public void positiveClick(String expenseText, String amountText) {
                 if (amountText.length() == 0) return;
@@ -219,17 +218,17 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void deleteDialog() {
-        DontAskDialog dialog = new DontAskDialog();
+        NeverAskAgainDialog dialog = new NeverAskAgainDialog();
 
         Bundle bundle = new Bundle();
-        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to delete this expense tab?");
-        bundle.putString(DontAskDialog.KEY, DELETE_KEY);
+        bundle.putString(NeverAskAgainDialog.MESSAGE, "Are you sure you want to delete this expense tab?");
+        bundle.putString(NeverAskAgainDialog.KEY, DELETE_KEY);
 
         dialog.setArguments(bundle);
         if (getSupportFragmentManager() != null && isNotChecked(DELETE_KEY)) {
             dialog.show(getSupportFragmentManager(), "delete");
         }
-        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+        dialog.setOnClickListener(new NeverAskAgainDialog.OnClickListener() {
             @Override
             public void positiveClick() {
                 mDataBase.deleteExpense(mExpense.getId());
@@ -245,17 +244,17 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void clearAllDialog() {
-        DontAskDialog dialog = new DontAskDialog();
+        NeverAskAgainDialog dialog = new NeverAskAgainDialog();
 
         Bundle bundle = new Bundle();
-        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to clear the history?");
-        bundle.putString(DontAskDialog.KEY, CLEAR_ALL_KEY);
+        bundle.putString(NeverAskAgainDialog.MESSAGE, "Are you sure you want to clear the history?");
+        bundle.putString(NeverAskAgainDialog.KEY, CLEAR_ALL_KEY);
 
         dialog.setArguments(bundle);
         if (getSupportFragmentManager() != null && isNotChecked(CLEAR_ALL_KEY)) {
             dialog.show(getSupportFragmentManager(), "clearall");
         }
-        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+        dialog.setOnClickListener(new NeverAskAgainDialog.OnClickListener() {
             @Override
             public void positiveClick() {
                 mExpense.getHistory().clearAll();
@@ -310,7 +309,6 @@ public class DetailsActivity extends AppCompatActivity {
     HistoryRecyclerAdapter.OnClickListener historyItemListener = new HistoryRecyclerAdapter.OnClickListener() {
         @Override
         public void onClick(HistoryItem item) {
-            Toast.makeText(DetailsActivity.this, item.toString(), Toast.LENGTH_SHORT).show();
             Log.d(TAG, "onSwiped: " + mExpense.getHistory().getTotal());
         }
     };

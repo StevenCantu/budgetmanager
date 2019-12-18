@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,8 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.fragments.NeverAskAgainDialog;
 import com.example.thegreatbudget.util.Common;
-import com.example.thegreatbudget.util.DontAskDialog;
 
 import java.text.NumberFormat;
 import java.util.ArrayDeque;
@@ -293,13 +292,13 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void showEditDialog() {
-        DontAskDialog dialog = new DontAskDialog();
+        NeverAskAgainDialog dialog = new NeverAskAgainDialog();
         dialog.setArguments(new Bundle());
         if (getSupportFragmentManager() != null && isNotChecked(CHECK_EDIT_KEY)) {
             dialog.show(getSupportFragmentManager(), "showEditDialog");
         }
 
-        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+        dialog.setOnClickListener(new NeverAskAgainDialog.OnClickListener() {
             @Override
             public void positiveClick() {
                 mEditing = true;
@@ -314,18 +313,18 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void showUndoDialog() {
-        DontAskDialog dialog = new DontAskDialog();
+        NeverAskAgainDialog dialog = new NeverAskAgainDialog();
 
         Bundle bundle = new Bundle();
-        bundle.putString(DontAskDialog.MESSAGE, "Are you sure you want to undo your previous income change?");
-        bundle.putString(DontAskDialog.KEY, CHECK_UNDO_KEY);
+        bundle.putString(NeverAskAgainDialog.MESSAGE, "Are you sure you want to undo your previous income change?");
+        bundle.putString(NeverAskAgainDialog.KEY, CHECK_UNDO_KEY);
 
         dialog.setArguments(bundle);
         if (getSupportFragmentManager() != null && isNotChecked(CHECK_UNDO_KEY)) {
             dialog.show(getSupportFragmentManager(), "showUndoDialog");
         }
 
-        dialog.setOnClickListener(new DontAskDialog.OnClickListener() {
+        dialog.setOnClickListener(new NeverAskAgainDialog.OnClickListener() {
             @Override
             public void positiveClick() {
                 undoIncome();

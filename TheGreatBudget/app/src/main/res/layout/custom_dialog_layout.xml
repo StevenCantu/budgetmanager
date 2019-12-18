@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="?attr/cardBackground">
+
+        <TextView
+            android:id="@+id/custom_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="?attr/mainTextColor"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/custom_dialog_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/custom_dialog_title"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="some large message to show here"
+            android:textColor="?attr/textColor" />
+
+        <EditText
+            android:id="@+id/custom_dialog_expense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/custom_dialog_message"
+            android:hint="Enter expense"
+            android:textAlignment="center"
+            android:textColor="?attr/textColor"
+            android:textColorHint="?attr/textColor"
+            app:backgroundTint="@color/accent" />
+
+        <EditText
+            android:id="@+id/custom_dialog_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/custom_dialog_expense"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal"
+            android:textAlignment="center"
+            android:textColor="?attr/textColor"
+            android:textColorHint="?attr/textColor"
+            app:backgroundTint="@color/accent" />
+
+        <CheckBox
+            android:id="@+id/custom_dialog_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="?attr/textColor"
+            android:buttonTint="?attr/textColor"
+            android:text="Don't show again"
+            android:layout_below="@id/custom_dialog_amount"/>
+
+        <TextView
+            android:id="@+id/custom_dialog_positive"
+            android:background="@drawable/custom_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/custom_dialog_check"
+            android:layout_marginTop="32dp"
+            android:layout_alignParentEnd="true"
+            android:text="CONFIRM"
+            android:textColor="@color/accent"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/custom_dialog_negative"
+            android:background="@drawable/custom_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_dialog_check"
+            android:layout_marginEnd="32dp"
+            android:layout_toStartOf="@+id/custom_dialog_positive"
+            android:layout_marginTop="32dp"
+            android:text="CANCEL"
+            android:textColor="@color/accent"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

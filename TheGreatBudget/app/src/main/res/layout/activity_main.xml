@@ -31,7 +31,7 @@
             android:background="?attr/colorPrimary"
             app:tabRippleColor="@color/accent"
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
-            app:tabTextColor="?attr/mainTextColor"
+            app:tabTextColor="?attr/textColor"
             app:tabSelectedTextColor="?attr/tabTextColor"/>
 
     </android.support.design.widget.AppBarLayout>

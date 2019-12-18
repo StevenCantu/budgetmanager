@@ -9,7 +9,7 @@
         <item name="backgroundColor">@color/background</item>
         <item name="cardBackground">@color/cardColor</item>
         <item name="textColor">@color/textColor</item>
-        <item name="mainTextColor">@color/textColor</item>
+        <item name="mainTextColor">@color/mainText</item>
         <item name="tabTextColor">@color/textColorDark</item>
         <item name="tintColor">@color/tintColor</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
@@ -37,7 +37,7 @@
         <item name="backgroundColor">@color/background</item>
         <item name="cardBackground">@color/cardColor</item>
         <item name="textColor">@color/textColor</item>
-        <item name="mainTextColor">@color/textColor</item>
+        <item name="mainTextColor">@color/mainText</item>
         <item name="tabTextColor">@color/textColorDark</item>
         <item name="tintColor">@color/tintColor</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>

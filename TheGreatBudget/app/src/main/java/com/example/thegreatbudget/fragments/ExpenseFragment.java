@@ -16,13 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.thegreatbudget.activities.DetailsActivity;
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.activities.DetailsActivity;
 import com.example.thegreatbudget.adapters.ExpenseRecyclerAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
-import com.example.thegreatbudget.util.CustomDialog;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -138,13 +137,13 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void buildDeleteDialog(final long id) {
-        CustomDialog dialog = new CustomDialog();
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
         dialog.setArguments(new Bundle());
         if (getActivity().getSupportFragmentManager() != null) {
             dialog.show(getActivity().getSupportFragmentManager(), "delete");
         }
 
-        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
+        dialog.setOnClickListener(new ExpenseDialogFragment.OnClickListener() {
             @Override
             public void positiveClick(String expenseText, String amountText) {
                 mDataBase.deleteExpense(id);
@@ -163,19 +162,19 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void buildAddDialog() {
-        CustomDialog dialog = new CustomDialog();
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(CustomDialog.TITLE, "Add Expense");
-        bundle.putString(CustomDialog.MESSAGE, "Enter your expense.");
-        bundle.putBoolean(CustomDialog.HAS_EXPENSE, true);
-        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        bundle.putString(ExpenseDialogFragment.TITLE, "Add Expense");
+        bundle.putString(ExpenseDialogFragment.MESSAGE, "Enter your expense.");
+        bundle.putBoolean(ExpenseDialogFragment.HAS_EXPENSE, true);
+        bundle.putBoolean(ExpenseDialogFragment.HAS_AMOUNT, true);
         dialog.setArguments(bundle);
 
         if (getActivity().getSupportFragmentManager() != null) {
             dialog.show(getActivity().getSupportFragmentManager(), "delete");
         }
 
-        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
+        dialog.setOnClickListener(new ExpenseDialogFragment.OnClickListener() {
             @Override
             public void positiveClick(String expenseText, String amountText) {
                 final Expenses expense = new Expenses();
@@ -201,18 +200,18 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void buildEditDialog(final Expenses expense) {
-        CustomDialog dialog = new CustomDialog();
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(CustomDialog.TITLE, "Amount");
-        bundle.putString(CustomDialog.MESSAGE, String.format("Enter your %s expense.", expense.getTitle()));
-        bundle.putBoolean(CustomDialog.HAS_AMOUNT, true);
+        bundle.putString(ExpenseDialogFragment.TITLE, "Amount");
+        bundle.putString(ExpenseDialogFragment.MESSAGE, String.format("Enter your %s expense.", expense.getTitle()));
+        bundle.putBoolean(ExpenseDialogFragment.HAS_AMOUNT, true);
         dialog.setArguments(bundle);
 
         if (getActivity().getSupportFragmentManager() != null) {
             dialog.show(getActivity().getSupportFragmentManager(), "delete");
         }
 
-        dialog.setOnClickListener(new CustomDialog.OnClickListener() {
+        dialog.setOnClickListener(new ExpenseDialogFragment.OnClickListener() {
             @Override
             public void positiveClick(String expenseText, String amountText) {
                 if (amountText.length() == 0) return;
@@ -220,7 +219,6 @@ public class ExpenseFragment extends Fragment {
                 float num = Float.parseFloat(amountText);
                 expense.getHistory().addItem(num);
                 expense.setAmount(expense.getHistory().getTotal());
-//                expense.setAmount(num);
                 mDataBase.editExpense(expense);
                 swapCursor();
 
