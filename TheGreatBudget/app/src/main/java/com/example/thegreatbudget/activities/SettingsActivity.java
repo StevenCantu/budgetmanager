@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
@@ -17,9 +16,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
-import com.example.thegreatbudget.fragments.DatePickerFragment;
 import com.example.thegreatbudget.util.Common;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -29,6 +29,9 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
     private Switch mDarkModeSwitch;
     private TextView mDayText;
     private int mResetDay;
+
+    private final int chosenDay = 31;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        updateResetDay(dayOfMonth);
+        updateResetDayText(dayOfMonth);
         saveResetDay(dayOfMonth);
     }
 
@@ -90,19 +93,41 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
             darkModeText.setText("Enable Dark Mode");
         }
 
+        calendar = Calendar.getInstance();
+        Log.d(TAG, "initViews: " + SimpleDateFormat.getDateInstance().format(calendar.getTime()));
+        calendar.set(Calendar.DAY_OF_MONTH, chosenDay);
+
         mDayText = findViewById(R.id.calendar_reset_day);
-        updateResetDay(mResetDay);
+        updateResetDayText(mResetDay);
         CardView cardView = findViewById(R.id.calendar_card_view);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment datePickerFragment = new DatePickerFragment();
-                datePickerFragment.show(getSupportFragmentManager(), "date picker");
+//                DialogFragment datePickerFragment = new DatePickerFragment();
+//                datePickerFragment.show(getSupportFragmentManager(), "date picker");
+                calendarTest();
             }
         });
     }
 
-    private void updateResetDay(int day) {
+    private void calendarTest() {
+        calendar.add(Calendar.MONTH, 1);
+        int currentMonth = calendar.get(Calendar.MONTH);
+
+        if (chosenDay > calendar.get(Calendar.DAY_OF_MONTH)) {
+            calendar.set(Calendar.DAY_OF_MONTH, chosenDay);
+            Log.d(TAG, "calendarTest: adjusting 1");
+            if (currentMonth < calendar.get(Calendar.MONTH)) {
+                Log.d(TAG, "calendarTest: adjusting 2");
+                calendar.set(Calendar.MONTH, currentMonth);
+                calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+            }
+        }
+
+        Log.d(TAG, "calendarTest:  " + SimpleDateFormat.getDateInstance().format(calendar.getTime()));
+    }
+
+    private void updateResetDayText(int day) {
         String stringDay = String.format(Locale.getDefault(),
                 "budget will reset every %d of the month",
                 day);
