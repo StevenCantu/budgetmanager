@@ -34,7 +34,7 @@ public class NeverAskAgainDialog extends DialogFragment {
         super.onAttach(context);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mMessage = bundle.getString(MESSAGE, "Are you sure you want to edit income");
+            mMessage = bundle.getString(MESSAGE, "Are you sure you want to edit income?");
             mKey = bundle.getString(KEY, EMPTY_KEY);
         }
     }

@@ -15,7 +15,9 @@ public class Common {
     public static final String IS_CHECKED = "checked";
     public static final String NOT_CHECKED = "not checked";
     // Calendar info
+    public static final String CALCULATED_RESET_DAY_EXTRA = "com.example.thegreatbudget.util.extra.calculated.reset.day";
     public static final String RESET_DAY_EXTRA = "com.example.thegreatbudget.util.extra.reset.day";
+    public static final String RESET_ONCE = "com.example.thegreatbudget.util.extra.reset.once";
     public static final int RESET_DAY_DEFAULT = 1;
 
 

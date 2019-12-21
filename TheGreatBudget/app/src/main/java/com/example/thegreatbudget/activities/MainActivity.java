@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,12 +22,15 @@ import android.widget.TextView;
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
+import com.example.thegreatbudget.fragments.ExpenseDialogFragment;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.util.Common;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -61,6 +65,43 @@ public class MainActivity extends AppCompatActivity {
     private ExpenseFragment mOther;
     private String mCurrentSpinnerItem = INCOME;
     private ImageButton mEditIncomeButton;
+    // calendar
+    private int mChosenDay;
+    private int mCalculatedDay;
+    private Calendar mCalendar;
+    private boolean mHasBeenReset;
+
+    private void calculateNextDay() {
+        mCalendar.add(Calendar.MONTH, 1);
+        int currentMonth = mCalendar.get(Calendar.MONTH);
+
+        if (mChosenDay > mCalendar.get(Calendar.DAY_OF_MONTH)) {
+            mCalendar.set(Calendar.DAY_OF_MONTH, mChosenDay);
+            if (currentMonth < mCalendar.get(Calendar.MONTH)) {
+                mCalendar.set(Calendar.MONTH, currentMonth);
+                mCalendar.set(Calendar.DAY_OF_MONTH, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+                SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putInt(Common.CALCULATED_RESET_DAY_EXTRA, mCalendar.get(Calendar.DAY_OF_MONTH));
+
+                editor.apply();
+            }
+        }
+    }
+
+    private void showResetDialog() {
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ExpenseDialogFragment.TITLE, "NOTICE");
+        bundle.putString(ExpenseDialogFragment.MESSAGE, "Reset day has been reached.\n" +
+                "You can checkout your statement in the settings.");
+        dialog.setArguments(bundle);
+        if (getSupportFragmentManager() != null) {
+            dialog.show(getSupportFragmentManager(), "Reset Notice");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +109,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadData();
-        // TODO: 12/5/2019 monthly reset logic
+
+        mCalendar = Calendar.getInstance();
+        Log.d(TAG, "onCreate: " + SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
+        int today = mCalendar.get(Calendar.DAY_OF_MONTH);
+        Log.d(TAG, "onCreate: today = " + today + " cDay = " + mCalculatedDay + " chosenD = " + mChosenDay);
+        if (today == mCalculatedDay && !mHasBeenReset) {
+            mHasBeenReset = true;
+            Log.d(TAG, "onCreate: THE END OF TIME");
+            // TODO: 12/20/2019 create statement
+            calculateNextDay();
+            showResetDialog();
+            // TODO: 12/20/2019 proceed on dialog button
 //        BudgetDbHelper.getInstance(this).resetBD();
+        } else {
+            if (today != mCalculatedDay) {
+                mHasBeenReset = false;
+            }
+            Log.d(TAG, "onCreate: it didnt work");
+        }
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Common.RESET_ONCE, mHasBeenReset);
+        editor.apply();
 
         initSpinner();
         mEditIncomeButton.setOnClickListener(incomeClickListener);
@@ -261,6 +323,10 @@ public class MainActivity extends AppCompatActivity {
     private void loadData() {
         SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         mIncome = getDouble(sp, INCOME_SHARED_PREFS, 0d);
+
+        mChosenDay = sp.getInt(Common.RESET_DAY_EXTRA, Common.RESET_DAY_DEFAULT);
+        mCalculatedDay = sp.getInt(Common.CALCULATED_RESET_DAY_EXTRA, Common.RESET_DAY_DEFAULT);
+        mHasBeenReset = sp.getBoolean(Common.RESET_ONCE, false);
     }
 
     /**
@@ -324,5 +390,4 @@ public class MainActivity extends AppCompatActivity {
     };
 
     // TODO: 11/1/2019 lookup how to put hints on app
-    // TODO: 11/22/2019 lookup how to create statement for the previous month
 }

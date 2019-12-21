@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
@@ -16,6 +17,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.fragments.DatePickerFragment;
 import com.example.thegreatbudget.util.Common;
 
 import java.text.SimpleDateFormat;
@@ -103,9 +105,9 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DialogFragment datePickerFragment = new DatePickerFragment();
-//                datePickerFragment.show(getSupportFragmentManager(), "date picker");
-                calendarTest();
+                DialogFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getSupportFragmentManager(), "date picker");
+//                calendarTest();
             }
         });
     }
@@ -129,7 +131,7 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
 
     private void updateResetDayText(int day) {
         String stringDay = String.format(Locale.getDefault(),
-                "budget will reset every %d of the month",
+                "Budget will reset every %d of the month.",
                 day);
 
         mDayText.setText(stringDay);
@@ -144,11 +146,11 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
         SharedPreferences sp = getSharedPreferences(Common.SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putInt(Common.RESET_DAY_EXTRA, day);
+        editor.putInt(Common.CALCULATED_RESET_DAY_EXTRA, day);
         editor.apply();
     }
 
     private void goHome() {
-        Log.d(TAG, "goHome: ");
         Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
