@@ -19,6 +19,8 @@ public class Common {
     public static final String RESET_DAY_EXTRA = "com.example.thegreatbudget.util.extra.reset.day";
     public static final String RESET_ONCE = "com.example.thegreatbudget.util.extra.reset.once";
     public static final int RESET_DAY_DEFAULT = 1;
+    // permission requests
+    public static final int WRITE_REQUEST_CODE = 1;
 
 
     public static void themeSetter(Context context) {

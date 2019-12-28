@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    tools:context=".activities.StatementActivity">
+
+    <TextView
+        android:id="@+id/income_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="$0.00"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/income_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Income"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/expense_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="$0.00"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/income_text" />
+
+    <TextView
+        android:id="@+id/minus_sign_literal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="-"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintEnd_toStartOf="@+id/expense_total"
+        app:layout_constraintTop_toBottomOf="@+id/income_text" />
+
+    <TextView
+        android:id="@+id/expense_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Expense"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/income_text" />
+
+    <ImageView
+        android:id="@+id/total_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:src="?attr/dividerColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/expense_text" />
+
+    <TextView
+        android:id="@+id/after_expenses_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="$0.00"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_divider" />
+
+    <TextView
+        android:id="@+id/after_expenses_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Total"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/total_divider" />
+
+    <TextView
+        android:id="@+id/expenses_list_literal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:text="Expenses:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/list_divider" />
+
+    <ImageView
+        android:id="@+id/list_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="38dp"
+        android:src="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/after_expenses_text" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/history_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list_divider" />
+
+
+</android.support.constraint.ConstraintLayout>

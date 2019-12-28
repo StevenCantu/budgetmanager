@@ -12,6 +12,7 @@
         <item name="mainTextColor">@color/mainText</item>
         <item name="tabTextColor">@color/textColorDark</item>
         <item name="tintColor">@color/tintColor</item>
+        <item name="dividerColor">@color/textColor</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -26,6 +27,7 @@
         <item name="mainTextColor">@color/textColorDark</item>
         <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColorDark</item>
+        <item name="dividerColor">@color/accent</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -40,6 +42,7 @@
         <item name="mainTextColor">@color/mainText</item>
         <item name="tabTextColor">@color/textColorDark</item>
         <item name="tintColor">@color/tintColor</item>
+        <item name="dividerColor">@color/textColor</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -54,6 +57,7 @@
         <item name="mainTextColor">@color/textColorDark</item>
         <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColorDark</item>
+        <item name="dividerColor">@color/accent</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 

@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
 
-class PdfMaker {
+public class PdfMaker {
 
     private static final String TAG = "PdfMaker";
     // width and height measured in 1/72 of an inch
@@ -34,7 +34,7 @@ class PdfMaker {
     private Canvas mCanvas;
     private Paint mPaint;
 
-    PdfMaker() {
+    public PdfMaker() {
         mIncome = 100000f;
         mExpense = 52f;
         mTotal = mIncome - mExpense;
@@ -121,7 +121,7 @@ class PdfMaker {
         mPaint = new Paint();
     }
 
-    void makePdf() {
+    public void makePdf() {
         String extStorageDir = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDir, "Download");
 

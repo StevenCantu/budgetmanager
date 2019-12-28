@@ -1,9 +1,14 @@
 package com.example.thegreatbudget.activities;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.fragments.DatePickerFragment;
 import com.example.thegreatbudget.util.Common;
+import com.example.thegreatbudget.util.PdfMaker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -108,6 +114,15 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
                 DialogFragment datePickerFragment = new DatePickerFragment();
                 datePickerFragment.show(getSupportFragmentManager(), "date picker");
 //                calendarTest();
+            }
+        });
+
+        CardView statementCardView = findViewById(R.id.statement_card_view);
+        statementCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, StatementActivity.class);
+                startActivity(intent);
             }
         });
     }

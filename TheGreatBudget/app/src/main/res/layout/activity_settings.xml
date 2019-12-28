@@ -72,4 +72,36 @@
 
     </android.support.v7.widget.CardView>
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/statement_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="?attr/cardBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/statement_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="?attr/textColor"
+                android:text="Statement"/>
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:id="@+id/statement_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/textColor"
+                android:text="View statement for previous month."/>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>
