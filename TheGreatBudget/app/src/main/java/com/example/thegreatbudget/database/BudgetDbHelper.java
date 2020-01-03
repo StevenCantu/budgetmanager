@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.thegreatbudget.database.BudgetContract.BudgetTable;
 import com.example.thegreatbudget.database.BudgetContract.CategoriesTable;
+import com.example.thegreatbudget.database.BudgetContract.BalanceItemTable;
+import com.example.thegreatbudget.database.BudgetContract.StatementTable;
+import com.example.thegreatbudget.model.BalanceItem;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.model.Expenses;
 import com.example.thegreatbudget.model.History;
@@ -65,8 +67,28 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
                         CategoriesTable.TABLE_NAME + "(" + CategoriesTable._ID + ") ON DELETE CASCADE" +
                         ")";
 
+        final String CREATE_STATEMENT_INFO_TABLE =
+                "CREATE TABLE " + BalanceItemTable.TABLE_NAME + " ( " +
+                        BalanceItemTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        BalanceItemTable.ITEM_NAME + " TEXT, " +
+                        BalanceItemTable.AMOUNT + " REAL " +
+                        ")";
+
+        final String CREATE_STATEMENT_TABLE =
+                "CREATE TABLE " + StatementTable.TABLE_NAME + " ( " +
+                        StatementTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        StatementTable.EXPENSE + " TEXT, " +
+                        StatementTable.AMOUNT + " REAL, " +
+                        StatementTable.HISTORY + " TEXT," +
+                        StatementTable.CATEGORY_ID + " INTEGER, " +
+                        "FOREIGN KEY (" + StatementTable.CATEGORY_ID + ") REFERENCES " +
+                        CategoriesTable.TABLE_NAME + "(" + CategoriesTable._ID + ") ON DELETE CASCADE" +
+                        ")";
+
         mDatabase.execSQL(CREATE_CATEGORY_TABLE);
         mDatabase.execSQL(CREATE_BUDGET_TABLE);
+        mDatabase.execSQL(CREATE_STATEMENT_INFO_TABLE);
+        mDatabase.execSQL(CREATE_STATEMENT_TABLE);
         fillCategoryTable();
         fillBudgetTable();
     }
@@ -78,113 +100,19 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         onCreate(mDatabase);
     }
 
-    private void fillCategoryTable() {
-        Category housing = new Category("housing");
-        Category insurance = new Category("insurance");
-        Category personal = new Category("personal");
-        Category wants = new Category("wants");
-        Category misc = new Category("misc");
-        insertCategory(housing);
-        insertCategory(insurance);
-        insertCategory(personal);
-        insertCategory(wants);
-        insertCategory(misc);
-    }
-
-    private void insertCategory(Category category) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(CategoriesTable.CATEGORY_NAME, category.getCategoryName());
-        mDatabase.insert(CategoriesTable.TABLE_NAME, null, contentValues);
-    }
-
-    private void fillBudgetTable() {
-        Expenses rent = new Expenses("Rent/Mortgage", Category.HOUSING);
-        Expenses electricity = new Expenses("Electricity", Category.HOUSING);
-        Expenses gas = new Expenses("Gas", Category.HOUSING);
-        Expenses cable = new Expenses("Internet/Cable", Category.HOUSING);
-        Expenses water = new Expenses("Water/Sewage", Category.HOUSING);
-        insertExpense(rent);
-        insertExpense(electricity);
-        insertExpense(gas);
-        insertExpense(cable);
-        insertExpense(water);
-
-        Expenses car = new Expenses("Car loan", Category.PERSONAL);
-        Expenses groceries = new Expenses("Groceries", Category.PERSONAL);
-        Expenses toiletries = new Expenses("Toiletries", Category.PERSONAL);
-        Expenses transportation = new Expenses("Gasoline/Transportation", Category.PERSONAL);
-        Expenses cell = new Expenses("Cell Phone", Category.PERSONAL);
-        insertExpense(car);
-        insertExpense(groceries);
-        insertExpense(toiletries);
-        insertExpense(transportation);
-        insertExpense(cell);
-
-        Expenses auto = new Expenses("Auto", Category.INSURANCE);
-        Expenses health = new Expenses("Health", Category.INSURANCE);
-        Expenses life = new Expenses("Life", Category.INSURANCE);
-        Expenses home = new Expenses("Renters/Home Owners", Category.INSURANCE);
-        insertExpense(auto);
-        insertExpense(health);
-        insertExpense(life);
-        insertExpense(home);
-
-        Expenses clothes = new Expenses("Clothes", Category.WANTS);
-        Expenses dinning = new Expenses("Dining Out", Category.WANTS);
-        Expenses events = new Expenses("Events", Category.WANTS);
-        Expenses gym = new Expenses("Gym/Clubs", Category.WANTS);
-        Expenses travel = new Expenses("Travel", Category.WANTS);
-        Expenses decor = new Expenses("Home Decor", Category.WANTS);
-        Expenses streaming = new Expenses("Streaming Services", Category.WANTS);
-        insertExpense(clothes);
-        insertExpense(dinning);
-        insertExpense(events);
-        insertExpense(gym);
-        insertExpense(travel);
-        insertExpense(decor);
-        insertExpense(streaming);
-    }
-
-    private void insertExpense(Expenses expense) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BudgetTable.EXPENSE, expense.getTitle());
-        contentValues.put(BudgetTable.AMOUNT, expense.getAmount());
-        contentValues.put(BudgetTable.HISTORY, expense.getHistoryJson());
-        contentValues.put(BudgetTable.CATEGORY_ID, expense.getCategoryId());
-        mDatabase.insert(BudgetTable.TABLE_NAME, null, contentValues);
-    }
-
     public void addExpense(Expenses expense) {
         mDatabase = getWritableDatabase();
-        insertExpense(expense);
+        insertToBudgetTable(expense);
     }
 
     public void deleteExpense(long id) {
         mDatabase = getWritableDatabase();
-        delete(id);
-    }
-
-    private void delete(long id) {
-        mDatabase.delete(BudgetTable.TABLE_NAME, BudgetTable._ID + "=" + id, null);
+        deleteFromBudgetTable(id);
     }
 
     public void editExpense(Expenses expense) {
         mDatabase = getWritableDatabase();
-        edit(expense);
-    }
-
-    private void edit(Expenses expense) {
-        ContentValues values = new ContentValues();
-
-        values.put(BudgetTable.AMOUNT, expense.getAmount());
-        values.put(BudgetTable.HISTORY, expense.getHistoryJson());
-
-        mDatabase.update(
-                BudgetTable.TABLE_NAME,
-                values,
-                BudgetTable._ID + "=" + expense.getId(),
-                null
-        );
+        editFromBudgetTable(expense);
     }
 
     public Cursor getExpensesCursor(int category) {
@@ -204,6 +132,34 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         );
     }
 
+    public Cursor getBalanceCursor() {
+        mDatabase = getReadableDatabase();
+
+        return mDatabase.query(
+                BalanceItemTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                BalanceItemTable._ID + " ASC"
+        );
+    }
+
+    public Cursor getStatementCursor() {
+        mDatabase = getReadableDatabase();
+
+        return mDatabase.query(
+                StatementTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                StatementTable._ID + " ASC"
+        );
+    }
+
     public double totalExpenses() {
         double total = 0;
         mDatabase = getReadableDatabase();
@@ -218,8 +174,15 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         return total;
     }
 
+    public void addBalanceItem(BalanceItem item) {
+        mDatabase = getWritableDatabase();
+        insertBalanceItem(item);
+    }
+
     public void resetBD() {
         mDatabase = getWritableDatabase();
+        resetBalanceItemTable();
+        resetStatementTable();
 
         try (Cursor cursor = mDatabase.query(
                 BudgetTable.TABLE_NAME,
@@ -238,14 +201,150 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
                 final String historyJson = cursor.getString(cursor.getColumnIndex(BudgetTable.HISTORY));
                 Expenses expenses = new Expenses(id, expense, amount, categoryId, historyJson);
 
-                if (categoryId == Category.MISC) {
-                    delete(id);
-                } else {
-                    expenses.setAmount(0f);
-                    expenses.setHistory(new History());
-                    edit(expenses);
+                if (amount > 0f) {
+                    insertToStatementTable(expenses);
                 }
+
+                // TODO: 12/30/2019 uncomment 
+//                if (categoryId == Category.MISC) {
+//                    deleteFromBudgetTable(id);
+//                } else {
+//                    expenses.setAmount(0f);
+//                    expenses.setHistory(new History());
+//                    editFromBudgetTable(expenses);
+//                }
             }
         }
+    }
+
+    private void resetBalanceItemTable() {
+        try (Cursor cursor = mDatabase.query(
+                BalanceItemTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                BalanceItemTable._ID + " DESC"
+        )) {
+            while (cursor.moveToNext()) {
+                final long id = cursor.getLong(cursor.getColumnIndex(BalanceItemTable._ID));
+                deleteFromBalanceItemTable(id);
+            }
+        }
+    }
+
+    private void resetStatementTable() {
+        try (Cursor cursor = mDatabase.query(
+                StatementTable.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                StatementTable._ID + " DESC"
+        )) {
+            while (cursor.moveToNext()) {
+                final long id = cursor.getLong(cursor.getColumnIndex(StatementTable._ID));
+                deleteFromStatementTable(id);
+            }
+        }
+    }
+
+    private void insertBalanceItem(BalanceItem item) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BalanceItemTable.ITEM_NAME, item.getName());
+        contentValues.put(BalanceItemTable.AMOUNT, item.getAmount());
+        mDatabase.insert(BalanceItemTable.TABLE_NAME, null, contentValues);
+    }
+
+    private void insertToStatementTable(Expenses expense) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(StatementTable.EXPENSE, expense.getTitle());
+        contentValues.put(StatementTable.AMOUNT, expense.getAmount());
+        contentValues.put(StatementTable.HISTORY, expense.getHistoryJson());
+        contentValues.put(StatementTable.CATEGORY_ID, expense.getCategoryId());
+        mDatabase.insert(StatementTable.TABLE_NAME, null, contentValues);
+    }
+
+    private void insertCategory(Category category) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CategoriesTable.CATEGORY_NAME, category.getCategoryName());
+        mDatabase.insert(CategoriesTable.TABLE_NAME, null, contentValues);
+    }
+
+    private void insertToBudgetTable(Expenses expense) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BudgetTable.EXPENSE, expense.getTitle());
+        contentValues.put(BudgetTable.AMOUNT, expense.getAmount());
+        contentValues.put(BudgetTable.HISTORY, expense.getHistoryJson());
+        contentValues.put(BudgetTable.CATEGORY_ID, expense.getCategoryId());
+        mDatabase.insert(BudgetTable.TABLE_NAME, null, contentValues);
+    }
+
+    private void fillCategoryTable() {
+        Category housing = new Category("housing");
+        Category insurance = new Category("insurance");
+        Category personal = new Category("personal");
+        Category wants = new Category("wants");
+        Category misc = new Category("misc");
+        insertCategory(housing);
+        insertCategory(insurance);
+        insertCategory(personal);
+        insertCategory(wants);
+        insertCategory(misc);
+    }
+
+    private void fillBudgetTable() {
+        insertToBudgetTable(new Expenses("Rent/Mortgage", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Electricity", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Gas", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Internet/Cable", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Water/Sewage", Category.HOUSING));
+
+        insertToBudgetTable(new Expenses("Car loan", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Groceries", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Toiletries", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Gasoline/Transportation", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Cell Phone", Category.PERSONAL));
+
+        insertToBudgetTable(new Expenses("Auto", Category.INSURANCE));
+        insertToBudgetTable(new Expenses("Health", Category.INSURANCE));
+        insertToBudgetTable(new Expenses("Life", Category.INSURANCE));
+        insertToBudgetTable(new Expenses("Renters/Home Owners", Category.INSURANCE));
+
+        insertToBudgetTable(new Expenses("Clothes", Category.WANTS));
+        insertToBudgetTable(new Expenses("Dining Out", Category.WANTS));
+        insertToBudgetTable(new Expenses("Events", Category.WANTS));
+        insertToBudgetTable(new Expenses("Gym/Clubs", Category.WANTS));
+        insertToBudgetTable(new Expenses("Travel", Category.WANTS));
+        insertToBudgetTable(new Expenses("Home Decor", Category.WANTS));
+        insertToBudgetTable(new Expenses("Streaming Services", Category.WANTS));
+    }
+
+    private void deleteFromBudgetTable(long id) {
+        mDatabase.delete(BudgetTable.TABLE_NAME, BudgetTable._ID + "=" + id, null);
+    }
+
+    private void deleteFromBalanceItemTable(long id) {
+        mDatabase.delete(BalanceItemTable.TABLE_NAME, BalanceItemTable._ID + "=" + id, null);
+    }
+
+    private void deleteFromStatementTable(long id) {
+        mDatabase.delete(StatementTable.TABLE_NAME, StatementTable._ID + "=" + id, null);
+    }
+
+    private void editFromBudgetTable(Expenses expense) {
+        ContentValues values = new ContentValues();
+
+        values.put(BudgetTable.AMOUNT, expense.getAmount());
+        values.put(BudgetTable.HISTORY, expense.getHistoryJson());
+
+        mDatabase.update(
+                BudgetTable.TABLE_NAME,
+                values,
+                BudgetTable._ID + "=" + expense.getId(),
+                null
+        );
     }
 }

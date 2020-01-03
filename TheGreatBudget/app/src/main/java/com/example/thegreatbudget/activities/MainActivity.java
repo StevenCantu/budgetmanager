@@ -2,6 +2,7 @@ package com.example.thegreatbudget.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -21,9 +22,11 @@ import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
+import com.example.thegreatbudget.database.BudgetContract;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseDialogFragment;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
+import com.example.thegreatbudget.model.BalanceItem;
 import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.util.Common;
 
@@ -103,41 +106,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void resetBudget() {
+        mCalendar = Calendar.getInstance();
+        int today = mCalendar.get(Calendar.DAY_OF_MONTH);
+        if (today == mCalculatedDay && !mHasBeenReset) {
+            mHasBeenReset = true;
+            calculateNextDay();
+            showResetDialog();
+            // TODO: 12/30/2019 uncomment
+//            resetDataBase();
+        } else if (today != mCalculatedDay) {
+            mHasBeenReset = false;
+        }
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Common.RESET_ONCE, mHasBeenReset);
+        editor.apply();
+    }
+
+    private void resetDataBase() {
+        BudgetDbHelper db = BudgetDbHelper.getInstance(this);
+        db.resetBD();
+        db.addBalanceItem(new BalanceItem(BalanceItem.INCOME, mIncome));
+        db.addBalanceItem(new BalanceItem(BalanceItem.EXPENSE, mTotalExpenses));
+        // TODO: 12/30/2019 uncomment
+//        mIncome = 0f;
+//        mTotalExpenses = 0f;
+//        mAfterExpenses = 0f;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadData();
-
-        mCalendar = Calendar.getInstance();
-        Log.d(TAG, "onCreate: " + SimpleDateFormat.getDateInstance().format(mCalendar.getTime()));
-        int today = mCalendar.get(Calendar.DAY_OF_MONTH);
-        Log.d(TAG, "onCreate: today = " + today + " cDay = " + mCalculatedDay + " chosenD = " + mChosenDay);
-        if (today == mCalculatedDay && !mHasBeenReset) {
-            mHasBeenReset = true;
-            Log.d(TAG, "onCreate: THE END OF TIME");
-            // TODO: 12/20/2019 create statement
-            calculateNextDay();
-            showResetDialog();
-            // TODO: 12/20/2019 proceed on dialog button
-//        BudgetDbHelper.getInstance(this).resetBD();
-        } else {
-            if (today != mCalculatedDay) {
-                mHasBeenReset = false;
-            }
-            Log.d(TAG, "onCreate: it didnt work");
-        }
-        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Common.RESET_ONCE, mHasBeenReset);
-        editor.apply();
-
-        initSpinner();
-        mEditIncomeButton.setOnClickListener(incomeClickListener);
         mTotalExpenses = BudgetDbHelper.getInstance(this).totalExpenses();
         mAfterExpenses = mIncome - mTotalExpenses;
 
+        resetDataBase();
+
+        initSpinner();
+        mEditIncomeButton.setOnClickListener(incomeClickListener);
         mCurrencyText = findViewById(R.id.main_income);
         updateCurrencyText();
 

@@ -41,6 +41,7 @@ import static com.example.thegreatbudget.util.Common.SHARED_PREFERENCES;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    public static final String READ_ONLY_EXTRA = "thegreatbudget.activities.read.only.extra";
     public static final String EXPENSE_EXTRA = "thegreatbudget.expense.obj.extra";
     private static final String TAG = "DetailsActivity";
     public static final String CLEAR_ALL_KEY = "DetailsActivity.skipMessage.clearall";
@@ -57,8 +58,9 @@ public class DetailsActivity extends AppCompatActivity {
     private ColorStateList mStateList;
     private BudgetDbHelper mDataBase;
     private Expenses mExpense = new Expenses();
+    private HistoryRecyclerAdapter mAdapter;
 
-    HistoryRecyclerAdapter mAdapter;
+    private boolean mIsReadOnly;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (mIsReadOnly) {
+            return super.onCreateOptionsMenu(menu);
+        }
         MenuInflater inflater = getMenuInflater();
         inflater.inflate((R.menu.details_activity_menu), menu);
         return true;
@@ -98,6 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
         boolean deletable = false;
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
+            mIsReadOnly = bundle.getBoolean(READ_ONLY_EXTRA, false);
             mExpense = bundle.getParcelable(EXPENSE_EXTRA);
             itemName = mExpense.getTitle();
             itemAmount = mExpense.getAmount();
@@ -115,6 +121,11 @@ public class DetailsActivity extends AppCompatActivity {
 
         if (deletable) mDelete.setVisibility(View.VISIBLE);
         else mDelete.setVisibility(View.INVISIBLE);
+
+        if (mIsReadOnly) {
+            mClearAll.setVisibility(View.INVISIBLE);
+            mDelete.setVisibility(View.INVISIBLE);
+        }
 
         mExpenseItem.setText(itemName);
         mExpenseTotal.setText(numberFormat.format(itemAmount));

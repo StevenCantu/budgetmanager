@@ -1,5 +1,7 @@
 package com.example.thegreatbudget.util;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -7,10 +9,19 @@ import android.graphics.pdf.PdfDocument;
 import android.os.Environment;
 import android.util.Log;
 
+import com.example.thegreatbudget.database.BudgetContract;
+import com.example.thegreatbudget.database.BudgetDbHelper;
+import com.example.thegreatbudget.model.BalanceItem;
+import com.example.thegreatbudget.model.Expenses;
+import com.example.thegreatbudget.model.HistoryItem;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class PdfMaker {
 
@@ -22,9 +33,9 @@ public class PdfMaker {
     private static final float TOP_MARGIN = 30f;
     private static final float START_MARGIN = 30f;
 
-    private float mIncome;
-    private float mExpense;
-    private float mTotal;
+    private double mIncome;
+    private double mExpense;
+    private double mTotal;
     private float mLinePosition = LINE_SPACING;
     private int mPageNumber = 1;
 
@@ -33,11 +44,43 @@ public class PdfMaker {
     private PdfDocument.Page mPage;
     private Canvas mCanvas;
     private Paint mPaint;
+    private List<Expenses> mStatementList = new ArrayList<>();
 
-    public PdfMaker() {
-        mIncome = 100000f;
-        mExpense = 52f;
+    public PdfMaker(Context context) {
+//        mIncome = 100000f;
+//        mExpense = 52f;
+//        mTotal = mIncome - mExpense;
+        initBalanceFields(context);
+        initStatementList(context);
+    }
+
+    private void initBalanceFields(Context context) {
+        Cursor balanceCursor = BudgetDbHelper.getInstance(context).getBalanceCursor();
+        while (balanceCursor.moveToNext()) {
+            String name = balanceCursor.getString(balanceCursor.getColumnIndex(BudgetContract.BalanceItemTable.ITEM_NAME));
+            double amount = balanceCursor.getDouble(balanceCursor.getColumnIndex(BudgetContract.BalanceItemTable.AMOUNT));
+            if (BalanceItem.INCOME.equals(name)) {
+                mIncome = amount;
+            } else if (BalanceItem.EXPENSE.equals(name)) {
+                mExpense = amount;
+            }
+        }
         mTotal = mIncome - mExpense;
+        balanceCursor.close();
+    }
+
+    private void initStatementList(Context context) {
+        Cursor cursor = BudgetDbHelper.getInstance(context).getStatementCursor();
+        while (cursor.moveToNext()) {
+            final long id = cursor.getLong(cursor.getColumnIndex(BudgetContract.BudgetTable._ID));
+            final String expense = cursor.getString(cursor.getColumnIndex(BudgetContract.BudgetTable.EXPENSE));
+            final float amount = cursor.getFloat(cursor.getColumnIndex(BudgetContract.BudgetTable.AMOUNT));
+            final int categoryId = cursor.getInt(cursor.getColumnIndex(BudgetContract.BudgetTable.CATEGORY_ID));
+            final String historyJson = cursor.getString(cursor.getColumnIndex(BudgetContract.BudgetTable.HISTORY));
+            Expenses expenses = new Expenses(id, expense, amount, categoryId, historyJson);
+            mStatementList.add(expenses);
+        }
+        cursor.close();
     }
 
     private void goToNextLine() {
@@ -81,15 +124,42 @@ public class PdfMaker {
         mCanvas.drawLine(START_MARGIN, mLinePosition, mCanvas.getWidth() - START_MARGIN, mLinePosition, mPaint);
         goToNextLine();
 
-        for (int i = 0; i < 100; i++) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        for (Expenses e : mStatementList) {
+            String titleText = e.getTitle();
+            String messageText = format.format(e.getAmount());
+
             checkForNewPage();
-            mCanvas.drawText("sample* " + i, START_MARGIN, mLinePosition, mPaint);
+            mCanvas.drawText(titleText, START_MARGIN, mLinePosition, mPaint);
             Rect bound = new Rect();
-            mPaint.getTextBounds("text", 0, "text".length(), bound);
+            mPaint.getTextBounds(messageText, 0, messageText.length(), bound);
             float xPos = mCanvas.getWidth() - START_MARGIN - bound.width();
-            mCanvas.drawText("text", xPos, mLinePosition, mPaint);
+            mCanvas.drawText(messageText, xPos, mLinePosition, mPaint);
             goToNextLine();
+
+            for (HistoryItem item : e.getHistory().getHistory()) {
+                titleText = format.format(item.getAmount());
+                messageText = item.getDate();
+
+                checkForNewPage();
+                mCanvas.drawText(titleText, mCanvas.getWidth() / 4, mLinePosition, mPaint);
+                bound = new Rect();
+                mPaint.getTextBounds(messageText, 0, messageText.length(), bound);
+                xPos = mCanvas.getWidth() - START_MARGIN - bound.width();
+                mCanvas.drawText(messageText, xPos, mLinePosition, mPaint);
+                goToNextLine();
+            }
         }
+
+//        for (int i = 0; i < 100; i++) {
+//            checkForNewPage();
+//            mCanvas.drawText("sample* " + i, START_MARGIN, mLinePosition, mPaint);
+//            Rect bound = new Rect();
+//            mPaint.getTextBounds("text", 0, "text".length(), bound);
+//            float xPos = mCanvas.getWidth() - START_MARGIN - bound.width();
+//            mCanvas.drawText("text", xPos, mLinePosition, mPaint);
+//            goToNextLine();
+//        }
     }
 
     private void checkForNewPage() {
@@ -146,33 +216,4 @@ public class PdfMaker {
             Log.d(TAG, "makePdf: success!");
         }
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == WRITE_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            Log.d(TAG, "onRequestPermissionsResult: granted");
-//            PdfMaker pdfMaker = new PdfMaker();
-//            pdfMaker.makePdf();
-//        }
-//    }
-//
-//    private boolean isStoragePermissionGranted() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-//                    == PackageManager.PERMISSION_GRANTED) {
-//                Log.v(TAG,"Permission is granted");
-//                return true;
-//            } else {
-//
-//                Log.v(TAG,"Permission is revoked");
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_REQUEST_CODE);
-//                return false;
-//            }
-//        }
-//        else { //permission is automatically granted on sdk<23 upon installation
-//            Log.v(TAG,"Permission is granted");
-//            return true;
-//        }
-//    }
 }

@@ -8,7 +8,7 @@
     tools:context=".activities.StatementActivity">
 
     <TextView
-        android:id="@+id/income_total"
+        android:id="@+id/statement_income_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/expense_total"
+        android:id="@+id/statement_expense_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -52,7 +52,7 @@
         android:text="-"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="?attr/textColor"
-        app:layout_constraintEnd_toStartOf="@+id/expense_total"
+        app:layout_constraintEnd_toStartOf="@+id/statement_expense_total"
         app:layout_constraintTop_toBottomOf="@+id/income_text" />
 
     <TextView
@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/expense_text" />
 
     <TextView
-        android:id="@+id/after_expenses_total"
+        android:id="@+id/statement_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -125,7 +125,7 @@
         app:layout_constraintTop_toBottomOf="@+id/after_expenses_text" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/history_recycler_view"
+        android:id="@+id/statement_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
