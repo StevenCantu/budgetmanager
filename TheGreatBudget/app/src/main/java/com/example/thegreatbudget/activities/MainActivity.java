@@ -113,8 +113,7 @@ public class MainActivity extends AppCompatActivity {
             mHasBeenReset = true;
             calculateNextDay();
             showResetDialog();
-            // TODO: 12/30/2019 uncomment
-//            resetDataBase();
+            resetDataBase();
         } else if (today != mCalculatedDay) {
             mHasBeenReset = false;
         }
@@ -129,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
         db.resetBD();
         db.addBalanceItem(new BalanceItem(BalanceItem.INCOME, mIncome));
         db.addBalanceItem(new BalanceItem(BalanceItem.EXPENSE, mTotalExpenses));
-        // TODO: 12/30/2019 uncomment
-//        mIncome = 0f;
-//        mTotalExpenses = 0f;
-//        mAfterExpenses = 0f;
+        mIncome = 0f;
+        mTotalExpenses = 0f;
+        mAfterExpenses = 0f;
     }
 
     @Override
@@ -144,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         mTotalExpenses = BudgetDbHelper.getInstance(this).totalExpenses();
         mAfterExpenses = mIncome - mTotalExpenses;
 
-        resetDataBase();
+        resetBudget();
 
         initSpinner();
         mEditIncomeButton.setOnClickListener(incomeClickListener);

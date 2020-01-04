@@ -146,7 +146,8 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
 
     private void updateResetDayText(int day) {
         String stringDay = String.format(Locale.getDefault(),
-                "Budget will reset every %d of the month.",
+                "Budget will reset every %d of the month.\n" +
+                "Note: Changing date may reset your current information.",
                 day);
 
         mDayText.setText(stringDay);

@@ -33,11 +33,13 @@ import java.util.Locale;
 public class StatementActivity extends AppCompatActivity {
 
     private static final String TAG = "StatementActivity";
-    public static final int DETAILS_ACTIVITY_REQUEST = 21;
+    private static final double EPSILON = 0.001d;
 
     private TextView mIncomeText;
     private TextView mExpenseText;
     private TextView mTotalText;
+
+    private boolean mCanSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,10 @@ public class StatementActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_statement) {
+            if (!mCanSave) {
+                Toast.makeText(this, "There is no information to save.", Toast.LENGTH_SHORT).show();
+                return true;
+            }
             if (isStoragePermissionGranted()) {
                 savePdf();
             }
@@ -81,8 +87,8 @@ public class StatementActivity extends AppCompatActivity {
     }
 
     private void fillBalance() {
-        double income = 0;
-        double expense = 0;
+        double income = 0d;
+        double expense = 0d;
         double total;
 
         BudgetDbHelper db = BudgetDbHelper.getInstance(this);
@@ -103,6 +109,12 @@ public class StatementActivity extends AppCompatActivity {
         mIncomeText.setText(format.format(income));
         mExpenseText.setText(format.format(expense));
         mTotalText.setText(format.format(total));
+
+        if (Math.abs(income) <= EPSILON && Math.abs(expense) <= EPSILON) {
+            mCanSave = false;
+        } else {
+            mCanSave = true;
+        }
     }
 
     private void initRecyclerView() {

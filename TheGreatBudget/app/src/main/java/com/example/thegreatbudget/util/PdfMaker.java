@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,9 +48,6 @@ public class PdfMaker {
     private List<Expenses> mStatementList = new ArrayList<>();
 
     public PdfMaker(Context context) {
-//        mIncome = 100000f;
-//        mExpense = 52f;
-//        mTotal = mIncome - mExpense;
         initBalanceFields(context);
         initStatementList(context);
     }
@@ -150,16 +148,6 @@ public class PdfMaker {
                 goToNextLine();
             }
         }
-
-//        for (int i = 0; i < 100; i++) {
-//            checkForNewPage();
-//            mCanvas.drawText("sample* " + i, START_MARGIN, mLinePosition, mPaint);
-//            Rect bound = new Rect();
-//            mPaint.getTextBounds("text", 0, "text".length(), bound);
-//            float xPos = mCanvas.getWidth() - START_MARGIN - bound.width();
-//            mCanvas.drawText("text", xPos, mLinePosition, mPaint);
-//            goToNextLine();
-//        }
     }
 
     private void checkForNewPage() {
@@ -194,9 +182,17 @@ public class PdfMaker {
     public void makePdf() {
         String extStorageDir = Environment.getExternalStorageDirectory().toString();
         File folder = new File(extStorageDir, "Download");
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        StringBuilder fileName = new StringBuilder("statement");
+        fileName.append("_").append(month+1);
+        fileName.append("_").append(year);
+        fileName.append(".pdf");
 
         try {
-            final File file = new File(folder, "sample.pdf");
+            final File file = new File(folder, fileName.toString());
             file.createNewFile();
             FileOutputStream fOut = new FileOutputStream(file);
 

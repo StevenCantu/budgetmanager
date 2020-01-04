@@ -204,15 +204,13 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
                 if (amount > 0f) {
                     insertToStatementTable(expenses);
                 }
-
-                // TODO: 12/30/2019 uncomment 
-//                if (categoryId == Category.MISC) {
-//                    deleteFromBudgetTable(id);
-//                } else {
-//                    expenses.setAmount(0f);
-//                    expenses.setHistory(new History());
-//                    editFromBudgetTable(expenses);
-//                }
+                if (categoryId == Category.MISC) {
+                    deleteFromBudgetTable(id);
+                } else {
+                    expenses.setAmount(0f);
+                    expenses.setHistory(new History());
+                    editFromBudgetTable(expenses);
+                }
             }
         }
     }

@@ -44,6 +44,9 @@
         android:id="@+id/calendar_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_marginTop="8dp"
         app:cardBackgroundColor="?attr/cardBackground">
 
@@ -77,6 +80,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="?attr/cardBackground">
 
         <LinearLayout
