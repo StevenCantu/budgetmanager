@@ -6,7 +6,7 @@ The Flourish app was created for users who want to be more aware of their financ
 
 ## Prerequisites
 
-The following will be required, in order to use the Flourish app:
+The following will be required in order to use the Flourish app:
  
 * Android powered device.
 
