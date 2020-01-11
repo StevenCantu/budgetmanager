@@ -99,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString(ExpenseDialogFragment.TITLE, "NOTICE");
         bundle.putString(ExpenseDialogFragment.MESSAGE, "Reset day has been reached.\n" +
-                "You can checkout your statement in the settings.");
+                "You may view your statement in the settings.");
+        bundle.putString(ExpenseDialogFragment.CONFIRM_BUTTON_TEXT, "ok");
+        bundle.putBoolean(ExpenseDialogFragment.HAS_CANCEL, false);
         dialog.setArguments(bundle);
         if (getSupportFragmentManager() != null) {
             dialog.show(getSupportFragmentManager(), "Reset Notice");

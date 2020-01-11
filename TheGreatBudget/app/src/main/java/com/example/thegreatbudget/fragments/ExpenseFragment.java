@@ -57,7 +57,6 @@ public class ExpenseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.expense_fragment, container, false);
-        Log.d(TAG, "onCreateView: gffdgdfgfg");
         mCursor = mDataBase.getExpensesCursor(mCategory);
         initRecyclerView(view);
         view.setOnClickListener(new View.OnClickListener() {

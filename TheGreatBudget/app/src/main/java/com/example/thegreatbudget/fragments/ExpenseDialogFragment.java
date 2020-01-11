@@ -18,8 +18,10 @@ public class ExpenseDialogFragment extends DialogFragment {
 
     public static final String TITLE = "thegreatbudget.fragments.expensedialog.title";
     public static final String MESSAGE = "thegreatbudget.fragments.expensedialog.message";
+    public static final String CONFIRM_BUTTON_TEXT = "thegreatbudget.fragments.expensedialog.confirm.button.text";
     public static final String HAS_EXPENSE = "thegreatbudget.fragments.expensedialog.has.expense";
     public static final String HAS_AMOUNT = "thegreatbudget.fragments.expensedialog.has.amount";
+    public static final String HAS_CANCEL = "thegreatbudget.fragments.expensedialog.has.cancel";
 
     private OnClickListener onClickListener;
 
@@ -27,8 +29,10 @@ public class ExpenseDialogFragment extends DialogFragment {
     private String mMessage;
     private String mExpenseText;
     private String mAmountText;
+    private String mConfirmButtonText;
     private boolean mHasExpense;
     private boolean mHasAmount;
+    private boolean mHasCancelButton;
 
     @Override
     public void onAttach(Context context) {
@@ -37,8 +41,10 @@ public class ExpenseDialogFragment extends DialogFragment {
         if (bundle != null) {
             mTitle = bundle.getString(TITLE, "Delete");
             mMessage = bundle.getString(MESSAGE, "Are you sure you want to delete?");
+            mConfirmButtonText = bundle.getString(CONFIRM_BUTTON_TEXT, "CONFIRM");
             mHasExpense = bundle.getBoolean(HAS_EXPENSE, false);
             mHasAmount = bundle.getBoolean(HAS_AMOUNT, false);
+            mHasCancelButton = bundle.getBoolean(HAS_CANCEL, true);
         }
     }
 
@@ -60,6 +66,7 @@ public class ExpenseDialogFragment extends DialogFragment {
         CheckBox checkBox = view.findViewById(R.id.custom_dialog_check);
         TextView confirm = view.findViewById(R.id.custom_dialog_positive);
         TextView cancel = view.findViewById(R.id.custom_dialog_negative);
+        confirm.setText(mConfirmButtonText.toUpperCase());
 
         checkBox.setVisibility(View.GONE);
         title.setText(mTitle);
@@ -92,6 +99,10 @@ public class ExpenseDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
+
+        if (!mHasCancelButton) {
+            cancel.setVisibility(View.INVISIBLE);
+        }
 
     }
 
