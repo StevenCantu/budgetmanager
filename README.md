@@ -9,6 +9,7 @@ The Flourish app was created for users who want to be more aware of their financ
 The following will be required in order to use the Flourish app:
  
 * Android powered device.
+* Android 6.0 Marshmallow or greater.
 
 ## Contributors
 
