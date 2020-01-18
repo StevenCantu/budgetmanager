@@ -7,6 +7,5 @@
     android:ellipsize="marquee"
     android:gravity="end"
     android:singleLine="true"
-    android:textColor="@android:color/white"
-    android:textSize="18sp"
-    tools:text="hghghghgfjjgf" />
+    android:textColor="?attr/textColor"
+    android:textSize="18sp" />

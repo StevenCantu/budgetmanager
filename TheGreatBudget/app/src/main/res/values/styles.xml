@@ -10,9 +10,14 @@
         <item name="cardBackground">@color/cardColor</item>
         <item name="textColor">@color/textColor</item>
         <item name="mainTextColor">@color/mainText</item>
-        <item name="tabTextColor">@color/textColorDark</item>
+        <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColor</item>
         <item name="dividerColor">@color/textColor</item>
+        <item name="iconTintColor">@color/iconColor</item>
+
+        <item name="titleTextColor">@color/iconColor</item>
+        <item name="subtitleTextColor">@color/iconColor</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -28,6 +33,11 @@
         <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColorDark</item>
         <item name="dividerColor">@color/accent</item>
+        <item name="iconTintColor">@color/iconColorDark</item>
+
+        <item name="titleTextColor">@color/iconColorDark</item>
+        <item name="subtitleTextColor">@color/iconColorDark</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -40,9 +50,14 @@
         <item name="cardBackground">@color/cardColor</item>
         <item name="textColor">@color/textColor</item>
         <item name="mainTextColor">@color/mainText</item>
-        <item name="tabTextColor">@color/textColorDark</item>
+        <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColor</item>
         <item name="dividerColor">@color/textColor</item>
+        <item name="iconTintColor">@color/iconColor</item>
+
+        <item name="titleTextColor">@color/iconColor</item>
+        <item name="subtitleTextColor">@color/iconColor</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 
@@ -58,6 +73,12 @@
         <item name="tabTextColor">@color/accent</item>
         <item name="tintColor">@color/tintColorDark</item>
         <item name="dividerColor">@color/accent</item>
+        <item name="iconTintColor">@color/iconColorDark</item>
+
+
+        <item name="titleTextColor">@color/iconColorDark</item>
+        <item name="subtitleTextColor">@color/iconColorDark</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>
     </style>
 

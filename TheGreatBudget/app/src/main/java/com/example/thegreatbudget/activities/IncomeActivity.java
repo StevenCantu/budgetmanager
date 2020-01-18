@@ -139,19 +139,24 @@ public class IncomeActivity extends AppCompatActivity {
     }
 
     private void resetViews() {
-        moveIncomeView(Gravity.CENTER);
-        mIncomeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 64);
-        setTitle("Income");
-        setButtonsVisibility(View.INVISIBLE);
-        mIncomeMenu.findItem(R.id.menu_undo).setVisible(true);
-        mIncomeMenu.findItem(R.id.menu_edit).setVisible(true);
-        mIncomeMenu.findItem(R.id.menu_cancel).setVisible(false);
-        mAddButton.show();
-        mDecimalInput = "";
-        mIncomeInput.setText("");
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_INCOME, mIncome);
-        setResult(RESULT_OK, intent);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                moveIncomeView(Gravity.CENTER);
+                mIncomeText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 64);
+                setTitle("Income");
+                setButtonsVisibility(View.INVISIBLE);
+                mIncomeMenu.findItem(R.id.menu_undo).setVisible(true);
+                mIncomeMenu.findItem(R.id.menu_edit).setVisible(true);
+                mIncomeMenu.findItem(R.id.menu_cancel).setVisible(false);
+                mAddButton.show();
+                mDecimalInput = "";
+                mIncomeInput.setText("");
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_INCOME, mIncome);
+                setResult(RESULT_OK, intent);
+            }
+        }, 350);
     }
 
     private void undoIncome() {
@@ -377,13 +382,7 @@ public class IncomeActivity extends AppCompatActivity {
                 mDecimalInput = "";
                 mIncomeInput.setText("");
             }
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetViews();
-                    Log.d(TAG, "run: " + mTemps + " " + mTempIncome);
-                }
-            }, 350);
+            resetViews();
         }
     };
 

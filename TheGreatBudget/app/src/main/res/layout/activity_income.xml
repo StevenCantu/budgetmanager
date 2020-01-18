@@ -231,6 +231,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_add" />
+        android:src="@drawable/ic_add_floating" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -2,14 +2,14 @@ package com.example.thegreatbudget.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
-import com.example.thegreatbudget.database.BudgetContract;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseDialogFragment;
 import com.example.thegreatbudget.fragments.ExpenseFragment;
@@ -31,7 +30,6 @@ import com.example.thegreatbudget.model.Category;
 import com.example.thegreatbudget.util.Common;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -371,12 +369,18 @@ public class MainActivity extends AppCompatActivity {
         switch (mCurrentSpinnerItem) {
             case INCOME:
                 mCurrencyText.setText(numberFormat.format(mIncome));
+                mCurrencyText.setTextColor(ResourcesCompat.getColor(getResources(), R.color.accent, null));
                 break;
             case EXPENSES:
                 mCurrencyText.setText(numberFormat.format(mTotalExpenses));
+                mCurrencyText.setTextColor(Color.RED);
                 break;
             case AFTER_EXPENSES:
                 mCurrencyText.setText(numberFormat.format(mAfterExpenses));
+                int color = mAfterExpenses >= 0
+                        ? ResourcesCompat.getColor(getResources(), R.color.accent, null)
+                        : Color.RED;
+                mCurrencyText.setTextColor(color);
                 break;
         }
     }

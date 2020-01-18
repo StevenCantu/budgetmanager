@@ -15,6 +15,7 @@
 
     <item android:id="@+id/menu_cancel"
         android:title="Cancel"
+        android:icon="@drawable/ic_close"
         app:showAsAction="ifRoom"/>
 
 </menu>

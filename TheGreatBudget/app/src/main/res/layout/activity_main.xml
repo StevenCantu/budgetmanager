@@ -59,7 +59,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/edit_button_ripple"
             android:src="@drawable/ic_edit" />
 
         <Spinner
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:layout_alignParentBottom="true"
-            android:backgroundTint="@android:color/white"
+            android:backgroundTint="?attr/textColor"
             android:layout_toStartOf="@+id/edit_income_button" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center_vertical"
             android:text="@string/income_string"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/textColor"
             android:textSize="24sp" />
 
     </RelativeLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/recycler_parent_layout"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_marginBottom="4dp"
+    android:layout_marginBottom="1dp"
     android:background="?attr/cardBackground"
     android:padding="15dp">
 
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:foreground="@drawable/custom_button"
         android:background="?attr/cardBackground">
 
         <TextView
@@ -32,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:textColor="?attr/textColor"
+            android:background="@drawable/custom_button"
             android:padding="10dp"
             android:text="enter amount" />
 

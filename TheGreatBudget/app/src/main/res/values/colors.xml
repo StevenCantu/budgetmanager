@@ -7,9 +7,10 @@
     <color name="textColor">#808080</color>
     <color name="mainText">#505050</color>
     <color name="tintColor">#000000</color>
-    <color name="primary">#1ad67e</color>
-    <color name="primaryDark">#34a36f</color>
-    <color name="accent">#d61a1a</color>
+    <color name="primary">#f9f5f5</color>
+    <color name="primaryDark">#c2bebe</color>
+    <color name="accent">#1AD67E</color>
+    <color name="iconColor">#7c7979</color>
 
     <!-- dark theme-->
     <color name="backgroundDark">#303030</color>
@@ -18,4 +19,5 @@
     <color name="tintColorDark">#ffffff</color>
     <color name="primaryNight">#212121</color>
     <color name="primaryDarkNight">#000000</color>
+    <color name="iconColorDark">#fafafa</color>
 </resources>
