@@ -22,15 +22,6 @@ public class Common {
     // permission requests
     public static final int WRITE_REQUEST_CODE = 1;
 
-
-    public static void themeSetter(Context context) {
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            context.setTheme(R.style.AppThemeDark);
-        } else {
-            context.setTheme(R.style.AppTheme);
-        }
-    }
-
     public static void themeSetterNoActionBar(Context context) {
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             context.setTheme(R.style.AppThemeNoActionDark);

@@ -1,18 +1,14 @@
 package com.example.thegreatbudget.activities;
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +20,6 @@ import android.widget.TextView;
 import com.example.thegreatbudget.R;
 import com.example.thegreatbudget.fragments.DatePickerFragment;
 import com.example.thegreatbudget.util.Common;
-import com.example.thegreatbudget.util.PdfMaker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,10 +38,10 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Common.themeSetter(this);
+        Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        setTitle("Settings");
+        setupActionBar();
 
         loadResetDay();
         initViews();
@@ -90,6 +85,13 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
         saveResetDay(dayOfMonth);
     }
 
+    private void setupActionBar() {
+        setTitle("Settings");
+        Toolbar toolbar = findViewById(R.id.settings_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     private void initViews() {
         mDarkModeSwitch = findViewById(R.id.dark_mode_switch);
         TextView darkModeText = findViewById(R.id.dark_mode_text);
@@ -125,23 +127,6 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
                 startActivity(intent);
             }
         });
-    }
-
-    private void calendarTest() {
-        calendar.add(Calendar.MONTH, 1);
-        int currentMonth = calendar.get(Calendar.MONTH);
-
-        if (chosenDay > calendar.get(Calendar.DAY_OF_MONTH)) {
-            calendar.set(Calendar.DAY_OF_MONTH, chosenDay);
-            Log.d(TAG, "calendarTest: adjusting 1");
-            if (currentMonth < calendar.get(Calendar.MONTH)) {
-                Log.d(TAG, "calendarTest: adjusting 2");
-                calendar.set(Calendar.MONTH, currentMonth);
-                calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-            }
-        }
-
-        Log.d(TAG, "calendarTest:  " + SimpleDateFormat.getDateInstance().format(calendar.getTime()));
     }
 
     private void updateResetDayText(int day) {

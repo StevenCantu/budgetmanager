@@ -8,13 +8,28 @@
     android:background="?attr/backgroundColor"
     tools:context=".activities.DetailsActivity">
 
-    <ImageView
-        android:id="@+id/history_divider"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/details_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:src="?attr/textColor"
-        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ToolbarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <TextView
+        android:id="@+id/expense_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="?attr/textColor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_toolbar"
+        tools:text="Text" />
 
     <TextView
         android:id="@+id/expense_total"
@@ -26,7 +41,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="?attr/textColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_toolbar"
         tools:text="$0.00" />
 
     <TextView
@@ -41,18 +56,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/expense_item" />
 
-    <TextView
-        android:id="@+id/expense_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="?attr/textColor"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Text" />
+    <ImageView
+        android:id="@+id/history_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:src="?attr/textColor"
+        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/clear_all"

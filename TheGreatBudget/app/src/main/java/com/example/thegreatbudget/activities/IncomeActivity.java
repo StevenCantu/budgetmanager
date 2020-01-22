@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -65,11 +66,11 @@ public class IncomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Common.themeSetter(this);
+        Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
 
-        setTitle("Income");
+        setupActionBar();
         handler = new Handler();
 
         Intent intent = getIntent();
@@ -136,6 +137,13 @@ public class IncomeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setupActionBar() {
+        setTitle("Income");
+        Toolbar toolbar = findViewById(R.id.income_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void resetViews() {
@@ -280,7 +288,6 @@ public class IncomeActivity extends AppCompatActivity {
     private void updateIncome(double value) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String money = numberFormat.format(value);
-//        mIncomeText.setText(String.format(Locale.US, "Income: %s", money));
         mIncomeText.setText(String.format(Locale.US, "%s", money));
     }
 

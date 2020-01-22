@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,10 +44,11 @@ public class StatementActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Common.themeSetter(this);
+        Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statement);
-        setTitle("Statement");
+
+        setupActionBar();
 
         mIncomeText = findViewById(R.id.statement_income_total);
         mExpenseText = findViewById(R.id.statement_expense_total);
@@ -84,6 +86,13 @@ public class StatementActivity extends AppCompatActivity {
         if (requestCode == Common.WRITE_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             savePdf();
         }
+    }
+
+    private void setupActionBar() {
+        setTitle("Statement");
+        Toolbar toolbar = findViewById(R.id.statement_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void fillBalance() {

@@ -72,67 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private Calendar mCalendar;
     private boolean mHasBeenReset;
 
-    private void calculateNextDay() {
-        mCalendar.add(Calendar.MONTH, 1);
-        int currentMonth = mCalendar.get(Calendar.MONTH);
-
-        if (mChosenDay > mCalendar.get(Calendar.DAY_OF_MONTH)) {
-            mCalendar.set(Calendar.DAY_OF_MONTH, mChosenDay);
-            if (currentMonth < mCalendar.get(Calendar.MONTH)) {
-                mCalendar.set(Calendar.MONTH, currentMonth);
-                mCalendar.set(Calendar.DAY_OF_MONTH, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-                SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-
-                editor.putInt(Common.CALCULATED_RESET_DAY_EXTRA, mCalendar.get(Calendar.DAY_OF_MONTH));
-
-                editor.apply();
-            }
-        }
-    }
-
-    private void showResetDialog() {
-        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(ExpenseDialogFragment.TITLE, "NOTICE");
-        bundle.putString(ExpenseDialogFragment.MESSAGE, "Reset day has been reached.\n" +
-                "You may view your statement in the settings.");
-        bundle.putString(ExpenseDialogFragment.CONFIRM_BUTTON_TEXT, "ok");
-        bundle.putBoolean(ExpenseDialogFragment.HAS_CANCEL, false);
-        dialog.setArguments(bundle);
-        if (getSupportFragmentManager() != null) {
-            dialog.show(getSupportFragmentManager(), "Reset Notice");
-        }
-    }
-
-    private void resetBudget() {
-        mCalendar = Calendar.getInstance();
-        int today = mCalendar.get(Calendar.DAY_OF_MONTH);
-        if (today == mCalculatedDay && !mHasBeenReset) {
-            mHasBeenReset = true;
-            calculateNextDay();
-            showResetDialog();
-            resetDataBase();
-        } else if (today != mCalculatedDay) {
-            mHasBeenReset = false;
-        }
-        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(Common.RESET_ONCE, mHasBeenReset);
-        editor.apply();
-    }
-
-    private void resetDataBase() {
-        BudgetDbHelper db = BudgetDbHelper.getInstance(this);
-        db.resetBD();
-        db.addBalanceItem(new BalanceItem(BalanceItem.INCOME, mIncome));
-        db.addBalanceItem(new BalanceItem(BalanceItem.EXPENSE, mTotalExpenses));
-        mIncome = 0f;
-        mTotalExpenses = 0f;
-        mAfterExpenses = 0f;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Common.themeSetterNoActionBar(this);
@@ -195,6 +134,69 @@ public class MainActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    //region reset data base logic
+    private void calculateNextDay() {
+        mCalendar.add(Calendar.MONTH, 1);
+        int currentMonth = mCalendar.get(Calendar.MONTH);
+
+        if (mChosenDay > mCalendar.get(Calendar.DAY_OF_MONTH)) {
+            mCalendar.set(Calendar.DAY_OF_MONTH, mChosenDay);
+            if (currentMonth < mCalendar.get(Calendar.MONTH)) {
+                mCalendar.set(Calendar.MONTH, currentMonth);
+                mCalendar.set(Calendar.DAY_OF_MONTH, mCalendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+                SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putInt(Common.CALCULATED_RESET_DAY_EXTRA, mCalendar.get(Calendar.DAY_OF_MONTH));
+
+                editor.apply();
+            }
+        }
+    }
+
+    private void showResetDialog() {
+        ExpenseDialogFragment dialog = new ExpenseDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ExpenseDialogFragment.TITLE, "NOTICE");
+        bundle.putString(ExpenseDialogFragment.MESSAGE, "Reset day has been reached.\n" +
+                "You may view your statement in the settings.");
+        bundle.putString(ExpenseDialogFragment.CONFIRM_BUTTON_TEXT, "ok");
+        bundle.putBoolean(ExpenseDialogFragment.HAS_CANCEL, false);
+        dialog.setArguments(bundle);
+        if (getSupportFragmentManager() != null) {
+            dialog.show(getSupportFragmentManager(), "Reset Notice");
+        }
+    }
+
+    private void resetBudget() {
+        mCalendar = Calendar.getInstance();
+        int today = mCalendar.get(Calendar.DAY_OF_MONTH);
+        if (today == mCalculatedDay && !mHasBeenReset) {
+            mHasBeenReset = true;
+            calculateNextDay();
+            showResetDialog();
+            resetDataBase();
+        } else if (today != mCalculatedDay) {
+            mHasBeenReset = false;
+        }
+        SharedPreferences sp = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Common.RESET_ONCE, mHasBeenReset);
+        editor.apply();
+    }
+
+    private void resetDataBase() {
+        BudgetDbHelper db = BudgetDbHelper.getInstance(this);
+        db.resetBD();
+        db.addBalanceItem(new BalanceItem(BalanceItem.INCOME, mIncome));
+        db.addBalanceItem(new BalanceItem(BalanceItem.EXPENSE, mTotalExpenses));
+        mIncome = 0f;
+        mTotalExpenses = 0f;
+        mAfterExpenses = 0f;
+    }
+    //endregion
 
     private void initSpinner() {
         //bottom menu
