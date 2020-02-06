@@ -1,4 +1,11 @@
 <resources>
+
+    <!--  splash style  -->
+    <style name="AppThemeSplash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorPrimaryDark">@color/accent</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
     
     <!-- light no action bar theme. -->
     <style name="AppThemeNoAction" parent="Theme.AppCompat.Light.NoActionBar">

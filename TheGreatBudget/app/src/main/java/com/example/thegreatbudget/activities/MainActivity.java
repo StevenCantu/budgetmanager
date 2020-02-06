@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.thegreatbudget.R;
+import com.example.thegreatbudget.SplashScreen;
 import com.example.thegreatbudget.adapters.SectionPageAdapter;
 import com.example.thegreatbudget.database.BudgetDbHelper;
 import com.example.thegreatbudget.fragments.ExpenseDialogFragment;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SplashScreen.isLaunched = true;
         loadData();
         mTotalExpenses = BudgetDbHelper.getInstance(this).totalExpenses();
         mAfterExpenses = mIncome - mTotalExpenses;

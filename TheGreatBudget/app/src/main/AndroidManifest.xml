@@ -15,7 +15,7 @@
         <activity
             android:name=".activities.StatementActivity"
             android:parentActivityName=".activities.SettingsActivity"
-            android:theme="@style/AppThemeNoAction"/>
+            android:theme="@style/AppThemeNoAction" />
         <activity
             android:name=".activities.SettingsActivity"
             android:parentActivityName=".activities.MainActivity"
@@ -27,11 +27,14 @@
         <activity
             android:name=".activities.IncomeActivity"
             android:parentActivityName=".activities.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
-        <activity
-            android:name=".activities.MainActivity"
+        <activity android:name=".activities.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppThemeNoAction">
+            android:theme="@style/AppThemeNoAction"/>
+        <activity
+            android:name=".SplashScreen"
+            android:theme="@style/AppThemeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
