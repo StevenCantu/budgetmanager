@@ -13,6 +13,7 @@
         <item name="tintColor">@color/tintColor</item>
         <item name="dividerColor">@color/textColor</item>
         <item name="iconTintColor">@color/iconColor</item>
+        <item name="titleIconImage">@drawable/titleiconlight</item>
 
         <item name="titleTextColor">@color/iconColor</item>
         <item name="subtitleTextColor">@color/iconColor</item>
@@ -34,6 +35,7 @@
         <item name="tintColor">@color/tintColorDark</item>
         <item name="dividerColor">@color/accent</item>
         <item name="iconTintColor">@color/iconColorDark</item>
+        <item name="titleIconImage">@drawable/titleicondark</item>
 
 
         <item name="titleTextColor">@color/iconColorDark</item>

@@ -9,5 +9,6 @@
         <attr name="tintColor" format="color"/>
         <attr name="dividerColor" format="color"/>
         <attr name="iconTintColor" format="color"/>
+        <attr name="titleIconImage" format="reference"/>
     </declare-styleable>
 </resources>
