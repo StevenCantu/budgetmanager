@@ -1,8 +1,7 @@
 package com.example.thegreatbudget.util;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
+import android.content.SharedPreferences;
 
 import com.example.thegreatbudget.R;
 
@@ -19,11 +18,15 @@ public class Common {
     public static final String RESET_DAY_EXTRA = "com.example.thegreatbudget.util.extra.reset.day";
     public static final String RESET_ONCE = "com.example.thegreatbudget.util.extra.reset.once";
     public static final int RESET_DAY_DEFAULT = 1;
+    // Dark mode info
+    public static final String DARK_MODE_EXTRA = "com.example.thegreatbudget.util.extra.dark.mode";
     // permission requests
     public static final int WRITE_REQUEST_CODE = 1;
 
     public static void themeSetterNoActionBar(Context context) {
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+        SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        boolean darkModeActive = sp.getBoolean(DARK_MODE_EXTRA, false);
+        if (darkModeActive) {
             context.setTheme(R.style.AppThemeNoActionDark);
         } else {
             context.setTheme(R.style.AppThemeNoAction);

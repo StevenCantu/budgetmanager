@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
     private Switch mDarkModeSwitch;
     private TextView mDayText;
     private int mResetDay;
+    private boolean mDarkModeActive;
 
     private final int chosenDay = 31;
     private Calendar calendar;
@@ -53,15 +53,16 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
         mDarkModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.d(TAG, "onCheckedChanged: " + isChecked);
-                if (isChecked) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
+                mDarkModeActive = isChecked;
                 recreate();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        saveDarkMode();
     }
 
     @Override
@@ -95,8 +96,7 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
     private void initViews() {
         mDarkModeSwitch = findViewById(R.id.dark_mode_switch);
         TextView darkModeText = findViewById(R.id.dark_mode_text);
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            Log.d(TAG, "onCreate: night mode ON");
+        if (mDarkModeActive) {
             mDarkModeSwitch.setChecked(true);
             darkModeText.setText("Disable Dark Mode");
         } else {
@@ -115,7 +115,6 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
             public void onClick(View v) {
                 DialogFragment datePickerFragment = new DatePickerFragment();
                 datePickerFragment.show(getSupportFragmentManager(), "date picker");
-//                calendarTest();
             }
         });
 
@@ -141,6 +140,14 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
     private void loadResetDay() {
         SharedPreferences sp = getSharedPreferences(Common.SHARED_PREFERENCES, MODE_PRIVATE);
         mResetDay = sp.getInt(Common.RESET_DAY_EXTRA, Common.RESET_DAY_DEFAULT);
+        mDarkModeActive = sp.getBoolean(Common.DARK_MODE_EXTRA, false);
+    }
+
+    private void saveDarkMode() {
+        SharedPreferences sp = getSharedPreferences(Common.SHARED_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(Common.DARK_MODE_EXTRA, mDarkModeActive);
+        editor.apply();
     }
 
     private void saveResetDay(int day) {
