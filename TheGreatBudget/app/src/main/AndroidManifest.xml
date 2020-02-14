@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.thegreatbudget">
+    package="com.flourish.budget">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -13,27 +13,27 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activities.StatementActivity"
-            android:parentActivityName=".activities.SettingsActivity"
+            android:name="com.flourish.budget.activities.StatementActivity"
+            android:parentActivityName="com.flourish.budget.activities.SettingsActivity"
             android:theme="@style/AppThemeNoAction" />
         <activity
-            android:name=".activities.SettingsActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name="com.flourish.budget.activities.SettingsActivity"
+            android:parentActivityName="com.flourish.budget.activities.MainActivity"
             android:theme="@style/AppThemeNoAction" />
         <activity
-            android:name=".activities.DetailsActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name="com.flourish.budget.activities.DetailsActivity"
+            android:parentActivityName="com.flourish.budget.activities.MainActivity"
             android:theme="@style/AppThemeNoAction" />
         <activity
-            android:name=".activities.IncomeActivity"
-            android:parentActivityName=".activities.MainActivity"
+            android:name="com.flourish.budget.activities.IncomeActivity"
+            android:parentActivityName="com.flourish.budget.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoAction" />
-        <activity android:name=".activities.MainActivity"
+        <activity android:name="com.flourish.budget.activities.MainActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppThemeNoAction"/>
         <activity
-            android:name=".SplashScreen"
+            android:name="com.flourish.budget.SplashScreen"
             android:theme="@style/AppThemeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
