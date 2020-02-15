@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.flourish.budget.database.BudgetContract.BudgetTable;
 import com.flourish.budget.database.BudgetContract.CategoriesTable;
@@ -95,9 +96,12 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        mDatabase.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
-        mDatabase.execSQL("DROP TABLE IF EXISTS " + BudgetTable.TABLE_NAME);
-        onCreate(mDatabase);
+        Log.d(TAG, "onUpgrade: >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + (mDatabase == null));
+        db.execSQL("DROP TABLE IF EXISTS " + CategoriesTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BudgetTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BalanceItemTable.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + StatementTable.TABLE_NAME);
+        onCreate(db);
     }
 
     public void addExpense(Expenses expense) {
@@ -297,13 +301,15 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         insertToBudgetTable(new Expenses("Rent/Mortgage", Category.HOUSING));
         insertToBudgetTable(new Expenses("Electricity", Category.HOUSING));
         insertToBudgetTable(new Expenses("Gas", Category.HOUSING));
-        insertToBudgetTable(new Expenses("Internet/Cable", Category.HOUSING));
-        insertToBudgetTable(new Expenses("Water/Sewage", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Internet", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Cable", Category.HOUSING));
+        insertToBudgetTable(new Expenses("Water", Category.HOUSING));
 
         insertToBudgetTable(new Expenses("Car loan", Category.PERSONAL));
         insertToBudgetTable(new Expenses("Groceries", Category.PERSONAL));
         insertToBudgetTable(new Expenses("Toiletries", Category.PERSONAL));
-        insertToBudgetTable(new Expenses("Gasoline/Transportation", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Gas", Category.PERSONAL));
+        insertToBudgetTable(new Expenses("Transportation", Category.PERSONAL));
         insertToBudgetTable(new Expenses("Cell Phone", Category.PERSONAL));
 
         insertToBudgetTable(new Expenses("Auto", Category.INSURANCE));
@@ -314,10 +320,11 @@ public class BudgetDbHelper extends SQLiteOpenHelper {
         insertToBudgetTable(new Expenses("Clothes", Category.WANTS));
         insertToBudgetTable(new Expenses("Dining Out", Category.WANTS));
         insertToBudgetTable(new Expenses("Events", Category.WANTS));
-        insertToBudgetTable(new Expenses("Gym/Clubs", Category.WANTS));
+        insertToBudgetTable(new Expenses("Clubs", Category.WANTS));
+        insertToBudgetTable(new Expenses("Gym", Category.WANTS));
         insertToBudgetTable(new Expenses("Travel", Category.WANTS));
         insertToBudgetTable(new Expenses("Home Decor", Category.WANTS));
-        insertToBudgetTable(new Expenses("Streaming Services", Category.WANTS));
+        insertToBudgetTable(new Expenses("Subscriptions", Category.WANTS));
     }
 
     private void deleteFromBudgetTable(long id) {

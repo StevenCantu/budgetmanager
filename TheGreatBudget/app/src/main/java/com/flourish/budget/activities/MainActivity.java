@@ -10,6 +10,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.TooltipCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -207,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
         //bottom menu
         Spinner spinnerTotals = findViewById(R.id.spinner_totals);
         mEditIncomeButton = findViewById(R.id.edit_income_button);
+        TooltipCompat.setTooltipText(mEditIncomeButton, "Edit Income");
         // Spinner Drop down elements
         final List<String> categories = new ArrayList<>();
         categories.add(INCOME);
