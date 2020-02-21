@@ -25,7 +25,7 @@ public class Common {
 
     public static void themeSetterNoActionBar(Context context) {
         SharedPreferences sp = context.getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        boolean darkModeActive = sp.getBoolean(DARK_MODE_EXTRA, false);
+        boolean darkModeActive = sp.getBoolean(DARK_MODE_EXTRA, true);
         if (darkModeActive) {
             context.setTheme(R.style.AppThemeNoActionDark);
         } else {

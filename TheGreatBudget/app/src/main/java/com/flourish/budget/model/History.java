@@ -2,7 +2,7 @@ package com.flourish.budget.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.flourish.budget.util.CustomComparator;
 import com.google.gson.annotations.SerializedName;

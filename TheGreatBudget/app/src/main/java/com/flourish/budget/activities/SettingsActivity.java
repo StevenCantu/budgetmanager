@@ -4,10 +4,10 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,7 +140,7 @@ public class SettingsActivity extends AppCompatActivity implements DatePickerDia
     private void loadResetDay() {
         SharedPreferences sp = getSharedPreferences(Common.SHARED_PREFERENCES, MODE_PRIVATE);
         mResetDay = sp.getInt(Common.RESET_DAY_EXTRA, Common.RESET_DAY_DEFAULT);
-        mDarkModeActive = sp.getBoolean(Common.DARK_MODE_EXTRA, false);
+        mDarkModeActive = sp.getBoolean(Common.DARK_MODE_EXTRA, true);
     }
 
     private void saveDarkMode() {
