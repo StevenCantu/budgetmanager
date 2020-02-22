@@ -10,33 +10,58 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        tools:ignore="GoogleAppIndexingWarning">
+        android:supportsRtl="true" >
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1967280896894474~4447082448"/>
+
         <activity
             android:name="com.flourish.budget.activities.StatementActivity"
             android:parentActivityName="com.flourish.budget.activities.SettingsActivity"
-            android:theme="@style/AppThemeNoAction" />
+            android:theme="@style/AppThemeNoAction" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.flourish.budget.activities.SettingsActivity"
             android:parentActivityName="com.flourish.budget.activities.MainActivity"
-            android:theme="@style/AppThemeNoAction" />
+            android:theme="@style/AppThemeNoAction" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.flourish.budget.activities.DetailsActivity"
             android:parentActivityName="com.flourish.budget.activities.MainActivity"
-            android:theme="@style/AppThemeNoAction" />
+            android:theme="@style/AppThemeNoAction" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.flourish.budget.activities.IncomeActivity"
             android:parentActivityName="com.flourish.budget.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeNoAction" />
+            android:theme="@style/AppThemeNoAction" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity android:name="com.flourish.budget.activities.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppThemeNoAction"/>
+            android:theme="@style/AppThemeNoAction">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.flourish.budget.SplashScreen"
             android:theme="@style/AppThemeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

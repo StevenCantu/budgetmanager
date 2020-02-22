@@ -5,19 +5,35 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
+
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -95,13 +111,57 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("");
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setIcon(R.drawable.titleicon);
         ViewPager viewPager = findViewById(R.id.container);
         setupViewPager(viewPager);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         setupIcons(tabLayout);
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        AdLoader adLoader =  new AdLoader.Builder(this, "ca-app-pub-1967280896894474/8881985628")
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater().inflate(R.layout.native_ad_layout, null);
+                        mapAdMob(unifiedNativeAd, adView);
+
+                        FrameLayout frameLayout = findViewById(R.id.native_ad_frame);
+                        frameLayout.removeAllViews();
+                        frameLayout.addView(adView);
+                    }
+                })
+                .withAdListener(new AdListener(){
+
+                })
+                .build();
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
+
+    public void mapAdMob(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+        adView.setIconView(adView.findViewById(R.id.ad_icon));
+        adView.setHeadlineView(adView.findViewById(R.id.ad_headline));
+        adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
+
+        ((TextView)adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        if (nativeAd.getIcon() == null) {
+            adView.getIconView().setVisibility(View.GONE);
+        } else {
+            ((ImageView)adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable());
+        }
+
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.GONE);
+        } else {
+            ((TextView)adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+        }
+
+        adView.setNativeAd(nativeAd);
     }
 
     @Override

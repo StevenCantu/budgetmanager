@@ -53,7 +53,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:id="@+id/native_ad_frame"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_above="@+id/income_container"/>
+
         <ImageView
+            android:id="@+id/income_container"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_alignParentBottom="true"
