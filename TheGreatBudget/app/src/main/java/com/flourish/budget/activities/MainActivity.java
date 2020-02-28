@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import com.flourish.budget.IncomeActivityTest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -175,7 +176,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INCOME_ACTIVITY_REQUEST && resultCode == RESULT_OK) {
             if (data != null) {
-                mIncome = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
+//                mIncome = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
+                mIncome = data.getDoubleExtra(IncomeActivityTest.EXTRA_INCOME, 0f);
                 mAfterExpenses = mIncome - mTotalExpenses;
                 updateCurrencyText();
             }
@@ -466,11 +468,12 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener incomeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(v.getContext(), IncomeActivity.class);
+//            Intent intent = new Intent(v.getContext(), IncomeActivity.class);
+            Intent intent = new Intent(v.getContext(), IncomeActivityTest.class);
             intent.putExtra(INCOME_EXTRA, mIncome);
             startActivityForResult(intent, INCOME_ACTIVITY_REQUEST);
         }
     };
-
-    // TODO: 11/1/2019 lookup how to put hints on app
 }
+
+// TODO: 2/25/2020 bug when income / expenses text is clicked 

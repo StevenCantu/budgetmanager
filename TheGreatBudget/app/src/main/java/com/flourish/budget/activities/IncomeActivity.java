@@ -91,7 +91,7 @@ public class IncomeActivity extends AppCompatActivity {
         mIncomeInput = findViewById(R.id.income_input);
         mDivider = findViewById(R.id.income_divider);
         mGrid = findViewById(R.id.keypadLayout);
-        mDelete = findViewById(R.id.buttonDelete);
+        mDelete = findViewById(R.id.income_delete_button);
         mEnter = findViewById(R.id.buttonEnter);
         mEnter.setOnClickListener(enterButtonListener);
         mIncomeText = findViewById(R.id.income_text);
@@ -211,7 +211,7 @@ public class IncomeActivity extends AppCompatActivity {
                 String s = ((Button) v).getText().toString();
                 addToDecimal(s);
                 break;
-            case R.id.buttonDelete:
+            case R.id.income_delete_button:
                 deleteFromDecimal();
                 break;
             default:
