@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class IncomeTestFragmentMainScreen extends Fragment {
+public class IncomeFragmentMainScreen extends Fragment {
 
     // region constants
     private static final String TAG = "IncomeTestFragmentMainS";
@@ -30,7 +30,7 @@ public class IncomeTestFragmentMainScreen extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView: ");
-        View view = inflater.inflate(R.layout.fragment_income_test_mainscreen, container, false);
+        View view = inflater.inflate(R.layout.fragment_income_mainscreen, container, false);
         setupViews(view);
         return view;
     }
@@ -42,7 +42,7 @@ public class IncomeTestFragmentMainScreen extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mIncome = bundle.getDouble(IncomeActivityTest.INCOME, 0.0);
+            mIncome = bundle.getDouble(IncomeActivity.INCOME, 0.0);
         }
     }
 

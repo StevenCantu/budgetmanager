@@ -30,11 +30,11 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
-public class IncomeActivityTest extends AppCompatActivity
-        implements IncomeTestFragmentNumberPad.FragmentNumberPadListener {
+public class IncomeActivity extends AppCompatActivity
+        implements IncomeFragmentNumberPad.FragmentNumberPadListener {
 
     // region constants
-    private static final String TAG = "IncomeActivityTest";
+    private static final String TAG = "IncomeActivity";
     public static final String FRAGMENT_TAG = "IncomeFragment";
     public static final String INCOME = "com.flourish.budget.income.arg";
     public static final String CHECK_UNDO_KEY = "com.flourish.budget.skipMessage.undo";
@@ -64,7 +64,7 @@ public class IncomeActivityTest extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         Common.themeSetterNoActionBar(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_income_test);
+        setContentView(R.layout.activity_income);
 
         setupActionBar();
         getIncomeFromIntent();
@@ -80,12 +80,14 @@ public class IncomeActivityTest extends AppCompatActivity
         super.onStart();
         mAddIncomeButton.setOnClickListener(addButtonListener);
         mAddIncomeButton.addOnHideAnimationListener(hideAnimationListener);
+        mAddIncomeButton.addOnShowAnimationListener(showAnimationListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mAddIncomeButton.removeOnHideAnimationListener(hideAnimationListener);
+        mAddIncomeButton.removeOnShowAnimationListener(showAnimationListener);
     }
 
     @Override
@@ -121,12 +123,12 @@ public class IncomeActivityTest extends AppCompatActivity
     }
 
     /**
-     * replace {@link Fragment} in {@link android.widget.FrameLayout} with an {@link IncomeTestFragmentMainScreen}
+     * replace {@link Fragment} in {@link android.widget.FrameLayout} with an {@link IncomeFragmentMainScreen}
      */
     private void switchToMainScreenFragment() {
         Bundle bundle = new Bundle();
         bundle.putDouble(INCOME, mIncome);
-        Fragment fragment = new IncomeTestFragmentMainScreen();
+        Fragment fragment = new IncomeFragmentMainScreen();
         fragment.setArguments(bundle);
         setFragment(fragment);
         setTitle("Income");
@@ -137,7 +139,7 @@ public class IncomeActivityTest extends AppCompatActivity
     }
 
     /**
-     * replace {@link Fragment} in {@link android.widget.FrameLayout} with an {@link IncomeTestFragmentNumberPad}
+     * replace {@link Fragment} in {@link android.widget.FrameLayout} with an {@link IncomeFragmentNumberPad}
      */
     private void switchToNumberPadScreenFragment() {
         setTitle(mIsAddMode ? "Add Income" : "Edit Income");
@@ -148,8 +150,8 @@ public class IncomeActivityTest extends AppCompatActivity
 
         Bundle bundle = new Bundle();
         bundle.putDouble(INCOME, mIncome);
-        bundle.putBoolean(IncomeTestFragmentNumberPad.MODE, mIsAddMode);
-        Fragment fragment = new IncomeTestFragmentNumberPad();
+        bundle.putBoolean(IncomeFragmentNumberPad.MODE, mIsAddMode);
+        Fragment fragment = new IncomeFragmentNumberPad();
         fragment.setArguments(bundle);
         setFragment(fragment);
     }
@@ -223,26 +225,30 @@ public class IncomeActivityTest extends AppCompatActivity
     private void handleEditMenuClick() {
         boolean isNotChecked = isCheckBoxNotChecked(CHECK_EDIT_KEY);
         mIsAddMode = false;
-        
+
         NeverAskAgainDialog dialog = new NeverAskAgainDialog();
         Bundle bundle = new Bundle();
         bundle.putString(NeverAskAgainDialog.KEY, CHECK_EDIT_KEY);
         dialog.setArguments(bundle);
+        dialog.setCancelable(false);
+        mIncomeMenu.findItem(R.id.menu_edit).setEnabled(false);
+
         if (isNotChecked) {
             dialog.show(getSupportFragmentManager(), "handleEditMenuClick");
         } else {
             mAddIncomeButton.hide();
         }
-        
+
         dialog.setOnClickListener(new NeverAskAgainDialog.OnClickListener() {
             @Override
             public void positiveClick() {
                 mAddIncomeButton.hide();
+                mIncomeMenu.findItem(R.id.menu_edit).setEnabled(true);
             }
 
             @Override
             public void negativeClick() {
-
+                mIncomeMenu.findItem(R.id.menu_edit).setEnabled(true);
             }
         });
     }
@@ -258,6 +264,8 @@ public class IncomeActivityTest extends AppCompatActivity
         bundle.putString(NeverAskAgainDialog.MESSAGE, "Are you sure you want to undo your previous income change?");
         bundle.putString(NeverAskAgainDialog.KEY, CHECK_UNDO_KEY);
         dialog.setArguments(bundle);
+        dialog.setCancelable(false);
+        mIncomeMenu.findItem(R.id.menu_undo).setEnabled(false);
 
         if (isNotChecked) {
             dialog.show(getSupportFragmentManager(), "showUndoDialog");
@@ -269,23 +277,23 @@ public class IncomeActivityTest extends AppCompatActivity
             @Override
             public void positiveClick() {
                 undoIncome();
+                mIncomeMenu.findItem(R.id.menu_undo).setEnabled(true);
             }
 
             @Override
             public void negativeClick() {
-
+                mIncomeMenu.findItem(R.id.menu_undo).setEnabled(true);
             }
         });
     }
 
     /**
-     * switch to {@link IncomeTestFragmentMainScreen}, main screen {@link Menu},
+     * switch to {@link IncomeFragmentMainScreen}, main screen {@link Menu},
      * and show {@link FloatingActionButton}
      */
     private void handleNumberPadToMainTransition() {
-        switchToMainScreenFragment();
-        showMainScreenMenuItems(mIncomeMenu);
         mAddIncomeButton.show();
+        switchToMainScreenFragment();
     }
 
     /**
@@ -379,6 +387,32 @@ public class IncomeActivityTest extends AppCompatActivity
             Log.d(TAG, "onAnimationEnd: ");
             switchToNumberPadScreenFragment();
             showNumberScreenMenuItems(mIncomeMenu);
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            Log.d(TAG, "onAnimationCancel: ");
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+            Log.d(TAG, "onAnimationRepeat: ");
+        }
+    };
+
+    /**
+     * listen for {@link FloatingActionButton} show animation events
+     */
+    private Animator.AnimatorListener showAnimationListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            Log.d(TAG, "onAnimationStart: ");
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            Log.d(TAG, "onAnimationEnd: ");
+            showMainScreenMenuItems(mIncomeMenu);
         }
 
         @Override

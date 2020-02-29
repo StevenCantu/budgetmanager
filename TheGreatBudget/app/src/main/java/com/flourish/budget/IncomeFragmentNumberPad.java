@@ -3,8 +3,6 @@ package com.flourish.budget;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,7 @@ import androidx.fragment.app.Fragment;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class IncomeTestFragmentNumberPad extends Fragment {
+public class IncomeFragmentNumberPad extends Fragment {
 
     // region constants
     private static final String TAG = "FragmentNumPad";
@@ -56,7 +55,7 @@ public class IncomeTestFragmentNumberPad extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mIncome = bundle.getDouble(IncomeActivityTest.INCOME, 0.0);
+            mIncome = bundle.getDouble(IncomeActivity.INCOME, 0.0);
             mIsAddMode = bundle.getBoolean(MODE, true);
         }
 
@@ -70,7 +69,7 @@ public class IncomeTestFragmentNumberPad extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_income_test_numberpad, container, false);
+        View view = inflater.inflate(R.layout.fragment_income_numberpad, container, false);
         setupViews(view);
         return view;
     }
@@ -143,7 +142,7 @@ public class IncomeTestFragmentNumberPad extends Fragment {
      * handle enter {@link Button} click
      */
     private void handleEnterButton() {
-
+        double temp = mIncome;
         if (mIsAddMode) {
             mIncome += mNumberPad.toDouble();
         } else {
@@ -151,7 +150,8 @@ public class IncomeTestFragmentNumberPad extends Fragment {
         }
 
         if (mIncome > MAX_INCOME) {
-            mIncome = MAX_INCOME;
+            mIncome = temp;
+            Toast.makeText(getContext(), "You have exceeded the limit.", Toast.LENGTH_SHORT).show();
         }
 
         setCurrencyTextOn(mIncomeText, mIncome);

@@ -6,26 +6,23 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
-import com.flourish.budget.IncomeActivityTest;
+import com.flourish.budget.IncomeActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayout;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
 
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -176,8 +173,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == INCOME_ACTIVITY_REQUEST && resultCode == RESULT_OK) {
             if (data != null) {
-//                mIncome = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
-                mIncome = data.getDoubleExtra(IncomeActivityTest.EXTRA_INCOME, 0f);
+                mIncome = data.getDoubleExtra(IncomeActivity.EXTRA_INCOME, 0f);
                 mAfterExpenses = mIncome - mTotalExpenses;
                 updateCurrencyText();
             }
@@ -468,8 +464,7 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener incomeClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-//            Intent intent = new Intent(v.getContext(), IncomeActivity.class);
-            Intent intent = new Intent(v.getContext(), IncomeActivityTest.class);
+            Intent intent = new Intent(v.getContext(), IncomeActivity.class);
             intent.putExtra(INCOME_EXTRA, mIncome);
             startActivityForResult(intent, INCOME_ACTIVITY_REQUEST);
         }
