@@ -1,4 +1,4 @@
-package com.flourish.budget;
+package com.flourish.budget.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.flourish.budget.model.NumberPad;
+import com.flourish.budget.R;
+import com.flourish.budget.activities.IncomeActivity;
+
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -24,7 +28,7 @@ public class IncomeFragmentNumberPad extends Fragment {
     // region constants
     private static final String TAG = "FragmentNumPad";
     private static final int KEYPAD_INDEX = 11;
-    static final String MODE = "com.flourish.budget.mode.arg";
+    public static final String MODE = "com.flourish.budget.mode.arg";
     private static final double MAX_INCOME = 999999.99;
     // endregion
 

@@ -1,11 +1,11 @@
-package com.flourish.budget;
+package com.flourish.budget.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.flourish.budget.activities.MainActivity;
+import com.flourish.budget.R;
 
 public class SplashScreen extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.flourish.budget;
+package com.flourish.budget.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.flourish.budget.R;
+import com.flourish.budget.activities.IncomeActivity;
 
 import java.text.NumberFormat;
 import java.util.Locale;

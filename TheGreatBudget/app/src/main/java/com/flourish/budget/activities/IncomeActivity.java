@@ -1,4 +1,4 @@
-package com.flourish.budget;
+package com.flourish.budget.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,7 +20,9 @@ import static com.flourish.budget.util.Common.IS_CHECKED;
 import static com.flourish.budget.util.Common.NOT_CHECKED;
 import static com.flourish.budget.util.Common.SHARED_PREFERENCES;
 
-import com.flourish.budget.activities.MainActivity;
+import com.flourish.budget.fragments.IncomeFragmentMainScreen;
+import com.flourish.budget.fragments.IncomeFragmentNumberPad;
+import com.flourish.budget.R;
 import com.flourish.budget.fragments.NeverAskAgainDialog;
 import com.flourish.budget.util.Common;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

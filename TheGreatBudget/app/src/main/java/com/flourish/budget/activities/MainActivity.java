@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
-import com.flourish.budget.IncomeActivity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -36,7 +35,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.flourish.budget.R;
-import com.flourish.budget.SplashScreen;
 import com.flourish.budget.adapters.SectionPageAdapter;
 import com.flourish.budget.database.BudgetDbHelper;
 import com.flourish.budget.fragments.ExpenseDialogFragment;

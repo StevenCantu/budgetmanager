@@ -59,12 +59,6 @@ public class ExpenseFragment extends Fragment {
         View view = inflater.inflate(R.layout.expense_fragment, container, false);
         mCursor = mDataBase.getExpensesCursor(mCategory);
         initRecyclerView(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buildAddDialog();
-            }
-        });
         return view;
     }
 
@@ -110,6 +104,13 @@ public class ExpenseFragment extends Fragment {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
                 intent.putExtra(DetailsActivity.EXPENSE_EXTRA, expense);
                 startActivityForResult(intent, DETAILS_ACTIVITY_REQUEST);
+            }
+        });
+
+        addExpenseText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildAddDialog();
             }
         });
 

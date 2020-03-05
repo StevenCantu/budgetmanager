@@ -1,12 +1,12 @@
-package com.flourish.budget;
+package com.flourish.budget.model;
 
-class NumberPad {
+public class NumberPad {
 
     private static final int INCOME_LIMIT = 6;
 
     private StringBuilder mNumber;
 
-    NumberPad() {
+    public NumberPad() {
         this.mNumber = new StringBuilder();
     }
 
@@ -14,7 +14,7 @@ class NumberPad {
      * converts {@link NumberPad} content to double
      * @return {@link NumberPad} content as a double
      */
-    double toDouble() {
+    public double toDouble() {
         String number = mNumber.toString();
         if (number.isEmpty() || number.equals(".")) {
             return 0;
@@ -26,7 +26,7 @@ class NumberPad {
      * check for decimal point
      * @return true if {@link NumberPad} has a decimal point, false otherwise
      */
-    boolean hasDecimal() {
+    public boolean hasDecimal() {
         return mNumber.toString().contains(".");
     }
 
@@ -34,7 +34,7 @@ class NumberPad {
      * add number string to the back of {@link NumberPad}
      * @param number assumed to be '0-9' or '.'
      */
-    void push(String number) {
+    public void push(String number) {
         if (number.equals(".")) {
             mNumber.append(number);
         } else if (mNumber.toString().contains(".")) {
@@ -59,7 +59,7 @@ class NumberPad {
     /**
      * pop last char from {@link NumberPad}
      */
-    void pop() {
+    public void pop() {
         String number = mNumber.toString();
         if (!number.isEmpty()) {
             if (number.contains(".") && number.length() - 1 == number.indexOf(".")) {
@@ -78,7 +78,7 @@ class NumberPad {
     /**
      * clear {@link NumberPad}
      */
-    void clear() {
+    public void clear() {
         mNumber = new StringBuilder();
     }
 }
