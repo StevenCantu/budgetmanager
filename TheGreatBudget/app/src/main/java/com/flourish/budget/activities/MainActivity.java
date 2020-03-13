@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     //spinner constants
     public static final String INCOME = "Income";
     public static final String EXPENSES = "Expenses";
-    public static final String AFTER_EXPENSES = "After Expenses";
+    public static final String AFTER_EXPENSES = "Remaining";
 
     //bundles
     public static final String INCOME_EXTRA = "thegreatbudget.main.income.extra.intent";
@@ -468,5 +468,3 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 }
-
-// TODO: 2/25/2020 bug when income / expenses text is clicked 

@@ -29,7 +29,7 @@ public class IncomeFragmentNumberPad extends Fragment {
     private static final String TAG = "FragmentNumPad";
     private static final int KEYPAD_INDEX = 11;
     public static final String MODE = "com.flourish.budget.mode.arg";
-    private static final double MAX_INCOME = 999999.99;
+    public static final double MAX_INCOME = 999999.99;
     // endregion
 
     // region member variables

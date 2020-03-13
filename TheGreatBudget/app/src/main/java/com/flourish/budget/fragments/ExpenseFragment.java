@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flourish.budget.R;
 import com.flourish.budget.activities.DetailsActivity;
@@ -22,6 +23,7 @@ import com.flourish.budget.adapters.ExpenseRecyclerAdapter;
 import com.flourish.budget.database.BudgetDbHelper;
 import com.flourish.budget.model.Category;
 import com.flourish.budget.model.Expenses;
+import com.flourish.budget.util.Common;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -181,6 +183,11 @@ public class ExpenseFragment extends Fragment {
                 if (amountText.length() == 0 || expenseText.length() == 0) return;
 
                 float num = Float.parseFloat(amountText);
+                double currentExpenses = BudgetDbHelper.getInstance(mContext).totalExpenses();
+                if ((num + currentExpenses) >= IncomeFragmentNumberPad.MAX_INCOME) {
+                    Common.expenseLimitExceededToast(mContext);
+                    return;
+                }
                 expense.setAmount(num);
                 expense.getHistory().addItem(num);
                 expense.setTitle(expenseText);
@@ -217,6 +224,11 @@ public class ExpenseFragment extends Fragment {
                 if (amountText.length() == 0) return;
 
                 float num = Float.parseFloat(amountText);
+                double currentExpenses = BudgetDbHelper.getInstance(mContext).totalExpenses();
+                if ((num + currentExpenses) >= IncomeFragmentNumberPad.MAX_INCOME) {
+                    Common.expenseLimitExceededToast(mContext);
+                    return;
+                }
                 expense.getHistory().addItem(num);
                 expense.setAmount(expense.getHistory().getTotal());
                 mDataBase.editExpense(expense);

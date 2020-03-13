@@ -2,6 +2,7 @@ package com.flourish.budget.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import com.flourish.budget.R;
 
@@ -31,5 +32,9 @@ public class Common {
         } else {
             context.setTheme(R.style.AppThemeNoAction);
         }
+    }
+
+    public static void expenseLimitExceededToast(Context context) {
+        Toast.makeText(context, "Expense limit exceeded.", Toast.LENGTH_SHORT).show();
     }
 }

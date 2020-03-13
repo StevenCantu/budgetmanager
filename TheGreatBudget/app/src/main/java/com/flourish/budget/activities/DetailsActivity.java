@@ -5,6 +5,8 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.flourish.budget.fragments.IncomeFragmentNumberPad;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -214,6 +216,11 @@ public class DetailsActivity extends AppCompatActivity {
             public void positiveClick(String expenseText, String amountText) {
                 if (amountText.length() == 0) return;
                 float num = Float.parseFloat(amountText);
+                double currentExpenses = BudgetDbHelper.getInstance(DetailsActivity.this).totalExpenses();
+                if ((num + currentExpenses) >= IncomeFragmentNumberPad.MAX_INCOME) {
+                    Common.expenseLimitExceededToast(DetailsActivity.this);
+                    return;
+                }
                 mExpense.getHistory().addItem(num);
                 updateDetails();
             }
